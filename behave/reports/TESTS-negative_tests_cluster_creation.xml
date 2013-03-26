@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="0" name="negative_tests_cluster_creation.Negative tests for cluster section" skips="0" tests="23" time="1.121"><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with name &quot;QA-cluster&quot;" time="0.188"><system-out>
+<testsuite failures="0" name="negative_tests_cluster_creation.Negative tests for cluster section" skips="0" tests="23" time="1.145"><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with name &quot;QA-cluster&quot;" time="0.348"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -13,7 +13,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with name &quot;QA-cluster&quot; that already exists" time="0.161"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with name &quot;QA-cluster&quot; that already exists" time="0.112"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -27,19 +27,19 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can delete cluster with name &quot;QA-cluster&quot; by ID" time="0.392"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can delete cluster with name &quot;QA-cluster&quot; by ID" time="0.091"><system-out>
 <![CDATA[Steps:
         When User delete cluster with id: "0" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/fd6cf3d745c94174a7e22af420f758ec
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/aeddc0de7d9941ec8d61898159ff8e2b
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with blank cluster name" time="0.203"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with blank cluster name" time="0.196"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -53,7 +53,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with invalid characters in cluster name" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with invalid characters in cluster name" time="0.005"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -67,7 +67,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with space in cluster name" time="0.007"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with space in cluster name" time="0.006"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -81,7 +81,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with blank base image ID" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with blank base image ID" time="0.006"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -95,10 +95,10 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with wrong base image ID #This cluster create #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with wrong base image ID #This cluster create #No validation" time="0.0"><system-out>
 <![CDATA[Steps:
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with negative parameter in number of jt_nn" time="0.02"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of JT and NN" time="0.079"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -112,7 +112,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with negative parameter in number of tt_dn" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of TT and DN" time="0.042"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -126,13 +126,35 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with characters in number of jt_nn #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of JT and NN #No validation" time="0.004"><system-out>
 <![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {"cluster": {"node_templates": {"jt_nn.medium": abc, "tt_dn.small": 1}, "name": "QA-cluster-5", "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"}}
+response = 400
+
+400 == 400
+
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with characters in number of tt_dn #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of TT and DN #No validation" time="0.003"><system-out>
 <![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {"cluster": {"node_templates": {"jt_nn.medium": 1, "tt_dn.small": abc}, "name": "QA-cluster-6", "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"}}
+response = 400
+
+400 == 400
+
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with nonexistent JT and NN" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent JT and NN" time="0.035"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -146,7 +168,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with nonexistent TT and DN" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent TT and DN" time="0.042"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -160,7 +182,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with empty value for JT and NN" time="0.015"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for JT and NN" time="0.039"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -174,7 +196,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with empty value for TT and DN" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for TT and DN" time="0.032"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -188,13 +210,35 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without number of JT and NN #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of JT and NN #No validation" time="0.006"><system-out>
 <![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {"cluster": {"node_templates": {"jt_nn.medium": , "tt_dn.small": 1}, "name": "QA-cluster-11", "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"}}
+response = 400
+
+400 == 400
+
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without number of TT and DN #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of TT and DN #No validation" time="0.004"><system-out>
 <![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {"cluster": {"node_templates": {"jt_nn.medium": 1, "tt_dn.small": }, "name": "QA-cluster-12", "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"}}
+response = 400
+
+400 == 400
+
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without JT and NN" time="0.021"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without JT and NN" time="0.038"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -208,7 +252,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without JT, NN and TT, DN" time="0.017"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without (JT, NN) and (TT, DN)" time="0.037"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -222,7 +266,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without node template" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without node template" time="0.006"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -236,7 +280,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without name cluster" time="0.005"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without cluster name" time="0.006"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -250,7 +294,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster without base image ID" time="0.005"><system-out>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without base image ID" time="0.009"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed

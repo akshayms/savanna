@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="0" name="negative_tests_get_cluster.Negative tests for get cluster" skips="0" tests="4" time="0.566"><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can create cluster with name &quot;cluster-QA&quot;" time="0.145"><system-out>
+<testsuite failures="0" name="negative_tests_get_cluster.Negative tests for get cluster" skips="0" tests="4" time="0.513"><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can create cluster with name &quot;cluster-QA&quot;" time="0.135"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -13,22 +13,22 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can delete cluster with name &quot;cluster-QA&quot; by ID" time="0.295"><system-out>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can delete cluster with name &quot;cluster-QA&quot; by ID" time="0.203"><system-out>
 <![CDATA[Steps:
         When User delete cluster with id: "0" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/0b8210bebd464894b8f7684f5adf7618
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/892ab8ecf53b4fe9b4630195c288c1d7
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can get cluster with name &quot;cluster-QA&quot; by ID #No validation" time="0.0"><system-out>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can not get deleted cluster with name &quot;cluster-QA&quot; by ID #No validation" time="0.0"><system-out>
 <![CDATA[Steps:
 ]]>
-</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can get clusters, if all cluster is delete" time="0.127"><system-out>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can get clusters, if all cluster is delete" time="0.175"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed

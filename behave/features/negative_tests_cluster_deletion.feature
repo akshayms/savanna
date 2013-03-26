@@ -19,7 +19,7 @@ Feature: Negative tests for cluster deletion
         When User delete cluster with id: "0"
         Then  Response is "204"
 
-    Scenario: User can delete cluster with name "cluster-QA" by ID #No validation
+    Scenario: User can not delete cluster with name "cluster-QA" by ID #No validation
         #When User delete cluster with id: "0"
         #Then  Response is "404"
 

@@ -13,7 +13,7 @@ Feature: Negative tests for get cluster
         When User delete cluster with id: "0"
         Then  Response is "204"
 
-    Scenario: User can get cluster with name "cluster-QA" by ID #No validation
+    Scenario: User can not get deleted cluster with name "cluster-QA" by ID #No validation
         #When User get cluster with id: "0"
         #Then  Response is "400"
 
