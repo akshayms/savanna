@@ -1,6 +1,6 @@
-********************
-EHO quickstart guide
-********************
+************************
+Savanna quickstart guide
+************************
 
 1 Setup prerequisites
 =====================
@@ -9,9 +9,9 @@ EHO quickstart guide
 
 1.2 OpenStack compute has to have floating IP autoassigment. You can read more here: http://docs.openstack.org/trunk/openstack-compute/admin/content/associating-public-ip.html
 
-1.3 Git should be installed on the machine where EHO_API will be deployed.
+1.3 Git should be installed on the machine where Savanna_API will be deployed.
 
-1.4 Your OpenStack should have flavors with 'm1.small' and 'm1.medium' names defined because these flavors are referenced by EHO's default Node Templates.
+1.4 Your OpenStack should have flavors with 'm1.small' and 'm1.medium' names defined because these flavors are referenced by Savanna's default Node Templates.
 You can check which flavors you have by running
 
 .. sourcecode:: bash
@@ -31,7 +31,7 @@ You can check which flavors you have by running
 
 .. sourcecode:: bash
 
-    wget http://eho-files.mirantis.com/hdp-img-01.tar.gz
+    wget http://savanna-files.mirantis.com/hdp-img-01.tar.gz
 
 2.3 Unpack image and import it into Glance:
 
@@ -66,20 +66,20 @@ You should see the output similar to the following:
     +------------------+--------------------------------------+
 
 
-3 EHO API SETUP
-===============
+3 Savanna API SETUP
+===================
 
-3.1 Git clone repo from the https://github.com/Mirantis/eho
+3.1 Git clone repo from the https://github.com/Mirantis/savanna
 
 .. sourcecode:: bash
 
-    git clone git://github.com/Mirantis/eho.git
+    git clone git://github.com/Mirantis/savanna.git
 
 3.2 Go to the cloned repo directory
 
 .. sourcecode:: bash
 
-    cd eho
+    cd savanna
 
 3.3 Install python headers and virtualenv:
 
@@ -97,51 +97,72 @@ You should see the output similar to the following:
 
 .. sourcecode:: bash
 
-    cp ./etc/local.cfg-sample ./etc/local.cfg
+    cp ./etc/savanna/savanna.conf.sample ./etc/savanna/savanna.conf
 
-3.6 In local.cfg you should edit the following parameters:
-
-.. sourcecode:: bash
-
-    # OPENSTACK CONF
-    OS_AUTH_PROTOCOL = 'http'
-    OS_AUTH_HOST = 'hostname' <- OpenStack hostname
-    OS_AUTH_PORT = '35357'
-    OS_ADMIN_USER = 'admin'  <- OpenStack user/password/tenant that will be used to check auth tokens
-    OS_ADMIN_PASSWORD = 'nova'
-    OS_ADMIN_TENANT = 'admin'
-
-    # NODE CONF
-    NODE_USER = 'root'
-    NODE_PASSWORD = 'swordfish'
-    NODE_INTERNAL_NET = 'novanetwork' <- name of the OpenStack network from which IPs are assigned to VMs
-
-3.7 To run EHO from created environment just call:
+3.6 In savanna.conf you should edit the following parameters:
 
 .. sourcecode:: bash
 
-    .venv/bin/python bin/eho-api --reset-db --stub-data --allow-cluster-ops
+    [DEFAULT]
 
-**Note:** ``--reset-db`` and ``--stub-data`` parameters should be inserted only with the first EHO-API startup.
-With these parameters supplied EHO will create sqlite db with predefined data in ``/tmp/eho-server.db``
+    # REST API config
+    #port=8080
+    #allow_cluster_ops=false
 
-Next times these parameters should be omited:
+    # Address and credentials that will be used to check auth tokens
+    #os_auth_host=openstack
+    #os_auth_port=35357
+    #os_admin_username=admin
+    #os_admin_password=nova
+    #os_admin_tenant_name=admin
+
+    # Nova network name that will be used to access VMs
+    #nova_internal_net_name=novanetwork
+
+    # (Optional) Name of log file to output to. If not set,
+    # logging will go to stdout. (string value)
+    #log_file=<None>
+
+    [cluster_node]
+
+    # An existing user on Hadoop image (string value)
+    #username=root
+
+    # User's password (string value)
+    #password=swordfish
+
+    [sqlalchemy]
+
+    # URL for sqlalchemy database (string value)
+    #database_uri=sqlite:////tmp/savanna-server.db
+
+**Note:** Config file could be specified for ``savanna-api`` and ``savanna-manage`` commands using ``--config-file`` flag.
+
+3.7 To initialize database and generate templates call:
 
 .. sourcecode:: bash
 
-    .venv/bin/python/ bin/eho-api --allow-cluster-ops
+    .venv/bin/python bin/savanna-manage reset-db --with-gen-templates
 
-Now EHO service is running. Further steps show how you can verify from console that EHO API works properly.
+This command creates database file from scratch and generates some node templates.
 
-3.8 First install httpie program. It allows you to send http requests to EHO API service.
+3.8 To run Savanna from created environment just call:
+
+.. sourcecode:: bash
+
+    .venv/bin/python bin/savanna-api --allow-cluster-ops
+
+Now Savanna service is running. Further steps show how you can verify from console that Savanna API works properly.
+
+3.9 First install httpie program. It allows you to send http requests to Savanna API service.
 
 .. sourcecode:: bash
 
     sudo easy_install httpie
 
-**Note:** sure you can use another HTTP client like curl to send requests to EHO service
+**Note:** sure you can use another HTTP client like curl to send requests to Savanna service
 
-3.9 Then you need to get authentification token from OpenStack Keystone service:
+3.10 Then you need to get authentification token from OpenStack Keystone service:
 
 .. sourcecode:: bash
 
@@ -151,33 +172,33 @@ E.g.:
 
 .. sourcecode:: bash
 
-    tools/get_auth_token eho-user nova eho-dev
+    tools/get_auth_token savanna-user nova savanna-dev
 
 If authentication succeed, output will be as follows:
 
 .. sourcecode:: bash
 
     Configuration has been loaded from 'etc/local.cfg'
-    User: eho-user
+    User: savanna-user
     Password: nova
-    Tenant: eho-dev
+    Tenant: savanna-dev
     Auth URL: http://172.18.79.139:35357/v2.0/
     Auth succeed: True
     Auth token: d61e47a1423d477f9c77ecb23c64d424
-    Tenant [eho-dev] id: 0677a89acc834e38bf8bb41665912416
+    Tenant [savanna-dev] id: 0677a89acc834e38bf8bb41665912416
 
-**Note:** Save the token because you have to supply it with every request to EHO in X-Auth-Token header.
+**Note:** Save the token because you have to supply it with every request to Savanna in X-Auth-Token header.
 You will also use tenant id in request URL
 
-3.10 Send http request to the EHO service:
+3.11 Send http request to the Savanna service:
 
 .. sourcecode:: bash
 
-    http http://{eho_api_ip}:8080/v0.2/{tenant_id}/node-templates X-Auth-Token:{auth_token}
+    http http://{savanna_api_ip}:8080/v0.2/{tenant_id}/node-templates X-Auth-Token:{auth_token}
 
 Where:
 
-* eho_api_ip - hostname where EHO API service is running
+* savanna_api_ip - hostname where Savanna API service is running
 
 * tenant_id - id of the tenant for which you got token in previous item
 
@@ -210,7 +231,7 @@ Output of this command will look as follows:
 4 Hadoop Cluster startup
 ========================
 
-4.1 Send the POST request to EHO API to create Hadoop Cluster.
+4.1 Send the POST request to Savanna API to create Hadoop Cluster.
 
 Create file with name ``cluster_create.json`` and fill it with the following content:
 
@@ -232,11 +253,11 @@ Where:
 * "name" - name of the cluster being created
 * "jt_nn.small": 1 and "tt_dn.small": 3 - names and numbers of Node Templates for Hadoop NameNodes and JobTracker; DataNodes and TaskTrackers.
 
-You can list available node templates by sending the following request to EHO API:
+You can list available node templates by sending the following request to Savanna API:
 
 .. sourcecode:: bash
 
-    http http://{eho_api_ip}:8080/v0.2/{tenant-id}/node-templates X-Auth-Token:{auth_token}
+    http http://{savanna_api_ip}:8080/v0.2/{tenant-id}/node-templates X-Auth-Token:{auth_token}
 
 * "base_image_id" - OpenStack image id of image which was downloaded in the Item 2.
 
@@ -250,7 +271,7 @@ After creating the file you can send the request:
 
 .. sourcecode:: bash
 
-    http http://{eho_api_ip}:8080/v0.2/{tenant-id}/clusters X-Auth-Token:{auth_token} < cluster_create.json
+    http http://{savanna_api_ip}:8080/v0.2/{tenant-id}/clusters X-Auth-Token:{auth_token} < cluster_create.json
 
 Response for this request will look like:
 
@@ -277,7 +298,7 @@ Response for this request will look like:
 
 .. sourcecode:: bash
 
-    http http://{eho_api_ip}:8080/v0.2/{tenant-id}/clusters/{cluster_id} X-Auth-Token:{auth_token}
+    http http://{savanna_api_ip}:8080/v0.2/{tenant-id}/clusters/{cluster_id} X-Auth-Token:{auth_token}
 
 Where "cluster_id" - id of created cluster. In our example above it the id is "254d8a8c483046ab9209d7993cad2da2"
 

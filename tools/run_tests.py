@@ -1,10 +1,11 @@
-import sys
-
 import os
-from eho.common.test_lib import run_tests
+
 from nose import config
 from nose import core
-import eho.tests
+
+import sys
+from savanna.openstack.test_lib import run_tests
+import savanna.tests
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
                       includeExe=True,
                       traverseNamespace=True,
                       plugins=core.DefaultPluginManager())
-    c.configureWhere(eho.tests.__path__)
+    c.configureWhere(savanna.tests.__path__)
     sys.exit(run_tests(c))
 
 

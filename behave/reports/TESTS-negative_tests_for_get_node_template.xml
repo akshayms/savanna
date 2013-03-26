@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="2" name="negative_tests_for_get_node_template.Test of get template with wrong param" skips="0" tests="7" time="0.418"><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can see templates" time="0.032"><system-out>
+<testsuite failures="2" name="negative_tests_for_get_node_template.Test of get template with wrong param" skips="0" tests="7" time="0.276"><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can see templates" time="0.024"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -13,7 +13,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can create template for TT+DN" time="0.205"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can create template for TT+DN" time="0.107"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -36,7 +36,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can see templates, if list has two templates" time="0.015"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can see templates, if list has two templates" time="0.031"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -50,56 +50,56 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'node-for-get'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'node-for-get']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can get template by id" time="0.007"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can get template by id" time="0.01"><system-out>
 <![CDATA[Steps:
         When User get template with id: "0" ... passed
         Then Response is "200" ... passed
          And Response for list node_template by id is:"{u'name_node': {u'heap_size': u'384'}, u'node_type': {u'processes': [u'name_node'], u'name': u'NN'}, u'flavor_id': u'm1.medium', u'name': u'node-for-get'}" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 200
 
 200 == 200
 {u'name_node': {u'heap_size': u'384'}, u'node_type': {u'processes': [u'name_node'], u'name': u'NN'}, u'flavor_id': u'm1.medium', u'name': u'node-for-get'} == {u'name_node': {u'heap_size': u'384'}, u'node_type': {u'processes': [u'name_node'], u'name': u'NN'}, u'flavor_id': u'm1.medium', u'name': u'node-for-get'}
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="I can delete node_template by id" time="0.144"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="I can delete node_template by id" time="0.092"><system-out>
 <![CDATA[Steps:
         When User delete template with id: "0" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can't get template by id, if node is deleted" time="0.007"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_get_node_template.Test of get template with wrong param" name="User can't get template by id, if node is deleted" time="0.006"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 500
 
 500 == 404
 
 Captured logging:
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1
-DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4 HTTP/1.1" 500 112</failure><system-out>
+DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af HTTP/1.1" 500 112</failure><system-out>
 <![CDATA[Steps:
         When User get template with id: "0" ... passed
         Then Response is "404" ... failed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 500
 
 500 == 404
@@ -110,25 +110,25 @@ response = 500
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 500
 
 500 == 404
 
 Captured logging:
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1
-DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4 HTTP/1.1" 500 112</failure><system-out>
+DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af HTTP/1.1" 500 112</failure><system-out>
 <![CDATA[Steps:
         When User get template with id: "0" ... passed
         Then Response is "404" ... failed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/96ed7677628842b98841145946a13ac4
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/70d2daf677604284bec82ff8ce24e4af
 response = 500
 
 500 == 404

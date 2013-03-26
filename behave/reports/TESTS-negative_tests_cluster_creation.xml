@@ -1,0 +1,837 @@
+<?xml version='1.0' encoding='utf8'?>
+<testsuite failures="0" name="negative_tests_cluster_creation.Negative tests for cluster section" skips="0" tests="35" time="0.976"><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can create cluster with name &quot;QA-cluster&quot;" time="0.123"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "202" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 202
+
+202 == 202
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with name &quot;QA-cluster&quot; that already exists" time="0.104"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+         {"
+            jt_nn.medium": 1,
+            "tt_dn.small": 1
+         },
+         "name": "QA-cluster",
+         "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can delete cluster with name &quot;QA-cluster&quot; by ID" time="0.102"><system-out>
+<![CDATA[Steps:
+        When User delete cluster with id: "0" ... passed
+        Then Response is "204" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/dae9658fba4246a5a6cc50e09d9184d8
+response = 204
+
+204 == 204
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with blank cluster name" time="0.106"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+     {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+     }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with invalid characters in cluster name" time="0.006"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+     {
+        "node_templates":
+         {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+         },
+         "name": "QA_*&cluster",
+         "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+     }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with space in cluster name" time="0.006"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA cluster",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with blank base image ID" time="0.008"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+     {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-1",
+        "base_image_id": ""
+     }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with wrong base image ID #This cluster create #No validation" time="0.0"><system-out>
+<![CDATA[Steps:
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of JT and NN" time="0.03"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+         {
+            "jt_nn.medium": -1,
+            "tt_dn.small": 1
+         },
+         "name": "QA-cluster-3",
+         "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of TT and DN" time="0.027"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": -1
+        },
+        "name": "QA-cluster-4",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of JT and NN" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": abc,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-5",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of TT and DN" time="0.005"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": abc
+        }, "name": "QA-cluster-6",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent JT and NN" time="0.028"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "abc": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-7",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent TT and DN" time="0.029"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+     {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "abc": 1
+        },
+        "name": "QA-cluster-8",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+     }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for JT and NN" time="0.029"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-9",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for TT and DN" time="0.027"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {   "jt_nn.medium": 1,
+            "": 1
+        },
+        "name": "QA-cluster-10",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of JT and NN" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": ,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-11",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of TT and DN" time="0.005"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small":
+        },
+        "name": "QA-cluster-12",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without JT and NN" time="0.032"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-13",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without (JT, NN) and (TT, DN)" time="0.029"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates": {},
+        "name": "QA-cluster-14",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without node template" time="0.006"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "name": "QA-cluster-15",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without cluster name" time="0.005"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        }, "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without base image ID" time="0.006"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt_nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-16"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of JT" time="0.027"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+         {
+            "jt.medium": -1,
+            "nn.medium": 1,
+            "tt_dn.small": 1
+         },
+         "name": "QA-cluster-31",
+         "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with negative parameter in number of NN" time="0.029"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+         {
+            "jt.medium": 1,
+            "nn.medium": -1,
+            "tt_dn.small": 1
+         },
+         "name": "QA-cluster-32",
+         "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of JT" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": abc,
+            "nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-51",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with characters in number of NN" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": 1,
+            "nn.medium": abc,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-52",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent JT" time="0.028"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "abc": 1,
+            "nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-71",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with nonexistent NN" time="0.027"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": 1,
+            "abc": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-72",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for JT" time="0.029"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "": 1,
+            "nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-91",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster with empty value for NN" time="0.028"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": 1,
+            "": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-92",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of JT" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": ,
+            "nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-111",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without number of NN" time="0.004"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": 1,
+            "nn.medium": ,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-112",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without JT" time="0.036"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "nn.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-131",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_cluster_creation.Negative tests for cluster section" name="User can not create cluster without NN" time="0.036"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {
+    "cluster":
+    {
+        "node_templates":
+        {
+            "jt.medium": 1,
+            "tt_dn.small": 1
+        },
+        "name": "QA-cluster-132",
+        "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase></testsuite>

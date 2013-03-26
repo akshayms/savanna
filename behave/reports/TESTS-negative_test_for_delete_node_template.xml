@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='utf8'?>
+<testsuite failures="3" name="negative_test_for_delete_node_template.Test of delete template with wrong param" skips="0" tests="7" time="0.368"><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can see templates" time="0.029"><failure message="None" type="NoneType">Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
+    match.run(runner.context)
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
+    self.func(context, *args, **kwargs)
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+    assert str(names) == str(list)
+AssertionError
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
+
+Captured logging:
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1
+DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates HTTP/1.1" 200 3103</failure><system-out>
+<![CDATA[Steps:
+        When User see templates ... passed
+        Then Response is "200" ... passed
+         And Response list of list node_templates:"[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']" ... failed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can create template for TT+DN" time="0.108"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "202" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "node-for-delete",
+        "node_type": "TT+DN",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
+            "heap_size": 384,
+            "max_map_tasks": 3,
+            "max_reduce_tasks": 1,
+            "task_heap_size": 640
+        },
+        "data_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 202
+
+202 == 202
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can see templates, if list has two templates" time="0.051"><failure message="None" type="NoneType">Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
+    match.run(runner.context)
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
+    self.func(context, *args, **kwargs)
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+    assert str(names) == str(list)
+AssertionError
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1', u'node-for-delete'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'node-for-delete']
+
+Captured logging:
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1
+DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates HTTP/1.1" 200 3349</failure><system-out>
+<![CDATA[Steps:
+        When User see templates ... passed
+        Then Response is "200" ... passed
+         And Response list of list node_templates:"[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'node-for-delete']" ... failed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1', u'node-for-delete'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'node-for-delete']
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can delete template" time="0.115"><system-out>
+<![CDATA[Steps:
+        When User delete template with id: "0" ... passed
+        Then Response is "204" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/5cf446a12efe40eea0542116dbce49a2
+response = 204
+
+204 == 204
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can see templates, if list has two templates" time="0.048"><failure message="None" type="NoneType">Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
+    match.run(runner.context)
+  File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
+    self.func(context, *args, **kwargs)
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+    assert str(names) == str(list)
+AssertionError
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
+
+Captured logging:
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1
+DEBUG:requests.packages.urllib3.connectionpool:"GET /v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates HTTP/1.1" 200 3103</failure><system-out>
+<![CDATA[Steps:
+        When User see templates ... passed
+        Then Response is "200" ... passed
+         And Response list of list node_templates:"[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']" ... failed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+response = 200
+
+200 == 200
+[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can't delete template, if template already delete" time="0.011"><system-out>
+<![CDATA[Steps:
+        When User delete template with id: "0" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/5cf446a12efe40eea0542116dbce49a2
+response = 204
+
+
+]]>
+</system-out></testcase><testcase classname="negative_test_for_delete_node_template.Test of delete template with wrong param" name="User can't delete template, if template non exist" time="0.005"><system-out>
+<![CDATA[Steps:
+        When User delete template with id: "101" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/0000000001
+response = 204
+
+
+]]>
+</system-out></testcase></testsuite>

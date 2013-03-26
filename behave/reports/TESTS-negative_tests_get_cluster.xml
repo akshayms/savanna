@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf8'?>
+<testsuite failures="0" name="negative_tests_get_cluster.Negative tests for get cluster" skips="0" tests="4" time="0.469"><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can create cluster with name &quot;cluster-QA&quot;" time="0.117"><system-out>
+<![CDATA[Steps:
+       Given cluster data ... passed
+        When User create cluster ... passed
+        Then Response is "202" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+data = {"cluster": {"node_templates": {"jt_nn.medium": 1, "tt_dn.small": 1}, "name": "cluster-QA", "base_image_id": "d9342ba8-4c51-441c-8d5b-f9e14a901299"}}
+response = 202
+
+202 == 202
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can delete cluster with name &quot;cluster-QA&quot; by ID" time="0.198"><system-out>
+<![CDATA[Steps:
+        When User delete cluster with id: "0" ... passed
+        Then Response is "204" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/7e27be15829b47ca9b71f90783f8e1d7
+response = 204
+
+204 == 204
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can not get deleted cluster with name &quot;cluster-QA&quot; by ID #No validation" time="0.0"><system-out>
+<![CDATA[Steps:
+]]>
+</system-out></testcase><testcase classname="negative_tests_get_cluster.Negative tests for get cluster" name="User can get clusters, if all cluster is delete" time="0.155"><system-out>
+<![CDATA[Steps:
+        When User see clusters ... passed
+        Then Response is "200" ... passed
+         And Response list of list clusters:"[]" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters
+response = 200
+
+200 == 200
+[] == []
+
+]]>
+</system-out></testcase></testsuite>

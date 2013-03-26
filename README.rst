@@ -1,5 +1,5 @@
-Elastic Hadoop on OpenStack
-===========================
+Savanna project
+===============
 
 QuickStart (Ubuntu)
 ----------
@@ -27,9 +27,9 @@ QuickStart (Ubuntu)
 ::
     tools/run_tests
 
-7. Run EHO REST API with stub data and cluster ops on port 8080
+7. Run Savanna REST API with stub data and cluster ops on port 8080
 ::
-    .venv/bin/python bin/eho-api --reset-db --stub-data --allow-cluster-ops
+    .venv/bin/python bin/savanna-api --reset-db --stub-data --allow-cluster-ops
 
 
 Pip speedup
@@ -42,7 +42,6 @@ Add the following lines to ~/.pip/pip.conf
     index-url = <mirror url>
 
 Note! The ~/.pip/cache folder should be created.
-For Saratov location the http://mirrors.sgu.ru/pypi/simple is preferred.
 
 Git hook for fast checks
 ------------------------

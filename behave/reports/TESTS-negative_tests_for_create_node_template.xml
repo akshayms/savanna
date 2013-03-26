@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="10" name="negative_tests_for_create_node_template.Test of create template with wrong param" skips="0" tests="61" time="1.359"><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.029"><system-out>
+<testsuite failures="10" name="negative_tests_for_create_node_template.Test of create template with wrong param" skips="0" tests="61" time="1.681"><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.035"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -13,7 +13,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template DN" time="0.025"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template DN" time="0.042"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -36,7 +36,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.015"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.032"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -50,7 +50,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template TT" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template TT" time="0.039"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -76,12 +76,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates, if list has two templates" time="0.015"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates, if list has two templates" time="0.036"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
     assert str(names) == str(list)
 AssertionError
 
@@ -108,12 +108,12 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1', u'QA-node-2', u'QA-node-3', u'QA-node-4', u'QA-node-5', u'QA-node-6']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with empty JSON" time="0.004"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with empty JSON" time="0.007"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -142,7 +142,7 @@ response = 500
 500 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong JSON" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong JSON" time="0.007"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -171,7 +171,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without name in JSON" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without name in JSON" time="0.008"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -196,7 +196,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without node_type in JSON" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without node_type in JSON" time="0.019"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -221,7 +221,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without flavor_id in JSON" time="0.007"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without flavor_id in JSON" time="0.008"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -266,7 +266,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without node_param in JSON" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template without node_param in JSON" time="0.011"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -279,6 +279,98 @@ data = {
     "name": "QA-node-6",
     "node_type": "DN",
     "flavor_id": "m1.medium",
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.01"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "TT+DN",
+        "flavor_id": "m1.medium",
+        "job_tracker": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "TT+DN",
+        "flavor_id": "m1.medium",
+        "name_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.015"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "TT+DN",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "TT+DN",
+        "flavor_id": "m1.medium",
+        "data_node": {
+            "heap_size": 384
+        }
     }
 }
 response = 400
@@ -300,6 +392,58 @@ data = {
         "node_type": "TT+DN",
         "flavor_id": "m1.medium",
         "job_tracker": {
+            "heap_size": 384
+        },
+        "name_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.015"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "JT+NN",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
+            "heap_size": 384
+        },
+        "data_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "JT+NN",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
             "heap_size": 384
         }
     }
@@ -320,150 +464,6 @@ URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
 data = {
     "node_template": {
         "name": "QA-node-6",
-        "node_type": "TT+DN",
-        "flavor_id": "m1.medium",
-        "name_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "TT+DN",
-        "flavor_id": "m1.medium",
-        "task_tracker": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "TT+DN",
-        "flavor_id": "m1.medium",
-        "data_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.005"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "TT+DN",
-        "flavor_id": "m1.medium",
-        "job_tracker": {
-            "heap_size": 384
-        },
-        "name_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.005"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "JT+NN",
-        "flavor_id": "m1.medium",
-        "task_tracker": {
-            "heap_size": 384
-        },
-        "data_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.004"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "JT+NN",
-        "flavor_id": "m1.medium",
-        "task_tracker": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.004"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
         "node_type": "JT+NN",
         "flavor_id": "m1.medium",
         "data_node": {
@@ -476,7 +476,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.013"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -499,7 +499,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.01"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -522,7 +522,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.005"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.013"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -548,12 +548,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.175"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.217"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -604,7 +604,7 @@ response = 202
 202 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.009"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.008"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -616,6 +616,127 @@ data = {
     "node_template": {
         "name": "QA-node-6",
         "node_type": "NN",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.014"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "NN",
+        "flavor_id": "m1.medium",
+        "data_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.015"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "NN",
+        "flavor_id": "m1.medium",
+        "job_tracker": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.011"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "JT",
+        "flavor_id": "m1.medium",
+        "task_tracker": {
+            "heap_size": 384
+        },
+        "data_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.047"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "JT",
+        "flavor_id": "m1.medium",
+        "job_tracker": {
+            "heap_size": 384
+        },
+        "name_node": {
+            "heap_size": 384
+        }
+    }
+}
+response = 400
+
+400 == 400
+
+]]>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.013"><system-out>
+<![CDATA[Steps:
+       Given node_template body ... passed
+        When User create template ... passed
+        Then Response is "400" ... passed
+
+Captured stdout:
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
+data = {
+    "node_template": {
+        "name": "QA-node-6",
+        "node_type": "JT",
         "flavor_id": "m1.medium",
         "task_tracker": {
             "heap_size": 384
@@ -638,127 +759,6 @@ URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
 data = {
     "node_template": {
         "name": "QA-node-6",
-        "node_type": "NN",
-        "flavor_id": "m1.medium",
-        "data_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.009"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "NN",
-        "flavor_id": "m1.medium",
-        "job_tracker": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.006"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "JT",
-        "flavor_id": "m1.medium",
-        "task_tracker": {
-            "heap_size": 384
-        },
-        "data_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.029"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "JT",
-        "flavor_id": "m1.medium",
-        "job_tracker": {
-            "heap_size": 384
-        },
-        "name_node": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.005"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
-        "node_type": "JT",
-        "flavor_id": "m1.medium",
-        "task_tracker": {
-            "heap_size": 384
-        }
-    }
-}
-response = 400
-
-400 == 400
-
-]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.006"><system-out>
-<![CDATA[Steps:
-       Given node_template body ... passed
-        When User create template ... passed
-        Then Response is "400" ... passed
-
-Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates
-data = {
-    "node_template": {
-        "name": "QA-node-6",
         "node_type": "JT",
         "flavor_id": "m1.medium",
         "data_node": {
@@ -771,7 +771,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template if param node_type not match node_param" time="0.011"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -794,7 +794,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy name" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy name" time="0.015"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -823,7 +823,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy node_type" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy node_type" time="0.008"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -874,12 +874,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy node_param" time="0.027"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template for emtpy node_param" time="0.05"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -955,7 +955,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.006"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.013"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -984,7 +984,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.008"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.014"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1013,7 +1013,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.007"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.011"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1042,12 +1042,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.183"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.116"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -1104,7 +1104,7 @@ response = 202
 202 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.008"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong name" time="0.009"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1133,7 +1133,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.023"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.048"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1162,7 +1162,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.044"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1191,7 +1191,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.02"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.05"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1220,7 +1220,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.02"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.044"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1249,7 +1249,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.018"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.046"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1278,7 +1278,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.021"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.047"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1307,12 +1307,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.006"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.01"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -1369,12 +1369,12 @@ response = 500
 500 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.006"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.018"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -1431,7 +1431,7 @@ response = 500
 500 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.004"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_type" time="0.005"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1460,12 +1460,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.214"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.123"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 9, in chkStatus
     assert status_code == int(res_code.strip())
 AssertionError
 
@@ -1522,7 +1522,7 @@ response = 202
 202 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.005"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.004"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1551,7 +1551,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.025"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong flavor_id" time="0.044"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1580,7 +1580,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.003"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.004"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1606,7 +1606,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.003"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.004"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1632,7 +1632,7 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.003"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with wrong node_patam" time="0.004"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1658,12 +1658,12 @@ response = 400
 400 == 400
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.023"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.041"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
     assert str(names) == str(list)
 AssertionError
 
@@ -1690,7 +1690,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can create template for TT+DN" time="0.19"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can create template for TT+DN" time="0.125"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -1719,12 +1719,12 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.024"><failure message="None" type="NoneType">Traceback (most recent call last):
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can see templates" time="0.039"><failure message="None" type="NoneType">Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 753, in run
     match.run(runner.context)
   File "/usr/local/lib/python2.7/dist-packages/behave/model.py", line 1045, in run
     self.func(context, *args, **kwargs)
-  File "/home/hadoop/eoh/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
+  File "/home/lobankovyy/EHO/savanna/behave/features/steps/then_steps.py", line 40, in response_list_node_templates
     assert str(names) == str(list)
 AssertionError
 
@@ -1751,7 +1751,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-6', u'qwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopqwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiopwertyuiop', u'qanode', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1']
 
 ]]>
-</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with already exist name" time="0.02"><system-out>
+</system-out></testcase><testcase classname="negative_tests_for_create_node_template.Test of create template with wrong param" name="User can't create template with already exist name" time="0.033"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
