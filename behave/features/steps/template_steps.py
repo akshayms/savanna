@@ -27,7 +27,10 @@ def get_template(context, n):
     global error_content
     global status_code
     global res_content_get_template
-    res = rest.get_template(context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = "0000000001"
+    res = rest.get_template(num)
     status_code = res.status_code
     if status_code == 200:
         res_content_get_template = json.loads(res.content)
@@ -60,7 +63,10 @@ def add_template(context):
 def del_template(context, n):
     global error_content
     global status_code
-    res = rest.delete_template(context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = "0000000001"
+    res = rest.delete_template(num)
     status_code = res.status_code
     if status_code != 204:
         error_content = json.loads(res.content)
@@ -72,7 +78,10 @@ def put_template(context, n):
     global status_code
     global res_content
     global template_body
-    res = rest.create_template(template_body, context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = "0000000001"
+    res = rest.create_template(template_body, num)
     status_code = res.status_code
     if status_code == 202:
         res_content = json.loads(res.content)

@@ -28,7 +28,10 @@ def get_cluster(context, n):
     global status_code
     global res_content_get_cluster
     global error_content
-    res = rest.get_cluster(context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = 0000000000001
+    res = rest.get_cluster(num)
     status_code = res.status_code
     if status_code == 200:
         res_content_get_cluster = json.loads(res.content)
@@ -62,7 +65,10 @@ def add_cluster(context):
 def del_cluster(context, n):
     global status_code
     global error_content
-    res = rest.delete_cluster(context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = 0000000000001
+    res = rest.delete_cluster(num)
     status_code = res.status_code
     if status_code != 204:
         error_content = json.loads(res.content)
@@ -74,7 +80,10 @@ def put_cluster(context, n):
     global res_content
     global cluster_body
     global error_content
-    res = rest.create_cluster(cluster_body, context.ids[int(n)])
+    try:
+        num = context.ids[int(n)]
+    except Exception, e: num = 0000000000001
+    res = rest.create_cluster(cluster_body, num)
     status_code = res.status_code
     if status_code == 202:
         res_content = json.loads(res.content)

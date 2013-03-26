@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="0" name="template.Test of template section" skips="0" tests="18" time="1.625"><testcase classname="template.Test of template section" name="User can see templates" time="0.026"><system-out>
+<testsuite failures="0" name="template.Test of template section" skips="0" tests="18" time="1.755"><testcase classname="template.Test of template section" name="User can see templates" time="0.062"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -13,7 +13,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can create template for TT+DN" time="0.168"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can create template for TT+DN" time="0.195"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -42,7 +42,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates, if list has two templates" time="0.016"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates" time="0.023"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -56,7 +56,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can create template JT+NN" time="0.257"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can create template JT+NN" time="0.224"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -96,7 +96,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1', u'QA-node-2'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1', u'QA-node-2']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can create template NN" time="0.185"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can create template NN" time="0.177"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -119,7 +119,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates, if list has two templates" time="0.027"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates, if list has two templates" time="0.025"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -133,7 +133,7 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1', u'QA-node-2', u'QA-node-3'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1', u'QA-node-2', u'QA-node-3']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can create template JT" time="0.172"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can create template JT" time="0.215"><system-out>
 <![CDATA[Steps:
        Given node_template body ... passed
         When User create template ... passed
@@ -156,7 +156,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates, if list has two templates" time="0.023"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can see templates, if list has two templates" time="0.025"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -176,25 +176,25 @@ response = 200
         Then Response is "200" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/324f4efc5f4a453d96f0b9f1842c6e8d
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/271affb82185402b8384828c0a18c680
 response = 200
 
 200 == 200
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.168"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.217"><system-out>
 <![CDATA[Steps:
         When User delete template with id: "0" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/324f4efc5f4a453d96f0b9f1842c6e8d
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/271affb82185402b8384828c0a18c680
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.018"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.024"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -208,19 +208,19 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-2', u'QA-node-3', u'QA-node-4'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-2', u'QA-node-3', u'QA-node-4']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.139"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.184"><system-out>
 <![CDATA[Steps:
         When User delete template with id: "3" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/a1d471c328834f039530cfceac848383
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/03dc76f47d2749e88fd9f8b5dc514cf3
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.022"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.021"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -234,19 +234,19 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-2', u'QA-node-3'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-2', u'QA-node-3']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.152"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.153"><system-out>
 <![CDATA[Steps:
         When User delete template with id: "1" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/bd0b13ae52174916b6b5adaa0073ccfa
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/a42ce02291574989b119040d11447831
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.024"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.023"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed
@@ -260,19 +260,19 @@ response = 200
 [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-3'] == [u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-3']
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.183"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can delete template" time="0.143"><system-out>
 <![CDATA[Steps:
         When User delete template with id: "2" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/50e34962f3a24b8d86c330fc20807847
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/node-templates/65d92ee0a7274c6088940f726c772a78
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.021"><system-out>
+</system-out></testcase><testcase classname="template.Test of template section" name="User can get templates" time="0.023"><system-out>
 <![CDATA[Steps:
         When User see templates ... passed
         Then Response is "200" ... passed

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf8'?>
-<testsuite failures="0" name="clusters.Test of cluster section" skips="0" tests="14" time="1.961"><testcase classname="clusters.Test of cluster section" name="User can get clusters if list is empty" time="0.007"><system-out>
+<testsuite failures="0" name="clusters.Test of cluster section" skips="0" tests="14" time="1.652"><testcase classname="clusters.Test of cluster section" name="User can get clusters if list is empty" time="0.006"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -13,7 +13,7 @@ response = 200
 [] == []
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.152"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.17"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -27,7 +27,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has only one cluster" time="0.132"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has only one cluster" time="0.133"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -41,7 +41,7 @@ response = 200
 [u'qacluster-1'] == [u'qacluster-1']
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.168"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.156"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -55,7 +55,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has two cluster" time="0.137"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has two cluster" time="0.13"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -69,21 +69,21 @@ response = 200
 [u'qacluster-1', u'qacluster-2'] == [u'qacluster-1', u'qacluster-2']
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get cluster by ID" time="0.01"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get cluster by ID" time="0.012"><system-out>
 <![CDATA[Steps:
         When User get cluster with id: "0" ... passed
         Then Response is "200" ... passed
          And Response for list cluster by id is:"{u'status': u'Active', u'service_urls': {}, u'name': u'qacluster-1', u'base_image_id': u'd9342ba8-4c51-441c-8d5b-f9e14a901299', u'node_templates': {u'jt_nn.medium': 1, u'tt_dn.small': 1}, u'nodes': []}" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/8abc5af5e9424955a3f05e9fd2a62a52
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/9b5123a0b70846c9a4d0466b75209e5d
 response = 200
 
 200 == 200
 {u'status': u'Active', u'service_urls': {}, u'name': u'qacluster-1', u'base_image_id': u'd9342ba8-4c51-441c-8d5b-f9e14a901299', u'node_templates': {u'jt_nn.medium': 1, u'tt_dn.small': 1}, u'nodes': []} == {u'status': u'Active', u'service_urls': {}, u'name': u'qacluster-1', u'base_image_id': u'd9342ba8-4c51-441c-8d5b-f9e14a901299', u'node_templates': {u'jt_nn.medium': 1, u'tt_dn.small': 1}, u'nodes': []}
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.169"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can create cluster" time="0.15"><system-out>
 <![CDATA[Steps:
        Given cluster data ... passed
         When User create cluster ... passed
@@ -97,7 +97,7 @@ response = 202
 202 == 202
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has three cluster" time="0.207"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if list has three cluster" time="0.137"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -111,19 +111,19 @@ response = 200
 [u'qacluster-1', u'qacluster-2', u'qacluster-3'] == [u'qacluster-1', u'qacluster-2', u'qacluster-3']
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.154"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.123"><system-out>
 <![CDATA[Steps:
         When User delete cluster with id: "0" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/8abc5af5e9424955a3f05e9fd2a62a52
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/9b5123a0b70846c9a4d0466b75209e5d
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if one cluster delete" time="0.28"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if one cluster delete" time="0.129"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -137,19 +137,19 @@ response = 200
 [u'qacluster-2', u'qacluster-3'] == [u'qacluster-2', u'qacluster-3']
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.153"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.112"><system-out>
 <![CDATA[Steps:
         When User delete cluster with id: "2" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/786f9eb19828425d9c5de99ba138832e
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/99e692c0ffbb45ab9464951f2479c520
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if one cluster delete" time="0.132"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if one cluster delete" time="0.137"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
@@ -163,19 +163,19 @@ response = 200
 [u'qacluster-2'] == [u'qacluster-2']
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.126"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can delete cluster by ID" time="0.129"><system-out>
 <![CDATA[Steps:
         When User delete cluster with id: "1" ... passed
         Then Response is "204" ... passed
 
 Captured stdout:
-URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/0806d71da38547fc9b99f5a6e29e6359
+URL = http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255/clusters/0d5fa3cef4b44c21aeacaa4bb370e693
 response = 204
 
 204 == 204
 
 ]]>
-</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if all cluster is delete" time="0.135"><system-out>
+</system-out></testcase><testcase classname="clusters.Test of cluster section" name="User can get clusters, if all cluster is delete" time="0.128"><system-out>
 <![CDATA[Steps:
         When User see clusters ... passed
         Then Response is "200" ... passed
