@@ -29,7 +29,7 @@ Feature: Test of template section
         When User create template
         Then Response is "202"
 
-    Scenario: User can see templates, if list has two templates
+    Scenario: User can see templates
         When User see templates
         Then Response is "200"
         And Response list of list node_templates:"[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium', u'QA-node-1']"

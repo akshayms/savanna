@@ -43,6 +43,10 @@ Feature: Test of delete template with wrong param
         Then Response is "200"
         And Response list of list node_templates:"[u'jt_nn.small', u'jt_nn.medium', u'jt.small', u'jt.medium', u'nn.small', u'nn.medium', u'tt_dn.small', u'tt_dn.medium']"
 
-    Scenario: User can delete template
-        #When User delete template with id: "0"
+    Scenario: User can't delete template, if template already delete
+        When User delete template with id: "0"
+        #Then Response is "404"
+
+    Scenario: User can't delete template, if template non exist
+        When User delete template with id: "101"
         #Then Response is "404"

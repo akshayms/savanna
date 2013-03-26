@@ -1,4 +1,5 @@
 #baseurl = "http://172.18.79.139:9000/v0.2/6b26f08455ec449ea7a2d3da75339255"
 #token = "af34f52c3ad84fdc8438b07d80366afe"
 baseurl = "http://127.0.0.1:8080/v0.2/6b26f08455ec449ea7a2d3da75339255"
-token = "cdf40fa543f04d6dbf296343d25753a5"
+token = "3b2a51bcdb934171b01af92609699f36"
+
