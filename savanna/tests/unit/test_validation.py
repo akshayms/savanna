@@ -139,6 +139,7 @@ class TestValidationApi(unittest.TestCase):
 
         self.app = app.test_client()
         self.url = '/v0.2/some-tenant-id/clusters.json'
+        self.url_not_json = '/v0.2/some-tenant-id/clusters/'
 
         self.cluster_data = dict(
             cluster=dict(
@@ -162,23 +163,129 @@ class TestValidationApi(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(self.db_path)
 
-    def test_required_cluster_name(self):
-        body = self.cluster_data.copy()
-        body['cluster'].pop('name')
+    def _test_response_validation_error_400(self, body):
         rv = self.app.post(self.url, data=json.dumps(body))
-        self.assertEquals(rv.status_code, 400)
         resp = json.loads(rv.data)
         self.assertEquals(resp['error_name'], u'VALIDATION_ERROR')
         self.assertEquals(resp['error_code'], 400)
 
-    def test_blank_cluster_name(self):
-        body = self.cluster_data.copy()
-        body['cluster']['name'] = ''
-        # LOG.debug(body)
+    def _test_response_image_not_found_400(self, body):
         rv = self.app.post(self.url, data=json.dumps(body))
-
-        self.assertEquals(rv.status_code, 400)
         resp = json.loads(rv.data)
-        # LOG.debug(resp)
-        self.assertEquals(resp['error_name'], u'VALIDATION_ERROR')
+        self.assertEquals(resp['error_name'], u'IMAGE_NOT_FOUND')
         self.assertEquals(resp['error_code'], 400)
+
+    def _test_cluster_name(self, name):
+        body = self.cluster_data.copy()
+        body['cluster']['name'] = name
+        self._test_response_validation_error_400(body)
+
+    def _test_base_image_id(self, base_image_id):
+        body = self.cluster_data.copy()
+        body['cluster']['base_image_id'] = base_image_id
+        if base_image_id == '':
+            self._test_response_validation_error_400(body)
+        else:
+            self._test_response_image_not_found_400(body)
+
+    def _test_node_template(self, node_type, count):
+        body = self.cluster_data.copy()
+        body['cluster']['node_templates'][node_type] = count
+        self._test_response_validation_error_400(body)
+
+    def _test_cluster_body(self, component):
+        body = self.cluster_data.copy()
+        body['cluster'].pop(component)
+        self._test_response_validation_error_400(body)
+
+
+    def test_positive_scripts(self):
+        rv = self.app.get(self.url)
+        self.assertEquals(rv.status_code, 200)
+        data = json.loads(rv.data)
+        data = data['clusters']
+        self.assertEquals(data, [])
+
+        rv = self.app.post(self.url, data=json.dumps(self.cluster_data))
+        self.assertEquals(rv.status_code, 202)
+        data = json.loads(rv.data)
+        data = data['cluster']
+        cluster_id = data.pop(u'id')
+        self.assertEquals(data, {
+                u'status': u'Starting',
+                u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'test-image',
+            u'node_templates': {
+                u'jt_nn.medium': 1,
+                u'tt_dn.small': 5
+            },
+            u'nodes': []
+        })
+
+        get = self.app.get(self.url_not_json + cluster_id)
+        self.assertEquals(get.status_code, 200)
+        get_data = json.loads(get.data)
+        get_data = get_data['cluster']
+        self.assertEquals(get_data.pop(u'id'), cluster_id)
+        self.assertEquals(get_data, {
+                                        u'status': u'Starting',
+                                        u'service_urls': {},
+                                        u'name': u'test-cluster',
+                                        u'base_image_id': u'test-image',
+                                        u'node_templates':
+                                        {
+                                            u'jt_nn.medium': 1,
+                                            u'tt_dn.small': 5
+                                        },
+                                        u'nodes': []
+                                    })
+
+        rv = self.app.delete(self.url_not_json + cluster_id)
+        self.assertEquals(rv.status_code, 204)
+
+        sec_get = self.app.get(self.url_not_json + cluster_id)
+        self.assertEquals(sec_get.status_code, 200)
+        sec_get_data = json.loads(sec_get.data)
+        sec_get_data = sec_get_data['cluster']
+        self.assertEquals(sec_get_data.pop(u'id'), cluster_id)
+        self.assertEquals(sec_get_data, {
+                                            u'base_image_id': u'test-image',
+                                            u'name': u'test-cluster',
+                                            u'node_templates':
+                                            {
+                                                u'jt_nn.medium': 1,
+                                                u'tt_dn.small': 5
+                                            },
+                                            u'nodes': [],
+                                            u'service_urls': {},
+                                            u'status': u'Stoping'
+                                        })
+
+
+    def test_validation_cluster_name(self):
+        self._test_cluster_name('')
+        self._test_cluster_name('@#$')
+        self._test_cluster_name('ab cd')
+
+    def test_validation_base_image_id(self):
+        self._test_base_image_id('')
+        self._test_base_image_id('abc')
+
+    def test_validation_node_template(self):
+        self._test_node_template('jt_nn.medium', -1)
+        self._test_node_template('jt_nn.medium', 'abc')
+        self._test_node_template('jt_nn.medium', None)
+
+        self._test_node_template('tt_dn.small', -1)
+        self._test_node_template('tt_dn.small', 'abc')
+        self._test_node_template('tt_dn.small', None)
+
+    def test_validation_cluster_body(self):
+        self._test_cluster_body('name')
+        self._test_cluster_body('base_image_id')
+        self._test_cluster_body('node_templates')
+
+
+
+
