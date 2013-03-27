@@ -440,6 +440,55 @@ class ValidationTestForNTApi(unittest.TestCase):
         sec_ip = thr_data.pop(u'id')
         self.del_nt(sec_ip, 204)
 
+    def test_create_nt_with_empty_json(self):
+        body = {}
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_name_json(self):
+        body = self.nn.copy()
+        del body['node_template']['name']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_node_type_json(self):
+        body = self.nn.copy()
+        del body['node_template']['node_type']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_flavor_id_json(self):
+        body = self.nn.copy()
+        del body['node_template']['flavor_id']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_node_param_json_nn(self):
+        body = self.nn.copy()
+        del body['node_template']['name_node']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_node_param_json_jt(self):
+        body = self.jt.copy()
+        del body['node_template']['job_tracker']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_node_param_json_jtnn(self):
+        body = self.jtnn.copy()
+        del body['node_template']['job_tracker']
+        del body['node_template']['name_node']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
+    def test_create_nt_without_node_param_json_ttdn(self):
+        body = self.ttdn.copy()
+        del body['node_template']['task_tracker']
+        del body['node_template']['data_node']
+        rv = self.post_nt(body, 400)
+        self.assertEquals(rv['error_name'], '')
+
 def _get_templates_stub_data():
     return {
         u'node_templates': [
