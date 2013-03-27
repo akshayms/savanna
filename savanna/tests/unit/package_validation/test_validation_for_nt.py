@@ -287,7 +287,8 @@ class ValidationTestForNTApi(unittest.TestCase):
                               u'name_node': {u'heap_size': u'2345'},
                               u'job_tracker': {u'heap_size': u'1234'},
                               u'node_type':
-                                  {u'processes': [u'job_tracker', u'name_node'],
+                                  {u'processes': [u'job_tracker',
+                                                  u'name_node'],
                                    u'name': u'JT+NN'},
                               u'flavor_id': u'test_flavor'
                           }
@@ -301,7 +302,8 @@ class ValidationTestForNTApi(unittest.TestCase):
                               u'name_node': {u'heap_size': u'2345'},
                               u'job_tracker': {u'heap_size': u'1234'},
                               u'node_type':
-                                  {u'processes': [u'job_tracker', u'name_node'],
+                                  {u'processes': [u'job_tracker',
+                                                  u'name_node'],
                                    u'name': u'JT+NN'},
                               u'flavor_id': u'test_flavor'
                           }
@@ -433,61 +435,83 @@ class ValidationTestForNTApi(unittest.TestCase):
         sec_body = self.ttdn.copy()
         sec_body['node_template']['name'] = 'sec-name'
         sec_data = self.post_nt(sec_body, 400)
-        self.assertEquals(sec_data['error_name'], 'OBJECT_NOT_FOUND')
+        self.assertEquals(sec_data['error_name'],
+                          'NODE_TEMPLATE_ALREADY_EXISTS')
         self.del_nt(ip, 204)
         thr_data = self.post_nt(sec_body, 202)
         thr_data = thr_data['node_template']
         sec_ip = thr_data.pop(u'id')
         self.del_nt(sec_ip, 204)
 
-    def test_create_nt_with_empty_json(self):
-        body = {}
-        rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+#--------------------incorrect_JSON--------------------------------------------
+
+    # def test_create_nt_with_empty_json(self):
+    #     body = dict()
+    #     rv = self.post_nt(body, 400)
+    #     self.assertEquals(rv['error_name'], '')
 
     def test_create_nt_without_name_json(self):
         body = self.nn.copy()
         del body['node_template']['name']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_type_json(self):
         body = self.nn.copy()
         del body['node_template']['node_type']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_flavor_id_json(self):
         body = self.nn.copy()
         del body['node_template']['flavor_id']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_nn(self):
         body = self.nn.copy()
         del body['node_template']['name_node']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_jt(self):
         body = self.jt.copy()
         del body['node_template']['job_tracker']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_jtnn(self):
         body = self.jtnn.copy()
         del body['node_template']['job_tracker']
         del body['node_template']['name_node']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_ttdn(self):
         body = self.ttdn.copy()
         del body['node_template']['task_tracker']
         del body['node_template']['data_node']
         rv = self.post_nt(body, 400)
-        self.assertEquals(rv['error_name'], '')
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
+
+#-------------------------incorrect_value--------------------------------------
+
+    def post_incorrect_nt_ttdn(self, field, value, code, error):
+        body = self.ttdn.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+        return 0
+
+    def test_create_nt_with_incorrect_name_ttdn(self):
+        self.post_incorrect_nt_ttdn('name', '', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '-p', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '1p', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '#p', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '-', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
 
 def _get_templates_stub_data():
     return {
