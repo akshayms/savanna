@@ -8,6 +8,7 @@ import json
 path.append(path.append(".."))
 rest = RestApi.RestApi()
 
+
 @When('User see templates')
 def get_templates(context):
     global error_content
@@ -29,7 +30,8 @@ def get_template(context, n):
     global res_content_get_template
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = "0000000001"
+    except Exception, e:
+        num = "0000000001"
     res = rest.get_template(num)
     status_code = res.status_code
     if status_code == 200:
@@ -65,7 +67,8 @@ def del_template(context, n):
     global status_code
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = "0000000001"
+    except Exception, e:
+        num = "0000000001"
     res = rest.delete_template(num)
     status_code = res.status_code
     if status_code != 204:
@@ -80,7 +83,8 @@ def put_template(context, n):
     global template_body
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = "0000000001"
+    except Exception, e:
+        num = "0000000001"
     res = rest.create_template(template_body, num)
     status_code = res.status_code
     if status_code == 202:

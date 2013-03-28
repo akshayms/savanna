@@ -68,7 +68,7 @@ class RestApi():
         return res
 
     def delete_cluster(self, cluster_id):
-        url = "/clusters/"+str(cluster_id)
+        url = "/clusters/" + str(cluster_id)
         res = self.execute_delete(url)
         return res
 

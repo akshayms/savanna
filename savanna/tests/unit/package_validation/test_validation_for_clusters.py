@@ -64,6 +64,7 @@ def _stub_auth_token(*args, **kwargs):
 
     def _filter(app):
         def _handler(env, start_response):
+            env['HTTP_X_TENANT_ID'] = 'tenant-id-1'
             return app(env, start_response)
 
         return _handler
@@ -220,7 +221,6 @@ class TestValidationApi(unittest.TestCase):
     def _assert_bad_cluster_name(self, name):
         body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster']['name'] = name
-        LOG.debug(name)
         resp = self._create_cluster(body)
         self._assert_validation_error_400(resp)
 
@@ -256,70 +256,6 @@ class TestValidationApi(unittest.TestCase):
         resp = self._create_cluster(body)
         self._assert_validation_error_400(resp)
 
-
-    # def test_positive_scripts(self):
-    #     rv = self.app.get(self.url)
-    #     self.assertEquals(rv.status_code, 200)
-    #     data = json.loads(rv.data)
-    #     data = data['clusters']
-    #     self.assertEquals(data, [])
-    #
-    #     rv = self.app.post(self.url, data=json.dumps(self.cluster_data))
-    #     self.assertEquals(rv.status_code, 202)
-    #     data = json.loads(rv.data)
-    #     data = data['cluster']
-    #     cluster_id = data.pop(u'id')
-    #     self.assertEquals(data, {
-    #             u'status': u'Starting',
-    #             u'service_urls': {},
-    #         u'name': u'test-cluster',
-    #         u'base_image_id': u'test-image',
-    #         u'node_templates': {
-    #             u'jt_nn.medium': 1,
-    #             u'tt_dn.small': 5
-    #         },
-    #         u'nodes': []
-    #     })
-    #
-    #     get = self.app.get(self.url_not_json + cluster_id)
-    #     self.assertEquals(get.status_code, 200)
-    #     get_data = json.loads(get.data)
-    #     get_data = get_data['cluster']
-    #     self.assertEquals(get_data.pop(u'id'), cluster_id)
-    #     self.assertEquals(get_data, {
-    #                                     u'status': u'Starting',
-    #                                     u'service_urls': {},
-    #                                     u'name': u'test-cluster',
-    #                                     u'base_image_id': u'test-image',
-    #                                     u'node_templates':
-    #                                     {
-    #                                         u'jt_nn.medium': 1,
-    #                                         u'tt_dn.small': 5
-    #                                     },
-    #                                     u'nodes': []
-    #                                 })
-    #
-    #     rv = self.app.delete(self.url_not_json + cluster_id)
-    #     self.assertEquals(rv.status_code, 204)
-    #
-    #     sec_get = self.app.get(self.url_not_json + cluster_id)
-    #     self.assertEquals(sec_get.status_code, 200)
-    #     sec_get_data = json.loads(sec_get.data)
-    #     sec_get_data = sec_get_data['cluster']
-    #     self.assertEquals(sec_get_data.pop(u'id'), cluster_id)
-    #     self.assertEquals(sec_get_data, {
-    #                                         u'base_image_id': u'test-image',
-    #                                         u'name': u'test-cluster',
-    #                                         u'node_templates':
-    #                                         {
-    #                                             u'jt_nn.medium': 1,
-    #                                             u'tt_dn.small': 5
-    #                                         },
-    #                                         u'nodes': [],
-    #                                         u'service_urls': {},
-    #                                         u'status': u'Stoping'
-    #                                     })
-
     #Negative tests cluster creation
     def test_cluster_name_validation(self):
         self._assert_bad_cluster_name('')
@@ -332,11 +268,19 @@ class TestValidationApi(unittest.TestCase):
             name += str
         self._assert_bad_cluster_name(name)
 
+    def test_cluster_creation_without_json(self):
+        body = dict(cluster=dict())
+        resp = self._create_cluster(body)
+        self._assert_validation_error_400(resp)
+
+        #----------------------return 500---------------------------
+        #body = dict()
+        #resp = self._create_cluster(body)
+
     def test_duplicate_cluster_creation(self):
         body = self.cluster_data_jtnn_ttdn.copy()
         self._create_cluster(body)
         resp = self._create_cluster(body)
-
         self._assert_error(resp, u'CLUSTER_NAME_ALREADY_EXISTS', 400)
 
     def test_base_image_id_validation(self):

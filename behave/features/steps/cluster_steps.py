@@ -9,6 +9,7 @@ import json
 path.append(path.append(".."))
 rest = RestApi.RestApi()
 
+
 @When('User see clusters')
 def get_clusters(context):
     global status_code
@@ -30,7 +31,8 @@ def get_cluster(context, n):
     global error_content
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = 0000000000001
+    except Exception, e:
+        num = 0000000000001
     res = rest.get_cluster(num)
     status_code = res.status_code
     if status_code == 200:
@@ -67,7 +69,8 @@ def del_cluster(context, n):
     global error_content
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = 0000000000001
+    except Exception, e:
+        num = 0000000000001
     res = rest.delete_cluster(num)
     status_code = res.status_code
     if status_code != 204:
@@ -82,7 +85,8 @@ def put_cluster(context, n):
     global error_content
     try:
         num = context.ids[int(n)]
-    except Exception, e: num = 0000000000001
+    except Exception, e:
+        num = 0000000000001
     res = rest.create_cluster(cluster_body, num)
     status_code = res.status_code
     if status_code == 202:
