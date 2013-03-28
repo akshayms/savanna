@@ -18,7 +18,7 @@ import tempfile
 import unittest
 import uuid
 import os
-import  random as random_number
+import random as random_number
 
 import eventlet
 from oslo.config import cfg
@@ -142,7 +142,7 @@ class ValidationTestForNTApi(unittest.TestCase):
         self.app = app.test_client()
         self.url = '/v0.2/some-tenant-id/node-templates.json'
         self.url_not_json = '/v0.2/some-tenant-id/node-templates/'
-        self.long_field = "qwertyuio"
+        self.long_field = "qwertyuiop"
         for i in range(23):
             self.long_field += "%d" % random_number.randint(1000000000,
                                                             9999999999)
@@ -236,7 +236,7 @@ class ValidationTestForNTApi(unittest.TestCase):
     def del_nt(self, ip, code):
         rv = self.app.delete(self.url_not_json + ip)
         self.assertEquals(rv.status_code, code)
-        if rv.status_code!=204:
+        if rv.status_code != 204:
             data = json.loads(rv.data)
             return data
 
@@ -292,32 +292,31 @@ class ValidationTestForNTApi(unittest.TestCase):
         data = self.post_nt(body, 202)
         data = data['node_template']
         ip = data.pop(u'id')
-        self.assertEquals(data,
-                        {
-                            u'name': u'test-template-2',
-                            u'data_node': {u'heap_size': u'2345'},
-                            u'task_tracker': {u'heap_size': u'1234'},
-                            u'node_type':
-                                {u'processes': [u'task_tracker', u'data_node'],
-                                u'name': u'TT+DN'},
-                            u'flavor_id': u'test_flavor'
-                        }
+        self.assertEquals(data, {
+            u'name': u'test-template-2',
+            u'data_node': {u'heap_size': u'2345'},
+            u'task_tracker': {u'heap_size': u'1234'},
+            u'node_type':
+            {u'processes': [u'task_tracker', u'data_node'],
+            u'name': u'TT+DN'},
+            u'flavor_id': u'test_flavor'
+        }
         )
         get_data = self.get_nt(ip, 200)
         LOG.debug("!!!!!!!!!!!!!!!{}!!!!!!!!!!!!!!!!!!!!!")
         LOG.debug(get_data)
         get_data = get_data['node_template']
         del get_data[u'id']
-        self.assertEquals(get_data,
-                          {
-                              u'name': u'test-template-2',
-                              u'data_node': {u'heap_size': u'2345'},
-                              u'task_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                {u'processes': [u'task_tracker', u'data_node'],
-                                u'name': u'TT+DN'},
-                              u'flavor_id': u'test_flavor'
-                          }
+        self.assertEquals(get_data, {
+            u'name': u'test-template-2',
+            u'data_node': {u'heap_size': u'2345'},
+            u'task_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'task_tracker',
+                u'data_node'],
+                u'name': u'TT+DN'},
+            u'flavor_id': u'test_flavor'
+        }
         )
         self.del_nt(ip, 204)
 
@@ -326,33 +325,29 @@ class ValidationTestForNTApi(unittest.TestCase):
         data = self.post_nt(body, 202)
         data = data['node_template']
         ip = data.pop(u'id')
-        self.assertEquals(data,
-                          {
-                              u'name': u'test-template-1',
-                              u'name_node': {u'heap_size': u'2345'},
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker',
-                                                  u'name_node'],
-                                   u'name': u'JT+NN'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(data, {
+            u'name': u'test-template-1',
+            u'name_node': {u'heap_size': u'2345'},
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker',
+                u'name_node'],
+            u'name': u'JT+NN'},
+            u'flavor_id': u'test_flavor'
+        })
         get_data = self.get_nt(ip, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
-        self.assertEquals(get_data,
-                          {
-                              u'name': u'test-template-1',
-                              u'name_node': {u'heap_size': u'2345'},
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker',
-                                                  u'name_node'],
-                                   u'name': u'JT+NN'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(get_data, {
+            u'name': u'test-template-1',
+            u'name_node': {u'heap_size': u'2345'},
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker',
+                u'name_node'],
+            u'name': u'JT+NN'},
+            u'flavor_id': u'test_flavor'
+        })
         self.del_nt(ip, 204)
 
     def test_create_and_delete_nt_nn(self):
@@ -360,29 +355,25 @@ class ValidationTestForNTApi(unittest.TestCase):
         data = self.post_nt(body, 202)
         data = data['node_template']
         ip = data.pop(u'id')
-        self.assertEquals(data,
-                          {
-                              u'name': u'test-template-4',
-                              u'name_node': {u'heap_size': u'2345'},
-                              u'node_type':
-                                  {u'processes': [u'name_node'],
-                                   u'name': u'NN'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(data, {
+            u'name': u'test-template-4',
+            u'name_node': {u'heap_size': u'2345'},
+            u'node_type': {
+                u'processes': [u'name_node'],
+                u'name': u'NN'},
+            u'flavor_id': u'test_flavor'
+        })
         get_data = self.get_nt(ip, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
-        self.assertEquals(get_data,
-                          {
-                              u'name': u'test-template-4',
-                              u'name_node': {u'heap_size': u'2345'},
-                              u'node_type':
-                                  {u'processes': [u'name_node'],
-                                   u'name': u'NN'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(get_data, {
+            u'name': u'test-template-4',
+            u'name_node': {u'heap_size': u'2345'},
+            u'node_type': {
+                u'processes': [u'name_node'],
+                u'name': u'NN'},
+            u'flavor_id': u'test_flavor'
+        })
         delete = self.app.delete(self.url_not_json + ip)
         self.assertEquals(delete.status_code, 204)
 
@@ -391,29 +382,25 @@ class ValidationTestForNTApi(unittest.TestCase):
         data = self.post_nt(body, 202)
         data = data['node_template']
         ip = data.pop(u'id')
-        self.assertEquals(data,
-                          {
-                              u'name': u'test-template-3',
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker'],
-                                   u'name': u'JT'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(data, {
+            u'name': u'test-template-3',
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker'],
+                u'name': u'JT'},
+            u'flavor_id': u'test_flavor'
+        })
         get_data = self.get_nt(ip, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
-        self.assertEquals(get_data,
-                          {
-                              u'name': u'test-template-3',
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker'],
-                                   u'name': u'JT'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(get_data, {
+            u'name': u'test-template-3',
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker'],
+                u'name': u'JT'},
+            u'flavor_id': u'test_flavor'
+        })
         self.del_nt(ip, 204)
 
 #-----------------------negative_tests-----------------------------------------
@@ -435,34 +422,30 @@ class ValidationTestForNTApi(unittest.TestCase):
         data = self.post_nt(body, 202)
         data = data['node_template']
         ip = data.pop(u'id')
-        self.assertEquals(data,
-                          {
-                              u'name': u'test-template-3',
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker'],
-                                   u'name': u'JT'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(data, {
+            u'name': u'test-template-3',
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker'],
+                u'name': u'JT'},
+            u'flavor_id': u'test_flavor'
+        })
         get_data = self.get_nt(ip, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
-        self.assertEquals(get_data,
-                          {
-                              u'name': u'test-template-3',
-                              u'job_tracker': {u'heap_size': u'1234'},
-                              u'node_type':
-                                  {u'processes': [u'job_tracker'],
-                                   u'name': u'JT'},
-                              u'flavor_id': u'test_flavor'
-                          }
-        )
+        self.assertEquals(get_data, {
+            u'name': u'test-template-3',
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker'],
+                u'name': u'JT'},
+            u'flavor_id': u'test_flavor'
+        })
         self.del_nt(ip, 204)
-    #     get_data = self.get_nt(ip, 404)
-    #     self.assertEquals(get_data['error_name'], u'NodeTemplate not found')
-    #     del_data = self.del_nt(ip, 404)
-    #     self.assertEquals(del_data['error_name'], u'NodeTemplate not found')
+        # get_data = self.get_nt(ip, 404)
+        # self.assertEquals(get_data['error_name'], u'NodeTemplate not found')
+        # del_data = self.del_nt(ip, 404)
+        # self.assertEquals(del_data['error_name'], u'NodeTemplate not found')
 
     # def test_get_not_exist_nt(self):
     #     get_data = self.get_nt("000000001", 404)
@@ -470,8 +453,8 @@ class ValidationTestForNTApi(unittest.TestCase):
 
     # def test_delete_not_exist_nt(self):
     #     delete_data = self.del_nt("00000001", 404)
-    #     self.assertEquals(delete_data['error_name'], 'NodeTemplate not found')
-    #TODO: vrovacehv: need uncomment after fixing
+    #     self.assertEquals(delete_data['error_name'],
+    #                       'NodeTemplate not found')
 
     def test_create_nt_with_already_used_name(self):
         body = self.jtnn.copy()
@@ -494,6 +477,11 @@ class ValidationTestForNTApi(unittest.TestCase):
 
     # def test_create_nt_with_empty_json(self):
     #     body = dict()
+    #     rv = self.post_nt(body, 400)
+    #     self.assertEquals(rv['error_name'], '')
+
+    # def test_create_nt_with_empty_json(self):
+    #     body = dict(cluster=dict())
     #     rv = self.post_nt(body, 400)
     #     self.assertEquals(rv['error_name'], '')
 
@@ -552,6 +540,8 @@ class ValidationTestForNTApi(unittest.TestCase):
         self.post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', 'node_template_2',
+                                    400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '!@#$%^&*()_+|{}:"<>?',
                                     400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', self.long_field + "q",
@@ -596,49 +586,49 @@ class ValidationTestForNTApi(unittest.TestCase):
         self.post_incorrect_nt_jtnn('node_type', 'TT+DN',
                                     400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_jt('node_type', 'TT+DN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_nn('node_type', 'TT+DN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_tt('node_type', 'TT+DN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_dn('node_type', 'TT+DN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
 
     def test_create_nt_jtnn_with_wront_objects(self):
         self.post_incorrect_nt_ttdn('node_type', 'JT+NN',
                                     400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_tt('node_type', 'JT+NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_dn('node_type', 'JT+NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_nn('node_type', 'JT+NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_jt('node_type', 'JT+NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
 
     def test_create_nt_nn_with_wront_objects(self):
         self.post_incorrect_nt_ttdn('node_type', 'NN',
                                     400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_jtnn('node_type', 'NN',
-                                    400, 'VALIDATION_ERROR')
+                                    400, 'NODE_PROCESS_DISCREPANCY')
         self.post_incorrect_nt_tt('node_type', 'NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_dn('node_type', 'NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_jt('node_type', 'NN',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
 
     def test_create_nt_jt_with_wront_objects(self):
         self.post_incorrect_nt_ttdn('node_type', 'JT',
                                     400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_jtnn('node_type', 'JT',
-                                    400, 'VALIDATION_ERROR')
+                                    400, 'NODE_PROCESS_DISCREPANCY')
         self.post_incorrect_nt_tt('node_type', 'JT',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_dn('node_type', 'JT',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_nn('node_type', 'JT',
-                                    400, 'VALIDATION_ERROR')
+                                  400, 'VALIDATION_ERROR')
 
 
 def _get_templates_stub_data():
