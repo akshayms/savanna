@@ -1,7 +1,7 @@
 How to Participate
 ==================
 
-You can browse the code at `our github repo <https://github.com/Mirantis/savanna>`_ and :doc:`here <\quickstart>` are the instructions on how to launch Savanna.
+You can browse the code at `the github repo <https://github.com/stackforge/savanna>`_ and :doc:`here <\quickstart>` are the instructions on how to launch Savanna.
 
 If you would like to ask some questions or make proposals,
 feel free to reach us on #savanna irc channel at `freenode <http://freenode.net/>`_.
