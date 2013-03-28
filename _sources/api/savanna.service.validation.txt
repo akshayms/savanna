@@ -1,7 +1,7 @@
-The :mod:`savanna.openstack.test_lib` Module
+The :mod:`savanna.service.validation` Module
 ============================================
 
-.. automodule:: savanna.openstack.test_lib
+.. automodule:: savanna.service.validation
   :members:
   :undoc-members:
   :show-inheritance:

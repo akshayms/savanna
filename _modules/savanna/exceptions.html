@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39488690-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>savanna.exceptions &mdash; savanna 0.1.a210.g4356068 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.a210.g4356068',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.tweet.js"></script>
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+    <script type='text/javascript'>
+        /*$(document).ready(function(){
+            $("#twitter_feed").tweet({
+                username: "openstack",
+                query: "from:openstack",
+                avatar_size: 32,
+                count: 4,
+                loading_text: "loading tweets..."
+            });
+        });*/
+    </script>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for savanna.exceptions</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2013 Mirantis Inc.</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#    http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or</span>
+<span class="c"># implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+
+<span class="kn">import</span> <span class="nn">savanna.openstack.common.exception</span> <span class="kn">as</span> <span class="nn">ex</span>
+
+
+<div class="viewcode-block" id="SavannaException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.SavannaException">[docs]</a><span class="k">class</span> <span class="nc">SavannaException</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">ApiError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base Exception for the project</span>
+
+<span class="sd">    To correctly use this class, inherit from it and define</span>
+<span class="sd">    a &#39;message&#39; and &#39;code&#39; properties.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;An unknown exception occurred&quot;</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="s">&quot;UNKNOWN_EXCEPTION&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
+
+
+<span class="c">## Cluster operations exceptions</span>
+</div>
+<div class="viewcode-block" id="ClusterNameExistedException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.ClusterNameExistedException">[docs]</a><span class="k">class</span> <span class="nc">ClusterNameExistedException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Cluster with name &#39;</span><span class="si">%s</span><span class="s">&#39; already exists&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;CLUSTER_NAME_ALREADY_EXISTS&quot;</span>
+
+</div>
+<div class="viewcode-block" id="ImageNotFoundException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.ImageNotFoundException">[docs]</a><span class="k">class</span> <span class="nc">ImageNotFoundException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Cannot find image with id &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;IMAGE_NOT_FOUND&quot;</span>
+
+</div>
+<div class="viewcode-block" id="NotSingleNameNodeException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NotSingleNameNodeException">[docs]</a><span class="k">class</span> <span class="nc">NotSingleNameNodeException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nn_count</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hadoop cluster should contain only 1 NameNode. &quot;</span> \
+                       <span class="s">&quot;Actual NN count is </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">nn_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NOT_SINGLE_NAME_NODE&quot;</span>
+
+</div>
+<div class="viewcode-block" id="NotSingleJobTrackerException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NotSingleJobTrackerException">[docs]</a><span class="k">class</span> <span class="nc">NotSingleJobTrackerException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jt_count</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hadoop cluster should contain only 1 JobTracker. &quot;</span> \
+                       <span class="s">&quot;Actual JT count is </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">jt_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NOT_SINGLE_JOB_TRACKER&quot;</span>
+
+
+<span class="c">## NodeTemplates operations exceptions</span>
+</div>
+<div class="viewcode-block" id="NodeTemplateNotFoundException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NodeTemplateNotFoundException">[docs]</a><span class="k">class</span> <span class="nc">NodeTemplateNotFoundException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Cannot find NodeTemplate &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NODE_TEMPLATE_NOT_FOUND&quot;</span>
+
+</div>
+<div class="viewcode-block" id="NodeTemplateExistedException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NodeTemplateExistedException">[docs]</a><span class="k">class</span> <span class="nc">NodeTemplateExistedException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;NodeTemplate with name &#39;</span><span class="si">%s</span><span class="s">&#39; already exists&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NODE_TEMPLATE_ALREADY_EXISTS&quot;</span>
+
+</div>
+<div class="viewcode-block" id="FlavorNotFoundException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.FlavorNotFoundException">[docs]</a><span class="k">class</span> <span class="nc">FlavorNotFoundException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Cannot find flavor with name &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;FLAVOR_NOT_FOUND&quot;</span>
+
+</div>
+<div class="viewcode-block" id="DiscrepancyNodeProcessException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.DiscrepancyNodeProcessException">[docs]</a><span class="k">class</span> <span class="nc">DiscrepancyNodeProcessException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Discrepancies in Node Processes. Required: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NODE_PROCESS_DISCREPANCY&quot;</span>
+
+
+<span class="c">## NodeTypes operations exceptions</span>
+</div>
+<div class="viewcode-block" id="NodeTypeNotFoundException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NodeTypeNotFoundException">[docs]</a><span class="k">class</span> <span class="nc">NodeTypeNotFoundException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Cannot find NodeType &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NODE_TYPE_NOT_FOUND&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mirantis Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

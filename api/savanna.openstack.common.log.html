@@ -19,7 +19,7 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <title>The savanna.openstack.common.log Module &mdash; savanna 0.1.a39.gbbb912f documentation</title>
+    <title>The savanna.openstack.common.log Module &mdash; savanna 0.1.a210.g4356068 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,7 +28,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.a39.gbbb912f',
+        VERSION:     '0.1.a210.g4356068',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/jquery.tweet.js"></script>
-    <link rel="top" title="savanna 0.1.a39.gbbb912f documentation" href="../index.html" />
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../index.html" />
     <script type='text/javascript'>
         /*$(document).ready(function(){
             $("#twitter_feed").tweet({
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -96,150 +96,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-savanna.openstack.common.log">
-<span id="the-savanna-openstack-common-log-module"></span><h1>The <a class="reference internal" href="#module-savanna.openstack.common.log" title="savanna.openstack.common.log"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.log</span></tt></a> Module<a class="headerlink" href="#module-savanna.openstack.common.log" title="Permalink to this headline">¶</a></h1>
-<p>Openstack logging handler.</p>
-<p>This module adds to logging functionality by adding the option to specify
-a context object when calling the various log methods.  If the context object
-is not specified, default formatting is used. Additionally, an instance uuid
-may be passed as part of the log message, which is intended to make it easier
-for admins to find messages related to a specific instance.</p>
-<p>It also allows setting of formatting information through conf.</p>
-<dl class="class">
-<dt id="savanna.openstack.common.log.ColorHandler">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">ColorHandler</tt><big>(</big><em>stream=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ColorHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ColorHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.StreamHandler</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.openstack.common.log.ColorHandler.LEVEL_COLORS">
-<tt class="descname">LEVEL_COLORS</tt><em class="property"> = {40: '\x1b[01;31m', 10: '\x1b[00;32m', 50: '\x1b[01;31m', 20: '\x1b[00;36m', 21: '\x1b[01;36m', 30: '\x1b[01;33m'}</em><a class="headerlink" href="#savanna.openstack.common.log.ColorHandler.LEVEL_COLORS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.ColorHandler.format">
-<tt class="descname">format</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ColorHandler.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ColorHandler.format" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.openstack.common.log.ContextAdapter">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">ContextAdapter</tt><big>(</big><em>logger</em>, <em>project_name</em>, <em>version_string</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ContextAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ContextAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.LoggerAdapter</span></tt></p>
-<dl class="method">
-<dt id="savanna.openstack.common.log.ContextAdapter.audit">
-<tt class="descname">audit</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ContextAdapter.audit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ContextAdapter.audit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.ContextAdapter.deprecated">
-<tt class="descname">deprecated</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ContextAdapter.deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ContextAdapter.deprecated" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.ContextAdapter.process">
-<tt class="descname">process</tt><big>(</big><em>msg</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#ContextAdapter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.ContextAdapter.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.ContextAdapter.warn">
-<tt class="descname">warn</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#savanna.openstack.common.log.ContextAdapter.warn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delegate a warning call to the underlying logger, after adding
-contextual information from this adapter instance.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="exception">
-<dt id="savanna.openstack.common.log.DeprecatedConfig">
-<em class="property">exception </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">DeprecatedConfig</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#DeprecatedConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.DeprecatedConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.openstack.common.log.DeprecatedConfig.message">
-<tt class="descname">message</tt><em class="property"> = u'Fatal call to deprecated config: %(msg)s'</em><a class="headerlink" href="#savanna.openstack.common.log.DeprecatedConfig.message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.openstack.common.log.JSONFormatter">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">JSONFormatter</tt><big>(</big><em>fmt=None</em>, <em>datefmt=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#JSONFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.JSONFormatter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.Formatter</span></tt></p>
-<dl class="method">
-<dt id="savanna.openstack.common.log.JSONFormatter.format">
-<tt class="descname">format</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#JSONFormatter.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.JSONFormatter.format" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.JSONFormatter.formatException">
-<tt class="descname">formatException</tt><big>(</big><em>ei</em>, <em>strip_newlines=True</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#JSONFormatter.formatException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.JSONFormatter.formatException" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.openstack.common.log.LegacyFormatter">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">LegacyFormatter</tt><big>(</big><em>fmt=None</em>, <em>datefmt=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#LegacyFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.LegacyFormatter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.Formatter</span></tt></p>
-<p>A context.RequestContext aware formatter configured through flags.</p>
-<p>The flags used to set format strings are: logging_context_format_string
-and logging_default_format_string.  You can also specify
-logging_debug_format_suffix to append extra formatting if the log level is
-debug.</p>
-<p>For information about what variables are available for the formatter see:
-<a class="reference external" href="http://docs.python.org/library/logging.html#formatter">http://docs.python.org/library/logging.html#formatter</a></p>
-<dl class="method">
-<dt id="savanna.openstack.common.log.LegacyFormatter.format">
-<tt class="descname">format</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#LegacyFormatter.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.LegacyFormatter.format" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses contextstring if request_id is set, otherwise default.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="savanna.openstack.common.log.LegacyFormatter.formatException">
-<tt class="descname">formatException</tt><big>(</big><em>exc_info</em>, <em>record=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#LegacyFormatter.formatException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.LegacyFormatter.formatException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format exception output with CONF.logging_exception_prefix.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.openstack.common.log.PublishErrorsHandler">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">PublishErrorsHandler</tt><big>(</big><em>level=0</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#PublishErrorsHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.PublishErrorsHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.Handler</span></tt></p>
-<dl class="method">
-<dt id="savanna.openstack.common.log.PublishErrorsHandler.emit">
-<tt class="descname">emit</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#PublishErrorsHandler.emit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.PublishErrorsHandler.emit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.openstack.common.log.WritableLogger">
-<em class="property">class </em><tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">WritableLogger</tt><big>(</big><em>logger</em>, <em>level=20</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#WritableLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.WritableLogger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>A thin wrapper that responds to <cite>write</cite> and logs.</p>
-<dl class="method">
-<dt id="savanna.openstack.common.log.WritableLogger.write">
-<tt class="descname">write</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#WritableLogger.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.WritableLogger.write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.log.getLogger">
-<tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">getLogger</tt><big>(</big><em>name='unknown'</em>, <em>version='unknown'</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#getLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.getLogger" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.log.set_defaults">
-<tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">set_defaults</tt><big>(</big><em>logging_context_format_string</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#set_defaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.set_defaults" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.log.setup">
-<tt class="descclassname">savanna.openstack.common.log.</tt><tt class="descname">setup</tt><big>(</big><em>product_name</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/log.html#setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.log.setup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup logging.</p>
-</dd></dl>
-
+  <div class="section" id="the-savanna-openstack-common-log-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.log</span></tt> Module<a class="headerlink" href="#the-savanna-openstack-common-log-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -260,7 +118,7 @@ debug.</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -19,7 +19,7 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <title>The savanna.openstack.common.timeutils Module &mdash; savanna 0.1.a39.gbbb912f documentation</title>
+    <title>The savanna.openstack.common.timeutils Module &mdash; savanna 0.1.a210.g4356068 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,7 +28,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.a39.gbbb912f',
+        VERSION:     '0.1.a210.g4356068',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/jquery.tweet.js"></script>
-    <link rel="top" title="savanna 0.1.a39.gbbb912f documentation" href="../index.html" />
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../index.html" />
     <script type='text/javascript'>
         /*$(document).ready(function(){
             $("#twitter_feed").tweet({
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -96,132 +96,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-savanna.openstack.common.timeutils">
-<span id="the-savanna-openstack-common-timeutils-module"></span><h1>The <a class="reference internal" href="#module-savanna.openstack.common.timeutils" title="savanna.openstack.common.timeutils"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.timeutils</span></tt></a> Module<a class="headerlink" href="#module-savanna.openstack.common.timeutils" title="Permalink to this headline">¶</a></h1>
-<p>Time related utilities and helper functions.</p>
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.advance_time_delta">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">advance_time_delta</tt><big>(</big><em>timedelta</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#advance_time_delta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.advance_time_delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Advance overridden time using a datetime.timedelta.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.advance_time_seconds">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">advance_time_seconds</tt><big>(</big><em>seconds</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#advance_time_seconds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.advance_time_seconds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Advance overridden time by seconds.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.clear_time_override">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">clear_time_override</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#clear_time_override"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.clear_time_override" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the overridden time.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.delta_seconds">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">delta_seconds</tt><big>(</big><em>before</em>, <em>after</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#delta_seconds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.delta_seconds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the difference in seconds between two date, time, or
-datetime objects (as a float, to microsecond resolution).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.is_newer_than">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">is_newer_than</tt><big>(</big><em>after</em>, <em>seconds</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#is_newer_than"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.is_newer_than" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return True if after is newer than seconds.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.is_older_than">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">is_older_than</tt><big>(</big><em>before</em>, <em>seconds</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#is_older_than"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.is_older_than" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return True if before is older than seconds.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.is_soon">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">is_soon</tt><big>(</big><em>dt</em>, <em>window</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#is_soon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.is_soon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines if time is going to happen in the next window seconds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Params dt:</th><td class="field-body">the time</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Params window:</th><td class="field-body">minimum seconds to remain to consider the time not soon</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if expiration is within the given duration</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.iso8601_from_timestamp">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">iso8601_from_timestamp</tt><big>(</big><em>timestamp</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#iso8601_from_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.iso8601_from_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a iso8601 formated date from timestamp</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.isotime">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">isotime</tt><big>(</big><em>at=None</em>, <em>subsecond=False</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#isotime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.isotime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stringify time in ISO 8601 format</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.marshall_now">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">marshall_now</tt><big>(</big><em>now=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#marshall_now"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.marshall_now" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an rpc-safe datetime with microseconds.</p>
-<p>Note: tzinfo is stripped, but not required for relative times.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.normalize_time">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">normalize_time</tt><big>(</big><em>timestamp</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#normalize_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.normalize_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize time in arbitrary timezone to UTC naive object</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.parse_isotime">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">parse_isotime</tt><big>(</big><em>timestr</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#parse_isotime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.parse_isotime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse time from ISO 8601 format</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.parse_strtime">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">parse_strtime</tt><big>(</big><em>timestr</em>, <em>fmt='%Y-%m-%dT%H:%M:%S.%f'</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#parse_strtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.parse_strtime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turn a formatted time back into a datetime.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.set_time_override">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">set_time_override</tt><big>(</big><em>override_time=datetime.datetime(2013</em>, <em>3</em>, <em>22</em>, <em>9</em>, <em>58</em>, <em>6</em>, <em>420520)</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#set_time_override"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.set_time_override" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override utils.utcnow to return a constant time or a list thereof,
-one at a time.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.strtime">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">strtime</tt><big>(</big><em>at=None</em>, <em>fmt='%Y-%m-%dT%H:%M:%S.%f'</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#strtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.strtime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns formatted utcnow.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.unmarshall_time">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">unmarshall_time</tt><big>(</big><em>tyme</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#unmarshall_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.unmarshall_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unmarshall a datetime dict.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.utcnow">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">utcnow</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#utcnow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.utcnow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overridable version of utils.utcnow.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.timeutils.utcnow_ts">
-<tt class="descclassname">savanna.openstack.common.timeutils.</tt><tt class="descname">utcnow_ts</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/timeutils.html#utcnow_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.timeutils.utcnow_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Timestamp version of our utcnow function.</p>
-</dd></dl>
-
+  <div class="section" id="the-savanna-openstack-common-timeutils-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.timeutils</span></tt> Module<a class="headerlink" href="#the-savanna-openstack-common-timeutils-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -242,7 +118,7 @@ one at a time.</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

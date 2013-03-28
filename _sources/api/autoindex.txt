@@ -2,7 +2,9 @@
    :maxdepth: 1
 
    savanna.api.v02.rst
+   savanna.cli.rst
    savanna.config.rst
+   savanna.exceptions.rst
    savanna.main.rst
    savanna.middleware.auth_valid.rst
    savanna.openstack.common.context.rst
@@ -21,13 +23,16 @@
    savanna.openstack.common.wsgi.rst
    savanna.openstack.common.xmlutils.rst
    savanna.openstack.commons.rst
-   savanna.openstack.test_lib.rst
    savanna.service.api.rst
    savanna.service.cluster_ops.rst
+   savanna.service.validation.rst
+   savanna.storage.db.rst
    savanna.storage.defaults.rst
    savanna.storage.models.rst
    savanna.storage.storage.rst
+   savanna.tests.unit.base.rst
    savanna.tests.unit.test_api_v02.rst
+   savanna.tests.unit.test_service.rst
    savanna.utils.api.rst
    savanna.utils.openstack.base.rst
    savanna.utils.openstack.nova.rst

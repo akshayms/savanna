@@ -19,7 +19,7 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <title>The savanna.storage.models Module &mdash; savanna 0.1.a39.gbbb912f documentation</title>
+    <title>The savanna.storage.models Module &mdash; savanna 0.1.a210.g4356068 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,7 +28,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.a39.gbbb912f',
+        VERSION:     '0.1.a210.g4356068',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/jquery.tweet.js"></script>
-    <link rel="top" title="savanna 0.1.a39.gbbb912f documentation" href="../index.html" />
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../index.html" />
     <script type='text/javascript'>
         /*$(document).ready(function(){
             $("#twitter_feed").tweet({
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -96,282 +96,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-savanna.storage.models">
-<span id="the-savanna-storage-models-module"></span><h1>The <a class="reference internal" href="#module-savanna.storage.models" title="savanna.storage.models"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.storage.models</span></tt></a> Module<a class="headerlink" href="#module-savanna.storage.models" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="savanna.storage.models.Cluster">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">Cluster</tt><big>(</big><em>name</em>, <em>base_image_id</em>, <em>tenant_id</em>, <em>status=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#Cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.Cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.base_image_id">
-<tt class="descname">base_image_id</tt><a class="headerlink" href="#savanna.storage.models.Cluster.base_image_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.Cluster.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.Cluster.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.node_counts">
-<tt class="descname">node_counts</tt><a class="headerlink" href="#savanna.storage.models.Cluster.node_counts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.nodes">
-<tt class="descname">nodes</tt><a class="headerlink" href="#savanna.storage.models.Cluster.nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.service_urls">
-<tt class="descname">service_urls</tt><a class="headerlink" href="#savanna.storage.models.Cluster.service_urls" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.status">
-<tt class="descname">status</tt><a class="headerlink" href="#savanna.storage.models.Cluster.status" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Cluster.tenant_id">
-<tt class="descname">tenant_id</tt><a class="headerlink" href="#savanna.storage.models.Cluster.tenant_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.ClusterNodeCount">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">ClusterNodeCount</tt><big>(</big><em>cluster_id</em>, <em>node_template_id</em>, <em>count</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#ClusterNodeCount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.ClusterNodeCount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.ClusterNodeCount.cluster_id">
-<tt class="descname">cluster_id</tt><a class="headerlink" href="#savanna.storage.models.ClusterNodeCount.cluster_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ClusterNodeCount.count">
-<tt class="descname">count</tt><a class="headerlink" href="#savanna.storage.models.ClusterNodeCount.count" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ClusterNodeCount.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.ClusterNodeCount.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ClusterNodeCount.node_template_id">
-<tt class="descname">node_template_id</tt><a class="headerlink" href="#savanna.storage.models.ClusterNodeCount.node_template_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.Node">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">Node</tt><big>(</big><em>vm_id</em>, <em>cluster_id</em>, <em>node_template_id</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#Node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.Node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.Node.cluster_id">
-<tt class="descname">cluster_id</tt><a class="headerlink" href="#savanna.storage.models.Node.cluster_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Node.node_template_id">
-<tt class="descname">node_template_id</tt><a class="headerlink" href="#savanna.storage.models.Node.node_template_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.Node.vm_id">
-<tt class="descname">vm_id</tt><a class="headerlink" href="#savanna.storage.models.Node.vm_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.NodeProcess">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">NodeProcess</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#NodeProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.NodeProcess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcess.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.NodeProcess.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcess.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.NodeProcess.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcess.node_process_properties">
-<tt class="descname">node_process_properties</tt><a class="headerlink" href="#savanna.storage.models.NodeProcess.node_process_properties" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.NodeProcessProperty">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">NodeProcessProperty</tt><big>(</big><em>node_process_id</em>, <em>name</em>, <em>required=True</em>, <em>default=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#NodeProcessProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.default">
-<tt class="descname">default</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.default" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.node_process_id">
-<tt class="descname">node_process_id</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.node_process_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.node_template_configs">
-<tt class="descname">node_template_configs</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.node_template_configs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeProcessProperty.required">
-<tt class="descname">required</tt><a class="headerlink" href="#savanna.storage.models.NodeProcessProperty.required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.NodeTemplate">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">NodeTemplate</tt><big>(</big><em>name</em>, <em>node_type_id</em>, <em>tenant_id</em>, <em>flavor_id</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#NodeTemplate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.NodeTemplate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.cluster_node_counts">
-<tt class="descname">cluster_node_counts</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.cluster_node_counts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.flavor_id">
-<tt class="descname">flavor_id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.flavor_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.node_template_configs">
-<tt class="descname">node_template_configs</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.node_template_configs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.node_type_id">
-<tt class="descname">node_type_id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.node_type_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.nodes">
-<tt class="descname">nodes</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplate.tenant_id">
-<tt class="descname">tenant_id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplate.tenant_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.NodeTemplateConfig">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">NodeTemplateConfig</tt><big>(</big><em>node_template_id</em>, <em>node_process_property_id</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#NodeTemplateConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.NodeTemplateConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplateConfig.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplateConfig.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplateConfig.node_process_property_id">
-<tt class="descname">node_process_property_id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplateConfig.node_process_property_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplateConfig.node_template_id">
-<tt class="descname">node_template_id</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplateConfig.node_template_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeTemplateConfig.value">
-<tt class="descname">value</tt><a class="headerlink" href="#savanna.storage.models.NodeTemplateConfig.value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.NodeType">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">NodeType</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#NodeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.NodeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeType.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.NodeType.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeType.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.NodeType.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeType.node_templates">
-<tt class="descname">node_templates</tt><a class="headerlink" href="#savanna.storage.models.NodeType.node_templates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.NodeType.processes">
-<tt class="descname">processes</tt><a class="headerlink" href="#savanna.storage.models.NodeType.processes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="savanna.storage.models.ServiceUrl">
-<em class="property">class </em><tt class="descclassname">savanna.storage.models.</tt><tt class="descname">ServiceUrl</tt><big>(</big><em>cluster_id</em>, <em>name</em>, <em>url</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/models.html#ServiceUrl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.models.ServiceUrl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask_sqlalchemy.Model</span></tt></p>
-<dl class="attribute">
-<dt id="savanna.storage.models.ServiceUrl.cluster_id">
-<tt class="descname">cluster_id</tt><a class="headerlink" href="#savanna.storage.models.ServiceUrl.cluster_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ServiceUrl.id">
-<tt class="descname">id</tt><a class="headerlink" href="#savanna.storage.models.ServiceUrl.id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ServiceUrl.name">
-<tt class="descname">name</tt><a class="headerlink" href="#savanna.storage.models.ServiceUrl.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="savanna.storage.models.ServiceUrl.url">
-<tt class="descname">url</tt><a class="headerlink" href="#savanna.storage.models.ServiceUrl.url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="the-savanna-storage-models-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.storage.models</span></tt> Module<a class="headerlink" href="#the-savanna-storage-models-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -392,7 +118,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

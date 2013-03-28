@@ -19,7 +19,7 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <title>The savanna.openstack.common.jsonutils Module &mdash; savanna 0.1.a39.gbbb912f documentation</title>
+    <title>The savanna.openstack.common.jsonutils Module &mdash; savanna 0.1.a210.g4356068 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,7 +28,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.a39.gbbb912f',
+        VERSION:     '0.1.a210.g4356068',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/jquery.tweet.js"></script>
-    <link rel="top" title="savanna 0.1.a39.gbbb912f documentation" href="../index.html" />
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../index.html" />
     <script type='text/javascript'>
         /*$(document).ready(function(){
             $("#twitter_feed").tweet({
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -96,46 +96,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-savanna.openstack.common.jsonutils">
-<span id="the-savanna-openstack-common-jsonutils-module"></span><h1>The <a class="reference internal" href="#module-savanna.openstack.common.jsonutils" title="savanna.openstack.common.jsonutils"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.jsonutils</span></tt></a> Module<a class="headerlink" href="#module-savanna.openstack.common.jsonutils" title="Permalink to this headline">¶</a></h1>
-<p>JSON related utilities.</p>
-<p>This module provides a few things:</p>
-<blockquote>
-<div><p>1) A handy function for getting an object down to something that can be
-JSON serialized.  See to_primitive().</p>
-<p>2) Wrappers around loads() and dumps().  The dumps() wrapper will
-automatically use to_primitive() for you if needed.</p>
-<p>3) This sets up anyjson to use the loads() and dumps() wrappers if anyjson
-is available.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="savanna.openstack.common.jsonutils.dumps">
-<tt class="descclassname">savanna.openstack.common.jsonutils.</tt><tt class="descname">dumps</tt><big>(</big><em>value</em>, <em>default=&lt;function to_primitive at 0x110151578&gt;</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/jsonutils.html#dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.jsonutils.dumps" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.jsonutils.load">
-<tt class="descclassname">savanna.openstack.common.jsonutils.</tt><tt class="descname">load</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/jsonutils.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.jsonutils.load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.jsonutils.loads">
-<tt class="descclassname">savanna.openstack.common.jsonutils.</tt><tt class="descname">loads</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/jsonutils.html#loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.jsonutils.loads" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="savanna.openstack.common.jsonutils.to_primitive">
-<tt class="descclassname">savanna.openstack.common.jsonutils.</tt><tt class="descname">to_primitive</tt><big>(</big><em>value</em>, <em>convert_instances=False</em>, <em>convert_datetime=True</em>, <em>level=0</em>, <em>max_depth=3</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/jsonutils.html#to_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.jsonutils.to_primitive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a complex object into primitives.</p>
-<p>Handy for JSON serialization. We can optionally handle instances,
-but since this is a recursive function, we could have cyclical
-data structures.</p>
-<p>To handle cyclical data structures we could track the actual objects
-visited in a set, but not all objects are hashable. Instead we just
-track the depth of the object inspections and don&#8217;t go too deep.</p>
-<p>Therefore, convert_instances=True is lossy ... be aware.</p>
-</dd></dl>
-
+  <div class="section" id="the-savanna-openstack-common-jsonutils-module">
+<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.jsonutils</span></tt> Module<a class="headerlink" href="#the-savanna-openstack-common-jsonutils-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -156,7 +118,7 @@ track the depth of the object inspections and don&#8217;t go too deep.</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">savanna 0.1.a39.gbbb912f documentation</a> &raquo;</li> 
+        <li><a href="../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
