@@ -17,12 +17,14 @@ import time
 
 from jinja2 import Environment
 from jinja2 import PackageLoader
-from paramiko import SSHClient, AutoAddPolicy
 from oslo.config import cfg
-from savanna.storage.models import Node, ServiceUrl
-from savanna.storage.db import DB
-from savanna.utils.openstack.nova import novaclient
+import paramiko
+
 from savanna.openstack.common import log as logging
+from savanna.storage.db import DB
+from savanna.storage.models import Node, ServiceUrl
+from savanna.storage.storage import update_cluster_status
+from savanna.utils.openstack.nova import novaclient
 
 
 LOG = logging.getLogger(__name__)
@@ -70,7 +72,7 @@ def _ensure_zero(ret):
 
 
 def _setup_ssh_connection(host, ssh):
-    ssh.set_missing_host_key_policy(AutoAddPolicy())
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(
         host,
         username=CONF.cluster_node.username,
@@ -85,7 +87,7 @@ def _open_channel_and_execute(ssh, cmd):
 
 
 def _execute_command_on_node(host, cmd):
-    ssh = SSHClient()
+    ssh = paramiko.SSHClient()
     try:
         _setup_ssh_connection(host, ssh)
         return _open_channel_and_execute(ssh, cmd)
@@ -120,6 +122,7 @@ def launch_cluster(headers, cluster):
 
         for _ in xrange(0, nc.count):
             node = dict()
+            node['id'] = None
             if ntype == 'JT+NN':
                 node['name'] = '%s-master' % cluster.name
             else:
@@ -132,10 +135,14 @@ def launch_cluster(headers, cluster):
             node['is_up'] = False
             clmap['nodes'].append(node)
 
-    for node in clmap['nodes']:
-        LOG.debug("Starting node for cluster '%s', node: %s, iamge: %s",
-                  cluster.name, node, clmap['image'])
-        _launch_node(nova, node, clmap['image'])
+    try:
+        for node in clmap['nodes']:
+            LOG.debug("Starting node for cluster '%s', node: %s, image: %s",
+                      cluster.name, node, clmap['image'])
+            _launch_node(nova, node, clmap['image'])
+    except Exception, e:
+        _rollback_cluster_creation(cluster, clmap, nova, e)
+        return
 
     all_set = False
 
@@ -169,8 +176,26 @@ def launch_cluster(headers, cluster):
 
 def _launch_node(nova, node, image):
     srv = nova.servers.create(node['name'], image, node['flavor'])
-    #srv = _find_by_name(nova_client.servers.list(), node['name'])
     node['id'] = srv.id
+
+
+def _rollback_cluster_creation(cluster, clmap, nova, error):
+    update_cluster_status("Error", id=cluster.id)
+
+    LOG.warn("Can't launch all vms for cluster '%s': %s", cluster.id, error)
+    for node in clmap['nodes']:
+        if node['id']:
+            _stop_node_silently(nova, cluster, node['id'])
+
+    LOG.info("All vms of cluster '%s' has been stopped", cluster.id)
+
+
+def _stop_node_silently(nova, cluster, vm_id):
+    LOG.debug("Stopping vm '%s' of cluster '%s'", vm_id, cluster.id)
+    try:
+        nova.servers.delete(vm_id)
+    except Exception, e:
+        LOG.error("Can't silently remove node '%s': %s", vm_id, e)
 
 
 def _check_if_up(nova, node):
@@ -178,11 +203,11 @@ def _check_if_up(nova, node):
         # all set
         return
 
-    if not 'ip' in node:
+    if 'ip' not in node:
         srv = _find_by_id(nova.servers.list(), node['id'])
         nets = srv.networks
 
-        if not CONF.nova_internal_net_name in nets:
+        if CONF.nova_internal_net_name not in nets:
             # VM's networking is not configured yet
             return
 
@@ -199,7 +224,7 @@ def _check_if_up(nova, node):
         _ensure_zero(ret)
     except Exception:
         # ssh is not up yet
-        # TODO log error if it takes more than 5 minutes to start-up
+        # TODO(dmescheryakov) log error that takes > 5 minutes to start-up
         return
 
     node['is_up'] = True
@@ -250,7 +275,7 @@ def _setup_node(node, clmap):
     else:
         script_body = clmap['slave_script']
 
-    ssh = SSHClient()
+    ssh = paramiko.SSHClient()
     try:
         _setup_ssh_connection(node['ip'], ssh)
         sftp = ssh.open_sftp()

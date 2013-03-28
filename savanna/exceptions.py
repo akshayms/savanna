@@ -13,12 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.openstack.common.exception import ApiError
+import savanna.openstack.common.exception as ex
 
 
-class SavannaException(ApiError):
-    """
-    Base Exception
+class SavannaException(ex.ApiError):
+    """Base Exception for the project
 
     To correctly use this class, inherit from it and define
     a 'message' and 'code' properties.
@@ -40,7 +39,7 @@ class ClusterNameExistedException(SavannaException):
 
 class ImageNotFoundException(SavannaException):
     def __init__(self, value):
-        self.message = "Cannot find image with name '%s'" % value
+        self.message = "Cannot find image with id '%s'" % value
         self.code = "IMAGE_NOT_FOUND"
 
 

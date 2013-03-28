@@ -18,6 +18,7 @@ import tempfile
 import unittest
 import uuid
 import os
+import  random as random_number
 
 import eventlet
 from oslo.config import cfg
@@ -64,6 +65,7 @@ def _stub_auth_token(*args, **kwargs):
 
     def _filter(app):
         def _handler(env, start_response):
+            env['HTTP_X_TENANT_ID'] = 'tenant-id-1'
             return app(env, start_response)
 
         return _handler
@@ -140,6 +142,11 @@ class ValidationTestForNTApi(unittest.TestCase):
         self.app = app.test_client()
         self.url = '/v0.2/some-tenant-id/node-templates.json'
         self.url_not_json = '/v0.2/some-tenant-id/node-templates/'
+        self.long_field = "qwertyuio"
+        for i in range(23):
+            self.long_field += "%d" % random_number.randint(1000000000,
+                                                            9999999999)
+
         self.jtnn = dict(
             node_template=dict(
                 name='test-template-1',
@@ -241,6 +248,44 @@ class ValidationTestForNTApi(unittest.TestCase):
             del data.get(u'node_templates')[idx][u'id']
 
         self.assertEquals(data, _get_templates_stub_data())
+
+    def post_incorrect_nt_ttdn(self, field, value, code, error):
+        body = self.ttdn.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+    def post_incorrect_nt_jtnn(self, field, value, code, error):
+        body = self.jtnn.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+    def post_incorrect_nt_jt(self, field, value, code, error):
+        body = self.jt.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+    def post_incorrect_nt_nn(self, field, value, code, error):
+        body = self.nn.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+    def post_incorrect_nt_tt(self, field, value, code, error):
+        body = self.tt.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+    def post_incorrect_nt_dn(self, field, value, code, error):
+        body = self.dn.copy()
+        body['node_template']['%s' % field] = '%s' % value
+        rv = self.post_nt(body, code)
+        self.assertEquals(rv['error_name'], '%s' % error)
+
+#-----------------------positive_tests-----------------------------------------
 
     def test_create_and_delete_nt_ttdn(self):
         body = self.ttdn.copy()
@@ -371,6 +416,8 @@ class ValidationTestForNTApi(unittest.TestCase):
         )
         self.del_nt(ip, 204)
 
+#-----------------------negative_tests-----------------------------------------
+
     def test_create_nt_tt(self):
         body = self.tt.copy()
         data = self.post_nt(body, 400)
@@ -413,17 +460,17 @@ class ValidationTestForNTApi(unittest.TestCase):
         )
         self.del_nt(ip, 204)
     #     get_data = self.get_nt(ip, 404)
-    #     self.assertEquals(get_data['error_name'], u'OBJECT_NOT_FOUND')
+    #     self.assertEquals(get_data['error_name'], u'NodeTemplate not found')
     #     del_data = self.del_nt(ip, 404)
-    #     self.assertEquals(del_data['error_name'], u'OBJECT_NOT_FOUND')
+    #     self.assertEquals(del_data['error_name'], u'NodeTemplate not found')
 
     # def test_get_not_exist_nt(self):
     #     get_data = self.get_nt("000000001", 404)
-    #     self.assertEquals(get_data['error_name'], 'OBJECT_NOT_FOUND')
+    #     self.assertEquals(get_data['error_name'], 'NodeTemplate not found')
 
     # def test_delete_not_exist_nt(self):
     #     delete_data = self.del_nt("00000001", 404)
-    #     self.assertEquals(delete_data['error_name'], 'OBJECT_NOT_FOUND')
+    #     self.assertEquals(delete_data['error_name'], 'NodeTemplate not found')
     #TODO: vrovacehv: need uncomment after fixing
 
     def test_create_nt_with_already_used_name(self):
@@ -496,13 +543,6 @@ class ValidationTestForNTApi(unittest.TestCase):
 
 #-------------------------incorrect_value--------------------------------------
 
-    def post_incorrect_nt_ttdn(self, field, value, code, error):
-        body = self.ttdn.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-        return 0
-
     def test_create_nt_with_incorrect_name_ttdn(self):
         self.post_incorrect_nt_ttdn('name', '', 400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '-p', 400, 'VALIDATION_ERROR')
@@ -512,6 +552,94 @@ class ValidationTestForNTApi(unittest.TestCase):
         self.post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
         self.post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', '!@#$%^&*()_+|{}:"<>?',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('name', self.long_field + "q",
+                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_with_name_with_240_symbols(self):
+        body = self.jtnn.copy()
+        body['node_template']['name'] = 'w'
+        data = self.post_nt(body, 202)
+        LOG.debug(data)
+        data = data['node_template']
+        id = data.pop(u'id')
+        self.del_nt(id, 204)
+
+    def test_create_nt_with_name_with_1_symbol(self):
+        body = self.jtnn.copy()
+        body['node_template']['name'] = self.long_field
+        data = self.post_nt(body, 202)
+        data = data['node_template']
+        ip = data.pop(u'id')
+        self.del_nt(ip, 204)
+
+    def test_create_nt_with_incorrect_node_type(self):
+        self.post_incorrect_nt_ttdn('node_type', '*', 400,
+                                    'NODE_TYPE_NOT_FOUND')
+        self.post_incorrect_nt_ttdn('node_type', 'T', 400,
+                                    'NODE_TYPE_NOT_FOUND')
+        self.post_incorrect_nt_ttdn('node_type', '%', 400,
+                                    'NODE_TYPE_NOT_FOUND')
+        self.post_incorrect_nt_ttdn('node_type', '', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('node_type', self.long_field + "q",
+                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_with_incorrect_flavor_id(self):
+        self.post_incorrect_nt_ttdn('flavor_id', '', 400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_ttdn('flavor_id', self.long_field + 'q',
+                                    400, 'VALIDATION_ERROR')
+
+#-----------mismatch_node_type_and_object--------------------------------------
+
+    def test_create_nt_ttdn_with_wront_objects(self):
+        self.post_incorrect_nt_jtnn('node_type', 'TT+DN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_jt('node_type', 'TT+DN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_nn('node_type', 'TT+DN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_tt('node_type', 'TT+DN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_dn('node_type', 'TT+DN',
+                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_jtnn_with_wront_objects(self):
+        self.post_incorrect_nt_ttdn('node_type', 'JT+NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_tt('node_type', 'JT+NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_dn('node_type', 'JT+NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_nn('node_type', 'JT+NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_jt('node_type', 'JT+NN',
+                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_nn_with_wront_objects(self):
+        self.post_incorrect_nt_ttdn('node_type', 'NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_jtnn('node_type', 'NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_tt('node_type', 'NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_dn('node_type', 'NN',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_jt('node_type', 'NN',
+                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_jt_with_wront_objects(self):
+        self.post_incorrect_nt_ttdn('node_type', 'JT',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_jtnn('node_type', 'JT',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_tt('node_type', 'JT',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_dn('node_type', 'JT',
+                                    400, 'VALIDATION_ERROR')
+        self.post_incorrect_nt_nn('node_type', 'JT',
+                                    400, 'VALIDATION_ERROR')
+
 
 def _get_templates_stub_data():
     return {
