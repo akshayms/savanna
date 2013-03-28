@@ -96,8 +96,142 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-savanna-storage-storage-module">
-<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.storage.storage</span></tt> Module<a class="headerlink" href="#the-savanna-storage-storage-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-savanna.storage.storage">
+<span id="the-savanna-storage-storage-module"></span><h1>The <a class="reference internal" href="#module-savanna.storage.storage" title="savanna.storage.storage"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.storage.storage</span></tt></a> Module<a class="headerlink" href="#module-savanna.storage.storage" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="savanna.storage.storage.create_cluster">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">create_cluster</tt><big>(</big><em>name</em>, <em>base_image_id</em>, <em>tenant_id</em>, <em>templates</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#create_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.create_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new cluster.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; cluster name</li>
+<li><strong>base_image_id</strong> &#8211; base image</li>
+<li><strong>tenant_id</strong> &#8211; tenant</li>
+<li><strong>templates</strong> &#8211; dict of template-&gt;count</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">created cluster</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.create_node_process">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">create_node_process</tt><big>(</big><em>name</em>, <em>properties</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#create_node_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.create_node_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new node process and node process properties.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; process name</li>
+<li><strong>properties</strong> &#8211; array of triples (name, required, default)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">created node process</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.create_node_template">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">create_node_template</tt><big>(</big><em>name</em>, <em>node_type_id</em>, <em>tenant_id</em>, <em>flavor_id</em>, <em>configs</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#create_node_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.create_node_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new node templates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; template name</li>
+<li><strong>node_type_id</strong> &#8211; node type</li>
+<li><strong>tenant_id</strong> &#8211; tenant</li>
+<li><strong>flavor_id</strong> &#8211; flavor</li>
+<li><strong>configs</strong> &#8211; dict of process-&gt;property-&gt;value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">created node template</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.create_node_type">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">create_node_type</tt><big>(</big><em>name</em>, <em>processes</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#create_node_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.create_node_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new node type using specified list of processes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; </li>
+<li><strong>processes</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_cluster">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_cluster</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_cluster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_clusters">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_clusters</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_clusters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_node_template">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_node_template</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_node_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_node_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_node_templates">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_node_templates</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_node_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_node_templates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_node_type">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_node_type</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_node_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_node_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.get_node_types">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">get_node_types</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#get_node_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.get_node_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.terminate_cluster">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">terminate_cluster</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#terminate_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.terminate_cluster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.terminate_node_template">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">terminate_node_template</tt><big>(</big><em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#terminate_node_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.terminate_node_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.storage.storage.update_cluster_status">
+<tt class="descclassname">savanna.storage.storage.</tt><tt class="descname">update_cluster_status</tt><big>(</big><em>new_status</em>, <em>**args</em><big>)</big><a class="reference internal" href="../_modules/savanna/storage/storage.html#update_cluster_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.storage.storage.update_cluster_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 

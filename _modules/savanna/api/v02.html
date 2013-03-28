@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39488690-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>savanna.api.v02 &mdash; savanna 0.1.a210.g4356068 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.a210.g4356068',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.tweet.js"></script>
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+    <script type='text/javascript'>
+        /*$(document).ready(function(){
+            $("#twitter_feed").tweet({
+                username: "openstack",
+                query: "from:openstack",
+                avatar_size: 32,
+                count: 4,
+                loading_text: "loading tweets..."
+            });
+        });*/
+    </script>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for savanna.api.v02</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2013 Mirantis Inc.</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#    http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or</span>
+<span class="c"># implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+
+<span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">savanna.service</span> <span class="kn">import</span> <span class="n">api</span>
+<span class="kn">import</span> <span class="nn">savanna.service.validation</span> <span class="kn">as</span> <span class="nn">v</span>
+<span class="kn">import</span> <span class="nn">savanna.utils.api</span> <span class="kn">as</span> <span class="nn">api_u</span>
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">rest</span> <span class="o">=</span> <span class="n">api_u</span><span class="o">.</span><span class="n">Rest</span><span class="p">(</span><span class="s">&#39;v02&#39;</span><span class="p">,</span> <span class="n">__name__</span><span class="p">)</span>
+
+
+<span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/node-templates&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="templates_list"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_list">[docs]</a><span class="k">def</span> <span class="nf">templates_list</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">node_templates</span><span class="o">=</span><span class="p">[</span><span class="n">nt</span><span class="o">.</span><span class="n">dict</span> <span class="k">for</span> <span class="n">nt</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">get_node_templates</span><span class="p">()])</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&quot;Exception while listing NodeTemplates&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.post</span><span class="p">(</span><span class="s">&#39;/node-templates&#39;</span><span class="p">)</span>
+<span class="nd">@v.validate</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">validate_node_template_create</span><span class="p">)</span>
+<div class="viewcode-block" id="templates_create"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_create">[docs]</a><span class="k">def</span> <span class="nf">templates_create</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">api_u</span><span class="o">.</span><span class="n">request_data</span><span class="p">()</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span>
+
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">create_node_template</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">wrapped_dict</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/node-templates/&lt;template_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="templates_get"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_get">[docs]</a><span class="k">def</span> <span class="nf">templates_get</span><span class="p">(</span><span class="n">template_id</span><span class="p">):</span>
+    <span class="n">nt</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">nt</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_node_template</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">template_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&quot;Exception while getting NodeTemplate by id &quot;</span>
+                                 <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nt</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s">&quot;NodeTemplate with id &#39;</span><span class="si">%s</span><span class="s">&#39; not found&quot;</span>
+                                 <span class="o">%</span> <span class="n">template_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nt</span><span class="o">.</span><span class="n">wrapped_dict</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.put</span><span class="p">(</span><span class="s">&#39;/node-templates/&lt;template_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="templates_update"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_update">[docs]</a><span class="k">def</span> <span class="nf">templates_update</span><span class="p">(</span><span class="n">template_id</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Template update op isn&#39;t implemented (id &#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span>
+                              <span class="o">%</span> <span class="n">template_id</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.delete</span><span class="p">(</span><span class="s">&#39;/node-templates/&lt;template_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="templates_delete"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_delete">[docs]</a><span class="k">def</span> <span class="nf">templates_delete</span><span class="p">(</span><span class="n">template_id</span><span class="p">):</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">terminate_node_template</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">template_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+</div>
+<span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/clusters&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="clusters_list"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_list">[docs]</a><span class="k">def</span> <span class="nf">clusters_list</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">clusters</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">dict</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">get_clusters</span><span class="p">()])</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&#39;Exception while listing Clusters&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.post</span><span class="p">(</span><span class="s">&#39;/clusters&#39;</span><span class="p">)</span>
+<span class="nd">@v.validate</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">validate_cluster_create</span><span class="p">)</span>
+<div class="viewcode-block" id="clusters_create"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_create">[docs]</a><span class="k">def</span> <span class="nf">clusters_create</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">api_u</span><span class="o">.</span><span class="n">request_data</span><span class="p">()</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span>
+
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">create_cluster</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">wrapped_dict</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/clusters/&lt;cluster_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="clusters_get"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_get">[docs]</a><span class="k">def</span> <span class="nf">clusters_get</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&#39;Exception while getting Cluster with id &#39;</span>
+                                 <span class="s">&#39;</span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">api_u</span><span class="o">.</span><span class="n">abort_and_log</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s">&#39;Cluster with id </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s"> not found&#39;</span>
+                                 <span class="o">%</span> <span class="n">cluster_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">wrapped_dict</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.put</span><span class="p">(</span><span class="s">&#39;/clusters/&lt;cluster_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="clusters_update"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_update">[docs]</a><span class="k">def</span> <span class="nf">clusters_update</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Cluster update op isn&#39;t implemented (id &#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span>
+                              <span class="o">%</span> <span class="n">cluster_id</span><span class="p">)</span>
+
+</div>
+<span class="nd">@rest.delete</span><span class="p">(</span><span class="s">&#39;/clusters/&lt;cluster_id&gt;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="clusters_delete"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_delete">[docs]</a><span class="k">def</span> <span class="nf">clusters_delete</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">terminate_cluster</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mirantis Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

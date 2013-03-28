@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39488690-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>savanna.main &mdash; savanna 0.1.a210.g4356068 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.a210.g4356068',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.tweet.js"></script>
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+    <script type='text/javascript'>
+        /*$(document).ready(function(){
+            $("#twitter_feed").tweet({
+                username: "openstack",
+                query: "from:openstack",
+                avatar_size: 32,
+                count: 4,
+                loading_text: "loading tweets..."
+            });
+        });*/
+    </script>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for savanna.main</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2013 Mirantis Inc.</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#    http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or</span>
+<span class="c"># implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+
+<span class="kn">from</span> <span class="nn">eventlet</span> <span class="kn">import</span> <span class="n">monkey_patch</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">keystoneclient.middleware.auth_token</span> <span class="kn">import</span> <span class="n">filter_factory</span> <span class="k">as</span> <span class="n">auth_token</span>
+<span class="kn">from</span> <span class="nn">oslo.config</span> <span class="kn">import</span> <span class="n">cfg</span>
+<span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">default_exceptions</span>
+<span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">HTTPException</span>
+
+<span class="kn">from</span> <span class="nn">savanna.api</span> <span class="kn">import</span> <span class="n">v02</span> <span class="k">as</span> <span class="n">api_v02</span>
+<span class="kn">from</span> <span class="nn">savanna.middleware.auth_valid</span> <span class="kn">import</span> <span class="n">filter_factory</span> <span class="k">as</span> <span class="n">auth_valid</span>
+<span class="kn">from</span> <span class="nn">savanna.storage.db</span> <span class="kn">import</span> <span class="n">setup_storage</span>
+<span class="kn">from</span> <span class="nn">savanna.utils.api</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">savanna.utils.scheduler</span> <span class="kn">import</span> <span class="n">setup_scheduler</span>
+
+<span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">log</span>
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">monkey_patch</span><span class="p">(</span><span class="n">os</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">socket</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">thread</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">opts</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_auth_protocol&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;http&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;Protocol used to access OpenStack Identity service&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_auth_host&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;openstack&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;IP or hostname of machine on which OpenStack Identity &#39;</span>
+                    <span class="s">&#39;service is located&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_auth_port&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;35357&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;Port of OpenStack Identity service&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_admin_username&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;admin&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;This OpenStack user is used to verify provided tokens. &#39;</span>
+                    <span class="s">&#39;The user must have admin role in &lt;os_admin_tenant_name&gt; &#39;</span>
+                    <span class="s">&#39;tenant&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_admin_password&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;nova&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;Password of the admin user&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;os_admin_tenant_name&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;admin&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;Name of tenant where the user is admin&#39;</span><span class="p">),</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;nova_internal_net_name&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;novanetwork&#39;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;Name of network which IPs are given to the VMs&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">CONF</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">CONF</span>
+<span class="n">CONF</span><span class="o">.</span><span class="n">register_opts</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="make_app"><a class="viewcode-back" href="../../api/savanna.main.html#savanna.main.make_app">[docs]</a><span class="k">def</span> <span class="nf">make_app</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;App builder (wsgi)</span>
+
+<span class="sd">    Entry point for Savanna REST API server</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="s">&#39;savanna.api&#39;</span><span class="p">)</span>
+
+    <span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">version_list</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">({</span>
+            <span class="s">&quot;versions&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="s">&quot;v0.2&quot;</span><span class="p">,</span> <span class="s">&quot;status&quot;</span><span class="p">:</span> <span class="s">&quot;CURRENT&quot;</span><span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api_v02</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s">&#39;/v0.2&#39;</span><span class="p">)</span>
+
+    <span class="n">setup_storage</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">setup_scheduler</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_json_error</span><span class="p">(</span><span class="n">ex</span><span class="p">):</span>
+        <span class="n">status_code</span> <span class="o">=</span> <span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">code</span>
+                       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">)</span>
+                       <span class="k">else</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">description</span>
+                       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">)</span>
+                       <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">({</span><span class="s">&#39;error&#39;</span><span class="p">:</span> <span class="n">status_code</span><span class="p">,</span> <span class="s">&#39;error_message&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">},</span>
+                      <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">default_exceptions</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">error_handler_spec</span><span class="p">[</span><span class="bp">None</span><span class="p">][</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_json_error</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">auth_valid</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">)(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">auth_token</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">auth_host</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_auth_host</span><span class="p">,</span>
+        <span class="n">auth_port</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_auth_port</span><span class="p">,</span>
+        <span class="n">auth_protocol</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_auth_protocol</span><span class="p">,</span>
+        <span class="n">admin_user</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_admin_username</span><span class="p">,</span>
+        <span class="n">admin_password</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_admin_password</span><span class="p">,</span>
+        <span class="n">admin_tenant</span><span class="o">=</span><span class="n">CONF</span><span class="o">.</span><span class="n">os_admin_tenant_name</span>
+    <span class="p">)(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mirantis Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

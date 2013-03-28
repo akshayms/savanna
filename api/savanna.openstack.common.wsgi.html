@@ -96,8 +96,129 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-savanna-openstack-common-wsgi-module">
-<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.wsgi</span></tt> Module<a class="headerlink" href="#the-savanna-openstack-common-wsgi-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-savanna.openstack.common.wsgi">
+<span id="the-savanna-openstack-common-wsgi-module"></span><h1>The <a class="reference internal" href="#module-savanna.openstack.common.wsgi" title="savanna.openstack.common.wsgi"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.openstack.common.wsgi</span></tt></a> Module<a class="headerlink" href="#module-savanna.openstack.common.wsgi" title="Permalink to this headline">¶</a></h1>
+<p>Utility methods for working with WSGI servers.</p>
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.ActionDispatcher">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">ActionDispatcher</tt><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#ActionDispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.ActionDispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Maps method name to local methods through action name.</p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.ActionDispatcher.default">
+<tt class="descname">default</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#ActionDispatcher.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.ActionDispatcher.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.ActionDispatcher.dispatch">
+<tt class="descname">dispatch</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#ActionDispatcher.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.ActionDispatcher.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and call local method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.DictSerializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">DictSerializer</tt><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#DictSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.DictSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.ActionDispatcher" title="savanna.openstack.common.wsgi.ActionDispatcher"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.ActionDispatcher</span></tt></a></p>
+<p>Default request body serialization</p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.DictSerializer.default">
+<tt class="descname">default</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#DictSerializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.DictSerializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.DictSerializer.serialize">
+<tt class="descname">serialize</tt><big>(</big><em>data</em>, <em>action='default'</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#DictSerializer.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.DictSerializer.serialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.JSONDeserializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">JSONDeserializer</tt><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#JSONDeserializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.JSONDeserializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.TextDeserializer" title="savanna.openstack.common.wsgi.TextDeserializer"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.TextDeserializer</span></tt></a></p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.JSONDeserializer.default">
+<tt class="descname">default</tt><big>(</big><em>datastring</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#JSONDeserializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.JSONDeserializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.JSONDictSerializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">JSONDictSerializer</tt><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#JSONDictSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.JSONDictSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.DictSerializer" title="savanna.openstack.common.wsgi.DictSerializer"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.DictSerializer</span></tt></a></p>
+<p>Default JSON request body serialization</p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.JSONDictSerializer.default">
+<tt class="descname">default</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#JSONDictSerializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.JSONDictSerializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.TextDeserializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">TextDeserializer</tt><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#TextDeserializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.TextDeserializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.ActionDispatcher" title="savanna.openstack.common.wsgi.ActionDispatcher"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.ActionDispatcher</span></tt></a></p>
+<p>Default request body deserialization</p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.TextDeserializer.default">
+<tt class="descname">default</tt><big>(</big><em>datastring</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#TextDeserializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.TextDeserializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.TextDeserializer.deserialize">
+<tt class="descname">deserialize</tt><big>(</big><em>datastring</em>, <em>action='default'</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#TextDeserializer.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.TextDeserializer.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.XMLDeserializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">XMLDeserializer</tt><big>(</big><em>metadata=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDeserializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDeserializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.TextDeserializer" title="savanna.openstack.common.wsgi.TextDeserializer"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.TextDeserializer</span></tt></a></p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDeserializer.default">
+<tt class="descname">default</tt><big>(</big><em>datastring</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDeserializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDeserializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDeserializer.extract_text">
+<tt class="descname">extract_text</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDeserializer.extract_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDeserializer.extract_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the text field contained by the given node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDeserializer.find_children_named">
+<tt class="descname">find_children_named</tt><big>(</big><em>parent</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDeserializer.find_children_named"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDeserializer.find_children_named" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all of a nodes children who have the given name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDeserializer.find_first_child_named">
+<tt class="descname">find_first_child_named</tt><big>(</big><em>parent</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDeserializer.find_first_child_named"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDeserializer.find_first_child_named" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search a nodes children for the first child with a given name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="savanna.openstack.common.wsgi.XMLDictSerializer">
+<em class="property">class </em><tt class="descclassname">savanna.openstack.common.wsgi.</tt><tt class="descname">XMLDictSerializer</tt><big>(</big><em>metadata=None</em>, <em>xmlns=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDictSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDictSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#savanna.openstack.common.wsgi.DictSerializer" title="savanna.openstack.common.wsgi.DictSerializer"><tt class="xref py py-class docutils literal"><span class="pre">savanna.openstack.common.wsgi.DictSerializer</span></tt></a></p>
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDictSerializer.default">
+<tt class="descname">default</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDictSerializer.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDictSerializer.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.openstack.common.wsgi.XMLDictSerializer.to_xml_string">
+<tt class="descname">to_xml_string</tt><big>(</big><em>node</em>, <em>has_atom=False</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/wsgi.html#XMLDictSerializer.to_xml_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.wsgi.XMLDictSerializer.to_xml_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 
 

@@ -96,8 +96,69 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-savanna-utils-api-module">
-<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">savanna.utils.api</span></tt> Module<a class="headerlink" href="#the-savanna-utils-api-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-savanna.utils.api">
+<span id="the-savanna-utils-api-module"></span><h1>The <a class="reference internal" href="#module-savanna.utils.api" title="savanna.utils.api"><tt class="xref py py-mod docutils literal"><span class="pre">savanna.utils.api</span></tt></a> Module<a class="headerlink" href="#module-savanna.utils.api" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="savanna.utils.api.Rest">
+<em class="property">class </em><tt class="descclassname">savanna.utils.api.</tt><tt class="descname">Rest</tt><big>(</big><em>name</em>, <em>import_name</em>, <em>static_folder=None</em>, <em>static_url_path=None</em>, <em>template_folder=None</em>, <em>url_prefix=None</em>, <em>subdomain=None</em>, <em>url_defaults=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">flask.blueprints.Blueprint</span></tt></p>
+<dl class="method">
+<dt id="savanna.utils.api.Rest.delete">
+<tt class="descname">delete</tt><big>(</big><em>rule</em>, <em>status_code=204</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.utils.api.Rest.get">
+<tt class="descname">get</tt><big>(</big><em>rule</em>, <em>status_code=200</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.utils.api.Rest.post">
+<tt class="descname">post</tt><big>(</big><em>rule</em>, <em>status_code=202</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.utils.api.Rest.put">
+<tt class="descname">put</tt><big>(</big><em>rule</em>, <em>status_code=202</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest.put" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="savanna.utils.api.Rest.route">
+<tt class="descname">route</tt><big>(</big><em>rule</em>, <em>**options</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#Rest.route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.Rest.route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.abort_and_log">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">abort_and_log</tt><big>(</big><em>status_code</em>, <em>descr</em>, <em>exc=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#abort_and_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.abort_and_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.bad_request">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">bad_request</tt><big>(</big><em>error</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#bad_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.bad_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.internal_error">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">internal_error</tt><big>(</big><em>status_code</em>, <em>descr</em>, <em>exc=None</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#internal_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.internal_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.render">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">render</tt><big>(</big><em>res=None</em>, <em>resp_type=None</em>, <em>status=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.render_error_message">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">render_error_message</tt><big>(</big><em>error_code</em>, <em>error_message</em>, <em>error_name</em><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#render_error_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.render_error_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="savanna.utils.api.request_data">
+<tt class="descclassname">savanna.utils.api.</tt><tt class="descname">request_data</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/savanna/utils/api.html#request_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.utils.api.request_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 

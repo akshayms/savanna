@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39488690-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>savanna.storage.storage &mdash; savanna 0.1.a210.g4356068 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.a210.g4356068',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.tweet.js"></script>
+    <link rel="top" title="savanna 0.1.a210.g4356068 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+    <script type='text/javascript'>
+        /*$(document).ready(function(){
+            $("#twitter_feed").tweet({
+                username: "openstack",
+                query: "from:openstack",
+                avatar_size: 32,
+                count: 4,
+                loading_text: "loading tweets..."
+            });
+        });*/
+    </script>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for savanna.storage.storage</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2013 Mirantis Inc.</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#    http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or</span>
+<span class="c"># implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+
+<span class="kn">from</span> <span class="nn">savanna.storage.db</span> <span class="kn">import</span> <span class="n">DB</span>
+
+<span class="kn">from</span> <span class="nn">savanna.storage.models</span> <span class="kn">import</span> <span class="n">NodeTemplate</span><span class="p">,</span> <span class="n">NodeProcess</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> \
+    <span class="n">ClusterNodeCount</span><span class="p">,</span> <span class="n">NodeTemplateConfig</span><span class="p">,</span> <span class="n">NodeType</span><span class="p">,</span> <span class="n">NodeProcessProperty</span>
+<span class="kn">from</span> <span class="nn">savanna.utils.api</span> <span class="kn">import</span> <span class="n">abort_and_log</span>
+
+
+<span class="c">## Node Template ops:</span>
+
+<div class="viewcode-block" id="get_node_template"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_node_template">[docs]</a><span class="k">def</span> <span class="nf">get_node_template</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">NodeTemplate</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="get_node_templates"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_node_templates">[docs]</a><span class="k">def</span> <span class="nf">get_node_templates</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">NodeTemplate</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="create_node_template"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.create_node_template">[docs]</a><span class="k">def</span> <span class="nf">create_node_template</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">node_type_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">flavor_id</span><span class="p">,</span> <span class="n">configs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new node templates.</span>
+
+<span class="sd">    :param name: template name</span>
+<span class="sd">    :param node_type_id: node type</span>
+<span class="sd">    :param tenant_id: tenant</span>
+<span class="sd">    :param flavor_id: flavor</span>
+<span class="sd">    :param configs: dict of process-&gt;property-&gt;value</span>
+<span class="sd">    :return: created node template</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node_template</span> <span class="o">=</span> <span class="n">NodeTemplate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">node_type_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">flavor_id</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_template</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">process_name</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">NodeProcess</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">process_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">process_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">node_process_properties</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span> <span class="ow">and</span> <span class="n">prop</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">prop</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Template </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s">, value missed &#39;</span>
+                                       <span class="s">&#39;for required param: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span>
+                                       <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">process</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">prop</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">default</span>
+            <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">NodeTemplateConfig</span><span class="p">(</span><span class="n">node_template</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prop</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">node_template</span>
+
+</div>
+<div class="viewcode-block" id="terminate_node_template"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.terminate_node_template">[docs]</a><span class="k">def</span> <span class="nf">terminate_node_template</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">NodeTemplate</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">template</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span>
+            <span class="n">abort_and_log</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&quot;There are active nodes created using &quot;</span>
+                               <span class="s">&quot;template &#39;</span><span class="si">%s</span><span class="s">&#39; you trying to terminate&quot;</span>
+                               <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+            <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+
+<span class="c">## Cluster ops:</span>
+</div>
+<div class="viewcode-block" id="get_cluster"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_cluster">[docs]</a><span class="k">def</span> <span class="nf">get_cluster</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="get_clusters"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_clusters">[docs]</a><span class="k">def</span> <span class="nf">get_clusters</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="create_cluster"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.create_cluster">[docs]</a><span class="k">def</span> <span class="nf">create_cluster</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">base_image_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">templates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new cluster.</span>
+
+<span class="sd">    :param name: cluster name</span>
+<span class="sd">    :param base_image_id: base image</span>
+<span class="sd">    :param tenant_id: tenant</span>
+<span class="sd">    :param templates: dict of template-&gt;count</span>
+<span class="sd">    :return: created cluster</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">Cluster</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">base_image_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">templates</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="n">template_id</span> <span class="o">=</span> <span class="n">get_node_template</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">cnc</span> <span class="o">=</span> <span class="n">ClusterNodeCount</span><span class="p">(</span><span class="n">cluster</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+        <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cnc</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">cluster</span>
+
+</div>
+<div class="viewcode-block" id="terminate_cluster"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.terminate_cluster">[docs]</a><span class="k">def</span> <span class="nf">terminate_cluster</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="update_cluster_status"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.update_cluster_status">[docs]</a><span class="k">def</span> <span class="nf">update_cluster_status</span><span class="p">(</span><span class="n">new_status</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">cluster</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">new_status</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">cluster</span>
+
+
+<span class="c">## Node Process ops:</span>
+</div>
+<div class="viewcode-block" id="create_node_process"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.create_node_process">[docs]</a><span class="k">def</span> <span class="nf">create_node_process</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new node process and node process properties.</span>
+
+<span class="sd">    :param name: process name</span>
+<span class="sd">    :param properties: array of triples (name, required, default)</span>
+<span class="sd">    :return: created node process</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">NodeProcess</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">process</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+        <span class="n">prop</span> <span class="o">=</span> <span class="n">NodeProcessProperty</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">process</span>
+
+
+<span class="c">## Node Type ops:</span>
+</div>
+<div class="viewcode-block" id="get_node_type"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_node_type">[docs]</a><span class="k">def</span> <span class="nf">get_node_type</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="get_node_types"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.get_node_types">[docs]</a><span class="k">def</span> <span class="nf">get_node_types</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">NodeType</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="create_node_type"><a class="viewcode-back" href="../../../api/savanna.storage.storage.html#savanna.storage.storage.create_node_type">[docs]</a><span class="k">def</span> <span class="nf">create_node_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">processes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new node type using specified list of processes</span>
+
+<span class="sd">    :param name:</span>
+<span class="sd">    :param processes:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node_type</span> <span class="o">=</span> <span class="n">NodeType</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">node_type</span><span class="o">.</span><span class="n">processes</span> <span class="o">=</span> <span class="n">processes</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_type</span><span class="p">)</span>
+    <span class="n">DB</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">node_type</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">savanna 0.1.a210.g4356068 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mirantis Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
