@@ -141,13 +141,43 @@ class TestValidationApi(unittest.TestCase):
         self.url = '/v0.2/some-tenant-id/clusters.json'
         self.url_not_json = '/v0.2/some-tenant-id/clusters/'
 
-        self.cluster_data_jt_nn_tt_dn = dict(
+        self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
                 name='test-cluster',
                 base_image_id='test-image',
                 node_templates={
                     'jt_nn.medium': 1,
                     'tt_dn.small': 5
+                }
+            ))
+
+        self.cluster_data_jt_nn_ttdn = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'nn.medium': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+
+        self.cluster_data_jtnn = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt_nn.medium': 1
+                }
+            ))
+
+        self.cluster_data_jt_nn = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'nn.medium': 1
                 }
             ))
 
@@ -163,65 +193,68 @@ class TestValidationApi(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(self.db_path)
 
+    def _assert_error(self, resp, name, code):
+        self.assertEquals(resp['error_name'], name)
+        self.assertEquals(resp['error_code'], code)
 
+    def _assert_validation_error_400(self, resp):
+        self._assert_error(resp, u'VALIDATION_ERROR', 400)
 
-    def _response_validation_error_400(self, resp):
-        self.assertEquals(resp['error_name'], u'VALIDATION_ERROR')
-        self.assertEquals(resp['error_code'], 400)
+    def _assert_image_not_found_400(self, resp):
+        self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
 
-    def _response_image_not_found_400(self, resp):
-        self.assertEquals(resp['error_name'], u'IMAGE_NOT_FOUND')
-        self.assertEquals(resp['error_code'], 400)
+    def _assert_node_template_not_found_400(self, resp):
+        self._assert_error(resp, u'NODE_TEMPLATE_NOT_FOUND', 400)
 
-    def _response_node_template_not_found_400(self, resp):
-        self.assertEquals(resp['error_name'], u'NODE_TEMPLATE_NOT_FOUND')
-        self.assertEquals(resp['error_code'], 400)
+    def _assert_not_single_name_node_400(self, resp):
+        self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
 
-    def _response_cluster_name_already_exists(self, resp):
-        self.assertEquals(resp['error_name'], u'CLUSTER_NAME_ALREADY_EXISTS')
-        self.assertEquals(resp['error_code'], 400)
+    def _assert_not_single_job_tracker_400(self, resp):
+        self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
 
     def _create_cluster(self, body):
         rv = self.app.post(self.url, data=json.dumps(body))
         resp = json.loads(rv.data)
         return resp
 
-    def _bad_cluster_name(self, name):
-        body = self.cluster_data_jt_nn_tt_dn.copy()
+    def _assert_bad_cluster_name(self, name):
+        body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster']['name'] = name
+        LOG.debug(name)
         resp = self._create_cluster(body)
-        self._response_validation_error_400(resp)
+        self._assert_validation_error_400(resp)
 
-    def _secondary_cluster_creation(self, body):
-        resp = self._create_cluster(body)
-        resp = self._create_cluster(body)
-        self._response_cluster_name_already_exists(resp)
-
-
-    def _bad_base_image_id(self, base_image_id):
-        body = self.cluster_data_jt_nn_tt_dn.copy()
+    def _assert_bad_base_image_id(self, base_image_id):
+        body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster']['base_image_id'] = base_image_id
         resp = self._create_cluster(body)
         if base_image_id == '':
-            self._response_validation_error_400(resp)
+            self._assert_validation_error_400(resp)
         else:
-            self._response_image_not_found_400(resp)
+            self._assert_image_not_found_400(resp)
 
-    def _bad_node_template(self, body, node_type, count):
+    def _assert_bad_node_template(self, body, node_type, count):
         body['cluster']['node_templates'][node_type] = count
         resp = self._create_cluster(body)
-        self._response_validation_error_400(resp)
+        self._assert_validation_error_400(resp)
 
-    def _bad_node_template_without_node_type(self, body):
+    def _assert_bad_node_template_with_wrong_node_type(self, body):
         resp = self._create_cluster(body)
-        self._response_node_template_not_found_400(resp)
+        self._assert_node_template_not_found_400(resp)
 
+    def _assert_bad_node_template_without_node_type_nn(self, body):
+        resp = self._create_cluster(body)
+        self._assert_not_single_name_node_400(resp)
 
-    def _bad_cluster_body(self, component):
-        body = self.cluster_data_jt_nn_tt_dn.copy()
+    def _assert_bad_node_template_without_node_type_jt(self, body):
+        resp = self._create_cluster(body)
+        self._assert_not_single_job_tracker_400(resp)
+
+    def _assert_bad_cluster_body(self, component):
+        body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster'].pop(component)
         resp = self._create_cluster(body)
-        self._response_validation_error_400(resp)
+        self._assert_validation_error_400(resp)
 
 
     # def test_positive_scripts(self):
@@ -288,28 +321,284 @@ class TestValidationApi(unittest.TestCase):
     #                                     })
 
     #Negative tests cluster creation
-    def test_validation_cluster_name(self):
-        body = self.cluster_data_jt_nn_tt_dn.copy()
+    def test_cluster_name_validation(self):
+        self._assert_bad_cluster_name('')
+        self._assert_bad_cluster_name('@#$')
+        self._assert_bad_cluster_name('ab cd')
 
-        self._secondary_cluster_creation(body)
-        self._bad_cluster_name('')
-        self._bad_cluster_name('@#$')
-        self._bad_cluster_name('ab cd')
+        str = "a"
+        name = "b"
+        while len(name) < 241:
+            name += str
+        self._assert_bad_cluster_name(name)
 
-    def test_validation_base_image_id(self):
-        self._bad_base_image_id('')
-        self._bad_base_image_id('abc')
+    def test_duplicate_cluster_creation(self):
+        body = self.cluster_data_jtnn_ttdn.copy()
+        self._create_cluster(body)
+        resp = self._create_cluster(body)
 
-    def test_validation_node_template(self):
-        body = self.cluster_data_jt_nn_tt_dn
+        self._assert_error(resp, u'CLUSTER_NAME_ALREADY_EXISTS', 400)
 
-        self._bad_node_template(body, 'jt_nn.medium', -1)
-        self._bad_node_template(body, 'jt_nn.medium', 'abc')
-        self._bad_node_template(body, 'jt_nn.medium', None)
+    def test_base_image_id_validation(self):
+        self._assert_bad_base_image_id('')
+        self._assert_bad_base_image_id('abc')
 
-        self._bad_node_template(body, 'tt_dn.small', -1)
-        self._bad_node_template(body, 'tt_dn.small', 'abc')
-        self._bad_node_template(body, 'tt_dn.small', None)
+    def test_node_template_validation(self):
+        body = self.cluster_data_jtnn_ttdn
+
+        self._assert_bad_node_template(body, 'jt_nn.medium', -1)
+        self._assert_bad_node_template(body, 'tt_dn.small', -1)
+        self._assert_bad_node_template(body, 'jt_nn.medium', 0)
+        self._assert_bad_node_template(body, 'tt_dn.small', 0)
+
+        self._assert_bad_node_template(body, 'jt_nn.medium', 'abc')
+        self._assert_bad_node_template(body, 'tt_dn.small', 'abc')
+        self._assert_bad_node_template(body, 'jt_nn.medium', None)
+        self._assert_bad_node_template(body, 'tt_dn.small', None)
+
+        body = self.cluster_data_jt_nn_ttdn
+
+        self._assert_bad_node_template(body, 'jt.medium', -1)
+        self._assert_bad_node_template(body, 'nn.medium', -1)
+        self._assert_bad_node_template(body, 'tt_dn.small', -1)
+        self._assert_bad_node_template(body, 'jt.medium', 0)
+        self._assert_bad_node_template(body, 'nn.medium', 0)
+        self._assert_bad_node_template(body, 'tt_dn.small', 0)
+
+        self._assert_bad_node_template(body, 'jt.medium', 'abc')
+        self._assert_bad_node_template(body, 'nn.medium', 'abc')
+        self._assert_bad_node_template(body, 'tt_dn.small', 'abc')
+        self._assert_bad_node_template(body, 'jt.medium', None)
+        self._assert_bad_node_template(body, 'nn.medium', None)
+        self._assert_bad_node_template(body, 'tt_dn.small', None)
+
+        body = self.cluster_data_jtnn
+
+        self._assert_bad_node_template(body, 'jt_nn.medium', -1)
+        self._assert_bad_node_template(body, 'jt_nn.medium', 0)
+
+        self._assert_bad_node_template(body, 'jt_nn.medium', 'abc')
+        self._assert_bad_node_template(body, 'jt_nn.medium', None)
+
+        body = self.cluster_data_jt_nn
+
+        self._assert_bad_node_template(body, 'jt.medium', -1)
+        self._assert_bad_node_template(body, 'nn.medium', -1)
+        self._assert_bad_node_template(body, 'jt.medium', 0)
+        self._assert_bad_node_template(body, 'nn.medium', 0)
+
+        self._assert_bad_node_template(body, 'jt.medium', 'abc')
+        self._assert_bad_node_template(body, 'nn.medium', 'abc')
+        self._assert_bad_node_template(body, 'jt.medium', None)
+        self._assert_bad_node_template(body, 'nn.medium', None)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-1',
+                base_image_id='test-image',
+                node_templates={
+                    '': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-2',
+                base_image_id='test-image',
+                node_templates={
+                    'abc': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-3',
+                base_image_id='test-image',
+                node_templates={
+                    'jt_nn.medium': 1,
+                    '': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-4',
+                base_image_id='test-image',
+                node_templates={
+                    'jt_nn.medium': 1,
+                    'abc': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-5',
+                base_image_id='test-image',
+                node_templates={
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_without_node_type_nn(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-6',
+                base_image_id='test-image',
+                node_templates={
+                    '': 1,
+                    'nn.medium': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-7',
+                base_image_id='test-image',
+                node_templates={
+                    'abc': 1,
+                    'nn.medium': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-8',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    '': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-9',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'abc': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-10',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'nn.medium': 1,
+                    '': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-11',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'nn.medium': 1,
+                    'abc': 5
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-12',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_without_node_type_nn(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-13',
+                base_image_id='test-image',
+                node_templates={
+                    'nn.medium': 1,
+                    'tt_dn.small': 5
+                }
+            ))
+        self._assert_bad_node_template_without_node_type_jt(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-14',
+                base_image_id='test-image',
+                node_templates={
+                    '': 1
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-14',
+                base_image_id='test-image',
+                node_templates={
+                    'abc': 1
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster-15',
+                base_image_id='test-image',
+                node_templates={}
+            ))
+        self._assert_bad_node_template_without_node_type_nn(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    '': 1
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1,
+                    'abc': 1
+                }
+            ))
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'jt.medium': 1
+                }
+            ))
+        self._assert_bad_node_template_without_node_type_nn(body)
 
         body = dict(
             cluster=dict(
@@ -317,27 +606,33 @@ class TestValidationApi(unittest.TestCase):
                 base_image_id='test-image',
                 node_templates={
                     '': 1,
-                    'tt_dn.small': 5
+                    'nn.medium': 1
                 }
             ))
-        self._bad_node_template_without_node_type(body)
+        self._assert_bad_node_template_with_wrong_node_type(body)
 
         body = dict(
             cluster=dict(
                 name='test-cluster',
                 base_image_id='test-image',
                 node_templates={
-                    'jt_nn.medium': 1,
-                    '': 5
+                    'abc': 1,
+                    'nn.medium': 1
                 }
             ))
-        self._bad_node_template_without_node_type(body)
+        self._assert_bad_node_template_with_wrong_node_type(body)
+
+        body = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='test-image',
+                node_templates={
+                    'nn.medium': 1
+                }
+            ))
+        self._assert_bad_node_template_without_node_type_jt(body)
 
     def test_validation_cluster_body(self):
-        self._bad_cluster_body('name')
-        self._bad_cluster_body('base_image_id')
-        self._bad_cluster_body('node_templates')
-
-
-
-
+        self._assert_bad_cluster_body('name')
+        self._assert_bad_cluster_body('base_image_id')
+        self._assert_bad_cluster_body('node_templates')
