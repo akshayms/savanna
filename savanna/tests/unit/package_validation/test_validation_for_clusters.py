@@ -17,6 +17,7 @@ import json
 import tempfile
 import unittest
 import uuid
+#from eventlet.green import time
 import os
 
 import eventlet
@@ -139,8 +140,7 @@ class TestValidationApi(unittest.TestCase):
         LOG.debug('Test app.config: %s', app.config)
 
         self.app = app.test_client()
-        self.url = '/v0.2/some-tenant-id/clusters.json'
-        self.url_not_json = '/v0.2/some-tenant-id/clusters/'
+        self.url = '/v0.2/some-tenant-id/clusters'
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -233,7 +233,15 @@ class TestValidationApi(unittest.TestCase):
         else:
             self._assert_image_not_found_400(resp)
 
-    def _assert_bad_node_template(self, body, node_type, count):
+    def _assert_n_t_with_not_single_jt_nn(self, body, node_type, count):
+        body['cluster']['node_templates'][node_type] = count
+        resp = self._create_cluster(body)
+        if (node_type == 'jt_nn.medium') or (node_type == 'nn.medium'):
+            self._assert_not_single_name_node_400(resp)
+        else:
+            self._assert_not_single_job_tracker_400(resp)
+
+    def _assert_n_t_with_wrong_number_jt_nn(self, body, node_type, count):
         body['cluster']['node_templates'][node_type] = count
         resp = self._create_cluster(body)
         self._assert_validation_error_400(resp)
@@ -256,10 +264,49 @@ class TestValidationApi(unittest.TestCase):
         resp = self._create_cluster(body)
         self._assert_validation_error_400(resp)
 
+    #-------------------------------------------------------------------------
+    #Negative tests cluster deletion and get cluster
+    #-------------------------------------------------------------------------
+    def test_nonexistent_cluster_deletion_and_get(self):
+        body = self.cluster_data_jtnn_ttdn.copy()
+
+        rv = self.app.post(self.url, data=json.dumps(body))
+        self.assertEquals(rv.status_code, 202)
+        data = json.loads(rv.data)
+        data = data['cluster']
+        cluster_id = data.pop(u'id')
+        self.assertEquals(data, {
+            u'status': u'Starting',
+            u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'test-image',
+            u'node_templates':
+            {
+                u'jt_nn.medium': 1,
+                u'tt_dn.small': 5
+            },
+            u'nodes': []
+        })
+
+        rv_del = self.app.delete(self.url + '/' + cluster_id)
+        self.assertEquals(rv_del.status_code, 204)
+
+        #-------------------return 500--------------------------------------
+        #time.sleep(1)
+        #rv_del = self.app.delete(self.url + '/' + cluster_id)
+        #self.assertEquals(rv_del.status_code, 404)
+
+        #-------------------return 500--------------------------------------
+        #get = self.app.get(self.url + '/' + cluster_id)
+        #self.assertEquals(get.status_code, 404)
+        #-------------------------------------------------------------------
+
+    #-------------------------------------------------------------------------
     #Negative tests cluster creation
+    #-------------------------------------------------------------------------
     def test_cluster_name_validation(self):
         self._assert_bad_cluster_name('')
-        self._assert_bad_cluster_name('@#$')
+        self._assert_bad_cluster_name('ab@#cd')
         self._assert_bad_cluster_name('ab cd')
 
         str = "a"
@@ -268,14 +315,16 @@ class TestValidationApi(unittest.TestCase):
             name += str
         self._assert_bad_cluster_name(name)
 
-    def test_cluster_creation_without_json(self):
+    def test_cluster_creation_with_empty_body(self):
         body = dict(cluster=dict())
         resp = self._create_cluster(body)
         self._assert_validation_error_400(resp)
 
-        #----------------------return 500---------------------------
+    #----------------------return 500---------------------------
+    #def test_cluster_creation_with_empty_json(self):
         #body = dict()
         #resp = self._create_cluster(body)
+    #-----------------------------------------------------------
 
     def test_duplicate_cluster_creation(self):
         body = self.cluster_data_jtnn_ttdn.copy()
@@ -290,51 +339,57 @@ class TestValidationApi(unittest.TestCase):
     def test_node_template_validation(self):
         body = self.cluster_data_jtnn_ttdn
 
-        self._assert_bad_node_template(body, 'jt_nn.medium', -1)
-        self._assert_bad_node_template(body, 'tt_dn.small', -1)
-        self._assert_bad_node_template(body, 'jt_nn.medium', 0)
-        self._assert_bad_node_template(body, 'tt_dn.small', 0)
-
-        self._assert_bad_node_template(body, 'jt_nn.medium', 'abc')
-        self._assert_bad_node_template(body, 'tt_dn.small', 'abc')
-        self._assert_bad_node_template(body, 'jt_nn.medium', None)
-        self._assert_bad_node_template(body, 'tt_dn.small', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'jt_nn.medium', 2)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 0)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', None)
 
         body = self.cluster_data_jt_nn_ttdn
 
-        self._assert_bad_node_template(body, 'jt.medium', -1)
-        self._assert_bad_node_template(body, 'nn.medium', -1)
-        self._assert_bad_node_template(body, 'tt_dn.small', -1)
-        self._assert_bad_node_template(body, 'jt.medium', 0)
-        self._assert_bad_node_template(body, 'nn.medium', 0)
-        self._assert_bad_node_template(body, 'tt_dn.small', 0)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'jt.medium', 2)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'nn.medium', 2)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 0)
 
-        self._assert_bad_node_template(body, 'jt.medium', 'abc')
-        self._assert_bad_node_template(body, 'nn.medium', 'abc')
-        self._assert_bad_node_template(body, 'tt_dn.small', 'abc')
-        self._assert_bad_node_template(body, 'jt.medium', None)
-        self._assert_bad_node_template(body, 'nn.medium', None)
-        self._assert_bad_node_template(body, 'tt_dn.small', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', None)
 
         body = self.cluster_data_jtnn
 
-        self._assert_bad_node_template(body, 'jt_nn.medium', -1)
-        self._assert_bad_node_template(body, 'jt_nn.medium', 0)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'jt_nn.medium', 2)
 
-        self._assert_bad_node_template(body, 'jt_nn.medium', 'abc')
-        self._assert_bad_node_template(body, 'jt_nn.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', None)
 
         body = self.cluster_data_jt_nn
 
-        self._assert_bad_node_template(body, 'jt.medium', -1)
-        self._assert_bad_node_template(body, 'nn.medium', -1)
-        self._assert_bad_node_template(body, 'jt.medium', 0)
-        self._assert_bad_node_template(body, 'nn.medium', 0)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'jt.medium', 2)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', -1)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 0)
+        self._assert_n_t_with_not_single_jt_nn(body, 'nn.medium', 2)
 
-        self._assert_bad_node_template(body, 'jt.medium', 'abc')
-        self._assert_bad_node_template(body, 'nn.medium', 'abc')
-        self._assert_bad_node_template(body, 'jt.medium', None)
-        self._assert_bad_node_template(body, 'nn.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 'abc')
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', None)
+        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', None)
 
         body = dict(
             cluster=dict(

@@ -1,3 +1,9 @@
+commit 6330f7a3260d1fd8fbe01c6a0bfe3ab523bde561
+Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
+Date:   Thu Mar 28 20:53:05 2013 +0400
+
+    add negative tests for cluster
+
 commit b678bee75ba444b375a77556814bc3238cdbab9b
 Merge: f2e9c6e 3852ebb
 Author: vrovachev <vrovachev@mirantis.com>
