@@ -13,25 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import eventlet
 import json
+import os
+from oslo.config import cfg
+import random as random_number
+from savanna.service import api
+from savanna.storage.db import DB
+from savanna.storage.defaults import setup_defaults
+from savanna.storage.models import Node, NodeTemplate
+import savanna.main
+from savanna.main import make_app
+from savanna.openstack.common import log as logging
+from savanna.utils.openstack import nova
+from savanna.utils import scheduler
 import tempfile
 import unittest
 import uuid
-import os
-import random as random_number
-
-import eventlet
-from oslo.config import cfg
-
-from savanna.main import make_app
-from savanna.service import api
-from savanna.storage.defaults import setup_defaults
-from savanna.storage.models import Node, NodeTemplate
-from savanna.storage.db import DB
-import savanna.main
-from savanna.utils import scheduler
-from savanna.utils.openstack import nova
-from savanna.openstack.common import log as logging
 
 LOG = logging.getLogger(__name__)
 
@@ -296,8 +294,9 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'name': u'test-template-2',
             u'data_node': {u'heap_size': u'2345'},
             u'task_tracker': {u'heap_size': u'1234'},
-            u'node_type':
-            {u'processes': [u'task_tracker', u'data_node'],
+            u'node_type': {
+                u'processes': [u'task_tracker',
+                               u'data_node'],
             u'name': u'TT+DN'},
             u'flavor_id': u'test_flavor'
         }
@@ -313,7 +312,7 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'task_tracker': {u'heap_size': u'1234'},
             u'node_type': {
                 u'processes': [u'task_tracker',
-                u'data_node'],
+                               u'data_node'],
                 u'name': u'TT+DN'},
             u'flavor_id': u'test_flavor'
         }
@@ -331,8 +330,8 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'job_tracker': {u'heap_size': u'1234'},
             u'node_type': {
                 u'processes': [u'job_tracker',
-                u'name_node'],
-            u'name': u'JT+NN'},
+                               u'name_node'],
+                u'name': u'JT+NN'},
             u'flavor_id': u'test_flavor'
         })
         get_data = self.get_nt(ip, 200)
@@ -344,8 +343,8 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'job_tracker': {u'heap_size': u'1234'},
             u'node_type': {
                 u'processes': [u'job_tracker',
-                u'name_node'],
-            u'name': u'JT+NN'},
+                               u'name_node'],
+                u'name': u'JT+NN'},
             u'flavor_id': u'test_flavor'
         })
         self.del_nt(ip, 204)
