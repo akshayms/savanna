@@ -110,6 +110,7 @@
 <span class="c"># limitations under the License.</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">oslo.config</span> <span class="kn">import</span> <span class="n">cfg</span>
 <span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">log</span>
@@ -158,8 +159,36 @@
                  <span class="s">&quot;gen templates: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gen</span><span class="p">)</span>
 
 </div></div>
+<div class="viewcode-block" id="SampleConfCmd"><a class="viewcode-back" href="../../api/savanna.cli.html#savanna.cli.SampleConfCmd">[docs]</a><span class="k">class</span> <span class="nc">SampleConfCmd</span><span class="p">(</span><span class="n">BaseCmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates sample conf&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;sample-conf&#39;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SampleConfCmd.add_argument_parser"><a class="viewcode-back" href="../../api/savanna.cli.html#savanna.cli.SampleConfCmd.add_argument_parser">[docs]</a>    <span class="k">def</span> <span class="nf">add_argument_parser</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SampleConfCmd</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">add_argument_parser</span><span class="p">(</span><span class="n">subparsers</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--full&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SampleConfCmd.main"><a class="viewcode-back" href="../../api/savanna.cli.html#savanna.cli.SampleConfCmd.main">[docs]</a>    <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="n">possible_topdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">))</span>
+
+        <span class="n">sample_path</span> <span class="o">=</span> <span class="n">possible_topdir</span> <span class="o">+</span> <span class="s">&quot;/etc/savanna/savanna.conf.sample&quot;</span>
+        <span class="k">if</span> <span class="n">CONF</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">full</span><span class="p">:</span>
+            <span class="n">sample_path</span> <span class="o">+=</span> <span class="s">&quot;-full&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;File &#39;&quot;</span> <span class="o">+</span> <span class="n">sample_path</span> <span class="o">+</span> <span class="s">&quot;&#39; does not exist.&quot;</span>
+
+</div></div>
 <span class="n">CLI_COMMANDS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">ResetDbCmd</span><span class="p">,</span>
+    <span class="n">SampleConfCmd</span>
 <span class="p">]</span>
 
 

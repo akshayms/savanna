@@ -207,8 +207,12 @@
     <span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="n">cluster</span><span class="o">.</span><span class="n">node_counts</span><span class="p">:</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">nc</span><span class="o">.</span><span class="n">node_template</span><span class="o">.</span><span class="n">node_template_configs</span><span class="p">:</span>
+            <span class="n">proc_name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">node_process_property</span><span class="o">.</span><span class="n">node_process</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">proc_name</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+                <span class="n">configs</span><span class="p">[</span><span class="n">proc_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
             <span class="n">name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">node_process_property</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">configs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">configs</span><span class="p">[</span><span class="n">proc_name</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">value</span>
 
         <span class="n">ntype</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">node_template</span><span class="o">.</span><span class="n">node_type</span><span class="o">.</span><span class="n">name</span>
         <span class="n">templ_id</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">node_template</span><span class="o">.</span><span class="n">id</span>
@@ -326,10 +330,65 @@
     <span class="n">node</span><span class="p">[</span><span class="s">&#39;is_up&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
 
 
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span><span class="s">&#39;savanna&#39;</span><span class="p">,</span> <span class="s">&#39;resources&#39;</span><span class="p">))</span>
+
+
 <span class="k">def</span> <span class="nf">_render_template</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span><span class="s">&#39;savanna&#39;</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">))</span>
-    <span class="n">templ</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;resources/</span><span class="si">%s</span><span class="s">.template&#39;</span> <span class="o">%</span> <span class="n">template_name</span><span class="p">)</span>
+    <span class="n">templ</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.template&#39;</span> <span class="o">%</span> <span class="n">template_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">templ</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">ENV_CONFS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;job_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;HADOOP_JOBTRACKER_OPTS=</span><span class="se">\\</span><span class="s">&quot;-Xmx</span><span class="si">%s</span><span class="s">m</span><span class="se">\\</span><span class="s">&quot;&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;name_node&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;HADOOP_NAMENODE_OPTS=</span><span class="se">\\</span><span class="s">&quot;-Xmx</span><span class="si">%s</span><span class="s">m</span><span class="se">\\</span><span class="s">&quot;&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;task_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;HADOOP_TASKTRACKER_OPTS=</span><span class="se">\\</span><span class="s">&quot;-Xmx</span><span class="si">%s</span><span class="s">m</span><span class="se">\\</span><span class="s">&quot;&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;data_node&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;HADOOP_DATANODE_OPTS=</span><span class="se">\\</span><span class="s">&quot;-Xmx</span><span class="si">%s</span><span class="s">m</span><span class="se">\\</span><span class="s">&quot;&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_keys_exist</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">key1</span> <span class="ow">in</span> <span class="nb">map</span> <span class="ow">and</span> <span class="n">key2</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">[</span><span class="n">key1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_environment_confs</span><span class="p">(</span><span class="n">node_configs</span><span class="p">):</span>
+    <span class="s">&quot;Returns list of Hadoop parameters which should be passed via environment&quot;</span>
+
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">process</span><span class="p">,</span> <span class="n">proc_confs</span> <span class="ow">in</span> <span class="n">ENV_CONFS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_format_str</span> <span class="ow">in</span> <span class="n">proc_confs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">_keys_exist</span><span class="p">(</span><span class="n">node_configs</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="ow">not</span> <span class="n">node_configs</span><span class="p">[</span><span class="n">process</span><span class="p">][</span><span class="n">param_name</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_format_str</span> <span class="o">%</span>
+                           <span class="n">node_configs</span><span class="p">[</span><span class="n">process</span><span class="p">][</span><span class="n">param_name</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">lst</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_xml_confs</span><span class="p">(</span><span class="n">node_configs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns list of Hadoop parameters which should be passed into general</span>
+<span class="sd">    configs like core-site.xml&quot;&quot;&quot;</span>
+
+    <span class="c"># For now we assume that all parameters outside of ENV_CONFS</span>
+    <span class="c"># are passed to xml files</span>
+
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">process</span><span class="p">,</span> <span class="n">proc_confs</span> <span class="ow">in</span> <span class="n">node_configs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_value</span> <span class="ow">in</span> <span class="n">proc_confs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">_keys_exist</span><span class="p">(</span><span class="n">ENV_CONFS</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="ow">not</span> <span class="n">param_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">param_name</span><span class="p">,</span> <span class="n">param_value</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">lst</span>
 
 
 <span class="k">def</span> <span class="nf">_pre_cluster_setup</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
@@ -356,28 +415,40 @@
         <span class="p">(</span><span class="s">&#39;</span><span class="si">%%</span><span class="s">%mapred_jobtracker_url</span><span class="si">%%</span><span class="s">%&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:8021&#39;</span> <span class="o">%</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">])</span>
     <span class="p">]</span>
 
-    <span class="n">templ_args</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;configfiles&#39;</span><span class="p">:</span> <span class="n">configfiles</span><span class="p">,</span>
-                  <span class="s">&#39;configs&#39;</span><span class="p">:</span> <span class="n">configs</span><span class="p">,</span>
-                  <span class="s">&#39;slaves&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slaves&#39;</span><span class="p">],</span>
-                  <span class="s">&#39;master_hostname&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">]}</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;nodes&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;is_master&#39;</span><span class="p">]:</span>
+            <span class="n">script_file</span> <span class="o">=</span> <span class="s">&#39;setup-master.sh&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">script_file</span> <span class="o">=</span> <span class="s">&#39;setup-general.sh&#39;</span>
 
-    <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slave_script&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="s">&#39;setup-general.sh&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">templ_args</span><span class="p">)</span>
-    <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_script&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="s">&#39;setup-master.sh&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">templ_args</span><span class="p">)</span>
+        <span class="n">templ_args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;configfiles&#39;</span><span class="p">:</span> <span class="n">configfiles</span><span class="p">,</span>
+            <span class="s">&#39;configs&#39;</span><span class="p">:</span> <span class="n">configs</span><span class="p">,</span>
+            <span class="s">&#39;slaves&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slaves&#39;</span><span class="p">],</span>
+            <span class="s">&#39;master_hostname&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">],</span>
+            <span class="s">&#39;env_configs&#39;</span><span class="p">:</span> <span class="n">_extract_environment_confs</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;configs&#39;</span><span class="p">])</span>
+        <span class="p">}</span>
+
+        <span class="n">node</span><span class="p">[</span><span class="s">&#39;setup_script&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="n">script_file</span><span class="p">,</span> <span class="o">**</span><span class="n">templ_args</span><span class="p">)</span>
+
+        <span class="n">xsl_args</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;props&#39;</span><span class="p">:</span> <span class="n">_extract_xml_confs</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;configs&#39;</span><span class="p">])}</span>
+        <span class="n">node</span><span class="p">[</span><span class="s">&#39;xsl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="s">&#39;config-transform.xsl&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">xsl_args</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_setup_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">clmap</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;is_master&#39;</span><span class="p">]:</span>
-        <span class="n">script_body</span> <span class="o">=</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_script&#39;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">script_body</span> <span class="o">=</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slave_script&#39;</span><span class="p">]</span>
-
     <span class="n">ssh</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">_setup_ssh_connection</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="n">ssh</span><span class="p">)</span>
         <span class="n">sftp</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
-        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-init.sh&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script_body</span><span class="p">)</span>
+
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-cfg.xsl&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xsl&#39;</span><span class="p">])</span>
         <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-init.sh&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;setup_script&#39;</span><span class="p">])</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
         <span class="n">sftp</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-init.sh&#39;</span><span class="p">,</span> <span class="mo">0500</span><span class="p">)</span>
 
         <span class="n">ret</span> <span class="o">=</span> <span class="n">_open_channel_and_execute</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span>
@@ -405,8 +476,10 @@
 
 
 <span class="k">def</span> <span class="nf">_start_cluster</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">clmap</span><span class="p">):</span>
-    <span class="n">ret</span> <span class="o">=</span> <span class="n">_execute_command_on_node</span><span class="p">(</span><span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_ip&#39;</span><span class="p">],</span>
-                                   <span class="s">&#39;su -c /usr/sbin/start-all.sh hadoop&#39;</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">_execute_command_on_node</span><span class="p">(</span>
+        <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_ip&#39;</span><span class="p">],</span>
+        <span class="s">&#39;su -c /usr/sbin/start-all.sh hadoop &gt;&gt;&#39;</span>
+        <span class="s">&#39; /tmp/savanna-hadoop-start-all.log&#39;</span><span class="p">)</span>
     <span class="n">_ensure_zero</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
 
     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Cluster &#39;</span><span class="si">%s</span><span class="s">&#39; successfully started!&quot;</span><span class="p">,</span> <span class="n">cluster</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
