@@ -275,19 +275,20 @@ class ValidationTestForNTApi(ValidationTestCase):
 #-------------------------incorrect_value--------------------------------------
 
     def test_create_nt_with_incorrect_name_ttdn(self):
-        self._post_incorrect_nt_ttdn('name', '', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '-p', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '1p', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '#p', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '-', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', 'node_template_2',
+        param = self.ttdn.copy()
+        self._post_incorrect_nt(param, 'name', '', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '-p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '1p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '#p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '-', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '1', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '#', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', '*', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', 'node_template_2',
                                     400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', '!@#$%^&*()_+|{}:"<>?',
+        self._post_incorrect_nt(param, 'name', '!@#$%^&*()_+|{}:"<>?',
                                     400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('name', self.long_field + "q",
+        self._post_incorrect_nt(param, 'name', self.long_field + "q",
                                     400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_name_with_240_symbols(self):
@@ -307,71 +308,72 @@ class ValidationTestForNTApi(ValidationTestCase):
         nt_id = data.pop(u'id')
         self._del_object(self.url_nt_not_json, nt_id, 204)
 
-    def test_create_nt_with_incorrect_node_type(self):
-        self._post_incorrect_nt_ttdn('node_type', '*', 400,
-                                    'NODE_TYPE_NOT_FOUND')
-        self._post_incorrect_nt_ttdn('node_type', 'T', 400,
-                                    'NODE_TYPE_NOT_FOUND')
-        self._post_incorrect_nt_ttdn('node_type', '%', 400,
-                                    'NODE_TYPE_NOT_FOUND')
-        self._post_incorrect_nt_ttdn('node_type', '', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('node_type', self.long_field + "q",
-                                    400, 'VALIDATION_ERROR')
-
-    def test_create_nt_with_incorrect_flavor_id(self):
-        self._post_incorrect_nt_ttdn('flavor_id', '', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_ttdn('flavor_id', self.long_field + 'q',
-                                    400, 'VALIDATION_ERROR')
+    def test_create_nt_with_incorrect_node_type_flavor_id(self):
+        param = self.ttdn.copy()
+        self._post_incorrect_nt(param, 'node_type', '*', 400,
+                                'NODE_TYPE_NOT_FOUND')
+        self._post_incorrect_nt(param, 'node_type', 'T', 400,
+                                'NODE_TYPE_NOT_FOUND')
+        self._post_incorrect_nt(param, 'node_type', '%', 400,
+                                'NODE_TYPE_NOT_FOUND')
+        self._post_incorrect_nt(param, 'node_type', '',
+                                400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', self.long_field + "q",
+                                400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'flavor_id', '',
+                                400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'flavor_id', self.long_field + 'q',
+                                400, 'VALIDATION_ERROR')
 
 #-----------mismatch_node_type_and_object--------------------------------------
 
     def test_create_nt_ttdn_with_wront_objects(self):
-        self._post_incorrect_nt_jtnn('node_type', 'TT+DN',
+        param = self.jtnn.copy()
+        self._post_incorrect_nt(param, 'node_type', 'TT+DN',
                                     400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_jt('node_type', 'TT+DN',
+        self._post_incorrect_nt(param, 'node_type', 'NN',
+                                     400, 'NODE_PROCESS_DISCREPANCY')
+        self._post_incorrect_nt(param, 'node_type', 'JT',
+                                     400, 'NODE_PROCESS_DISCREPANCY')
+        param = self.jt.copy()
+        self._post_incorrect_nt(param, 'node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_nn('node_type', 'TT+DN',
+        self._post_incorrect_nt(param, 'node_type', 'JT+NN',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'NN',
+                                   400, 'VALIDATION_ERROR')
+        param = self.nn.copy()
+        self._post_incorrect_nt(param, 'node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_tt('node_type', 'TT+DN',
+        self._post_incorrect_nt(param, 'node_type', 'JT+NN',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'JT',
+                                   400, 'VALIDATION_ERROR')
+        param = self.ttdn.copy()
+        self._post_incorrect_nt(param, 'node_type', 'JT+NN',
+                                     400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'NN',
+                                 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'JT',
+                                 400, 'VALIDATION_ERROR')
+        param = self.tt.copy()
+        self._post_incorrect_nt(param, 'node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_dn('node_type', 'TT+DN',
+        self._post_incorrect_nt(param, 'node_type', 'JT+NN',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'JT',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'NN',
+                                   400, 'VALIDATION_ERROR')
+        param = self.dn.copy()
+        self._post_incorrect_nt(param, 'node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-
-    def test_create_nt_jtnn_with_wront_objects(self):
-        self._post_incorrect_nt_ttdn('node_type', 'JT+NN',
-                                    400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_tt('node_type', 'JT+NN',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_dn('node_type', 'JT+NN',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_nn('node_type', 'JT+NN',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_jt('node_type', 'JT+NN',
-                                  400, 'VALIDATION_ERROR')
-
-    def test_create_nt_nn_with_wront_objects(self):
-        self._post_incorrect_nt_ttdn('node_type', 'NN',
-                                    400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_jtnn('node_type', 'NN',
-                                    400, 'NODE_PROCESS_DISCREPANCY')
-        self._post_incorrect_nt_tt('node_type', 'NN',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_dn('node_type', 'NN',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_jt('node_type', 'NN',
-                                  400, 'VALIDATION_ERROR')
-
-    def test_create_nt_jt_with_wront_objects(self):
-        self._post_incorrect_nt_ttdn('node_type', 'JT',
-                                    400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_jtnn('node_type', 'JT',
-                                    400, 'NODE_PROCESS_DISCREPANCY')
-        self._post_incorrect_nt_tt('node_type', 'JT',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_dn('node_type', 'JT',
-                                  400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt_nn('node_type', 'JT',
-                                  400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'JT+NN',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'NN',
+                                   400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'node_type', 'JT',
+                                   400, 'VALIDATION_ERROR')
 
 
 def _get_templates_stub_data():
