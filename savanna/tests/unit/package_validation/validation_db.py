@@ -135,8 +135,8 @@ class ValidationTestCase(SavannaTestCase):
         }
 
         #----------------------add_value_for_clusters--------------------------
-        self.url = '/v0.2/some-tenant-id/clusters'
-        self.url_not_json = '/v0.2/some-tenant-id/clusters/'
+
+        self.url_cluster = '/v0.2/some-tenant-id/clusters'
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -237,68 +237,49 @@ class ValidationTestCase(SavannaTestCase):
         self.assertEquals(resp['error_name'], name)
         self.assertEquals(resp['error_code'], code)
 
-    def _assert_validation_error_400(self, resp):
-        self._assert_error(resp, u'VALIDATION_ERROR', 400)
-
-    def _assert_image_not_found_400(self, resp):
-        self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
-
-    def _assert_node_template_not_found_400(self, resp):
-        self._assert_error(resp, u'NODE_TEMPLATE_NOT_FOUND', 400)
-
-    def _assert_not_single_name_node_400(self, resp):
-        self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
-
-    def _assert_not_single_job_tracker_400(self, resp):
-        self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
-
-    def _create_cluster(self, body):
-        rv = self.app.post(self.url, data=json.dumps(body))
-        resp = json.loads(rv.data)
-        return resp
-
-    def _assert_bad_cluster_name(self, name):
+    def _assert_incorrect_cluster_name(self, name):
         body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster']['name'] = name
-        resp = self._create_cluster(body)
-        self._assert_validation_error_400(resp)
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'VALIDATION_ERROR', 400)
 
-    def _assert_bad_base_image_id(self, base_image_id):
+    def _assert_incorrect_base_image_id(self, base_image_id):
         body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster']['base_image_id'] = base_image_id
-        resp = self._create_cluster(body)
+        resp = self._post_object(self.url_cluster, body, 400)
         if base_image_id == '':
-            self._assert_validation_error_400(resp)
+            self._assert_error(resp, u'VALIDATION_ERROR', 400)
         else:
-            self._assert_image_not_found_400(resp)
+            self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
 
-    def _assert_n_t_with_not_single_jt_nn(self, body, node_type, count):
+    def _assert_not_single_jt_nn(self, body, node_type, count):
         body['cluster']['node_templates'][node_type] = count
-        resp = self._create_cluster(body)
+        resp = self._post_object(self.url_cluster, body, 400)
         if (node_type == 'jt_nn.medium') or (node_type == 'nn.medium'):
-            self._assert_not_single_name_node_400(resp)
+            self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
         else:
-            self._assert_not_single_job_tracker_400(resp)
+            self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
 
-    def _assert_n_t_with_wrong_number_jt_nn(self, body, node_type, count):
+    def _assert_node_template_with_incorrect_number_of_node(self, body,
+                                                            node_type, count):
         body['cluster']['node_templates'][node_type] = count
-        resp = self._create_cluster(body)
-        self._assert_validation_error_400(resp)
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'VALIDATION_ERROR', 400)
 
-    def _assert_bad_node_template_with_wrong_node_type(self, body):
-        resp = self._create_cluster(body)
-        self._assert_node_template_not_found_400(resp)
+    def _assert_node_template_without_node_nn(self, body):
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
 
-    def _assert_bad_node_template_without_node_type_nn(self, body):
-        resp = self._create_cluster(body)
-        self._assert_not_single_name_node_400(resp)
+    def _assert_node_template_without_node_jt(self, body):
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
 
-    def _assert_bad_node_template_without_node_type_jt(self, body):
-        resp = self._create_cluster(body)
-        self._assert_not_single_job_tracker_400(resp)
+    def _assert_node_template_with_incorrect_node(self, body):
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'NODE_TEMPLATE_NOT_FOUND', 400)
 
     def _assert_bad_cluster_body(self, component):
         body = self.cluster_data_jtnn_ttdn.copy()
         body['cluster'].pop(component)
-        resp = self._create_cluster(body)
-        self._assert_validation_error_400(resp)
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'VALIDATION_ERROR', 400)

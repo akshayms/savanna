@@ -21,6 +21,7 @@ from savanna.tests.unit.package_validation.validation_db \
 
 LOG = logging.getLogger(__name__)
 
+
 class TestValidationApiForClusters(ValidationTestCase):
     #-------------------------------------------------------------------------
     #Negative tests cluster deletion and get cluster
@@ -28,9 +29,7 @@ class TestValidationApiForClusters(ValidationTestCase):
     def test_nonexistent_cluster_deletion_and_get(self):
         body = self.cluster_data_jtnn_ttdn.copy()
 
-        rv = self.app.post(self.url, data=json.dumps(body))
-        self.assertEquals(rv.status_code, 202)
-        data = json.loads(rv.data)
+        data = self._post_object(self.url_cluster, body, 202)
         data = data['cluster']
         cluster_id = data.pop(u'id')
         self.assertEquals(data, {
@@ -46,8 +45,8 @@ class TestValidationApiForClusters(ValidationTestCase):
             u'nodes': []
         })
 
-        rv_del = self.app.delete(self.url + '/' + cluster_id)
-        self.assertEquals(rv_del.status_code, 204)
+        data_del = self.app.delete(self.url_cluster + '/' + cluster_id)
+        self.assertEquals(data_del.status_code, 204)
 
         #-------------------return 500--------------------------------------
         #time.sleep(1)
@@ -63,20 +62,20 @@ class TestValidationApiForClusters(ValidationTestCase):
     #Negative tests cluster creation
     #-------------------------------------------------------------------------
     def test_cluster_name_validation(self):
-        self._assert_bad_cluster_name('')
-        self._assert_bad_cluster_name('ab@#cd')
-        self._assert_bad_cluster_name('ab cd')
+        self._assert_incorrect_cluster_name('')
+        self._assert_incorrect_cluster_name('ab@#cd')
+        self._assert_incorrect_cluster_name('ab cd')
 
         str = "a"
         name = "b"
         while len(name) < 241:
             name += str
-        self._assert_bad_cluster_name(name)
+        self._assert_incorrect_cluster_name(name)
 
     def test_cluster_creation_with_empty_body(self):
         body = dict(cluster=dict())
-        resp = self._create_cluster(body)
-        self._assert_validation_error_400(resp)
+        resp = self._post_object(self.url_cluster, body, 400)
+        self._assert_error(resp, u'VALIDATION_ERROR', 400)
 
     #----------------------return 500---------------------------
     #def test_cluster_creation_with_empty_json(self):
@@ -86,68 +85,101 @@ class TestValidationApiForClusters(ValidationTestCase):
 
     def test_duplicate_cluster_creation(self):
         body = self.cluster_data_jtnn_ttdn.copy()
-        self._create_cluster(body)
-        resp = self._create_cluster(body)
+        self.resp = self._post_object(self.url_cluster, body, 202)
+        resp = self._post_object(self.url_cluster, body, 400)
         self._assert_error(resp, u'CLUSTER_NAME_ALREADY_EXISTS', 400)
 
     def test_base_image_id_validation(self):
-        self._assert_bad_base_image_id('')
-        self._assert_bad_base_image_id('abc')
+        self._assert_incorrect_base_image_id('')
+        self._assert_incorrect_base_image_id('abc')
 
     def test_node_template_validation(self):
         body = self.cluster_data_jtnn_ttdn
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'jt_nn.medium', 2)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 0)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', None)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', 0)
+        self._assert_not_single_jt_nn(body, 'jt_nn.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', 0)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', 0)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', None)
 
         body = self.cluster_data_jt_nn_ttdn
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'jt.medium', 2)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'nn.medium', 2)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 0)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', 0)
+        self._assert_not_single_jt_nn(body, 'jt.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', 0)
+        self._assert_not_single_jt_nn(body, 'nn.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', 0)
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', None)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', None)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'tt_dn.small', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'tt_dn.small', None)
 
         body = self.cluster_data_jtnn
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'jt_nn.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', 0)
+        self._assert_not_single_jt_nn(body, 'jt_nn.medium', 2)
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt_nn.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt_nn.medium', None)
 
         body = self.cluster_data_jt_nn
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'jt.medium', 2)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', -1)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 0)
-        self._assert_n_t_with_not_single_jt_nn(body, 'nn.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', 0)
+        self._assert_not_single_jt_nn(body, 'jt.medium', 2)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', -1)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', 0)
+        self._assert_not_single_jt_nn(body, 'nn.medium', 2)
 
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', 'abc')
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'jt.medium', None)
-        self._assert_n_t_with_wrong_number_jt_nn(body, 'nn.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', 'abc')
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'jt.medium', None)
+        self._assert_node_template_with_incorrect_number_of_node(
+            body, 'nn.medium', None)
 
         body = dict(
             cluster=dict(
@@ -158,7 +190,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -169,7 +201,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -180,7 +212,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     '': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -191,7 +223,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'abc': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -201,7 +233,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_without_node_type_nn(body)
+        self._assert_node_template_without_node_nn(body)
 
         body = dict(
             cluster=dict(
@@ -213,7 +245,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -225,7 +257,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -237,7 +269,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -249,7 +281,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -261,7 +293,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     '': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -273,7 +305,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'abc': 5
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -284,7 +316,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_without_node_type_nn(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -295,7 +327,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'tt_dn.small': 5
                 }
             ))
-        self._assert_bad_node_template_without_node_type_jt(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -305,7 +337,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     '': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -315,7 +347,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'abc': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -323,7 +355,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                 base_image_id='test-image',
                 node_templates={}
             ))
-        self._assert_bad_node_template_without_node_type_nn(body)
+        self._assert_node_template_without_node_nn(body)
 
         body = dict(
             cluster=dict(
@@ -334,7 +366,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     '': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -345,7 +377,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'abc': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -355,7 +387,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'jt.medium': 1
                 }
             ))
-        self._assert_bad_node_template_without_node_type_nn(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -366,7 +398,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'nn.medium': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -377,7 +409,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'nn.medium': 1
                 }
             ))
-        self._assert_bad_node_template_with_wrong_node_type(body)
+        self._assert_node_template_with_incorrect_node(body)
 
         body = dict(
             cluster=dict(
@@ -387,7 +419,7 @@ class TestValidationApiForClusters(ValidationTestCase):
                     'nn.medium': 1
                 }
             ))
-        self._assert_bad_node_template_without_node_type_jt(body)
+        self._assert_node_template_with_incorrect_node(body)
 
     def test_validation_cluster_body(self):
         self._assert_bad_cluster_body('name')
