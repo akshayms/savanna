@@ -13,283 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import eventlet
-import json
-import os
-from oslo.config import cfg
-import random as random_number
-from savanna.service import api
-from savanna.storage.db import DB
-from savanna.storage.defaults import setup_defaults
-from savanna.storage.models import Node, NodeTemplate
-import savanna.main
-from savanna.main import make_app
 from savanna.openstack.common import log as logging
-from savanna.utils.openstack import nova
-from savanna.utils import scheduler
-import tempfile
-import unittest
-import uuid
+from savanna.tests.unit.package_validation.validation_db \
+    import ValidationTestCase
 
 LOG = logging.getLogger(__name__)
 
 
-def _stub_vm_creation_job(template_id):
-    template = NodeTemplate.query.filter_by(id=template_id).first()
-    eventlet.sleep(2)
-    return 'ip-address', uuid.uuid4().hex, template.id
-
-
-def _stub_launch_cluster(headers, cluster):
-    LOG.debug('stub launch_cluster called with %s, %s', headers, cluster)
-    pile = eventlet.GreenPile(scheduler.POOL)
-
-    for elem in cluster.node_counts:
-        node_count = elem.count
-        for _ in xrange(0, node_count):
-            pile.spawn(_stub_vm_creation_job, elem.node_template_id)
-
-    for (ip, vm_id, elem) in pile:
-        DB.session.add(Node(vm_id, cluster.id, elem))
-        LOG.debug("VM '%s/%s/%s' created", ip, vm_id, elem)
-
-
-def _stub_stop_cluster(headers, cluster):
-    LOG.debug("stub stop_cluster called with %s, %s", headers, cluster)
-
-
-def _stub_auth_token(*args, **kwargs):
-    LOG.debug('stub token filter called with %s, %s', args, kwargs)
-
-    def _filter(app):
-        def _handler(env, start_response):
-            env['HTTP_X_TENANT_ID'] = 'tenant-id-1'
-            return app(env, start_response)
-
-        return _handler
-
-    return _filter
-
-
-def _stub_auth_valid(*args, **kwargs):
-    LOG.debug('stub token validation called with %s, %s', args, kwargs)
-
-    def _filter(app):
-        def _handler(env, start_response):
-            return app(env, start_response)
-
-        return _handler
-
-    return _filter
-
-
-def _stub_get_flavors(headers):
-    LOG.debug('Stub get_flavors called with %s', headers)
-    return [u'test_flavor', u'test_flavor_2']
-
-
-def _stub_get_images(headers):
-    LOG.debug('Stub get_images called with %s', headers)
-    return [u'base-image-id', u'base-image-id_2']
-
-
-CONF = cfg.CONF
-CONF.import_opt('debug', 'savanna.openstack.common.log')
-CONF.import_opt('allow_cluster_ops', 'savanna.config')
-CONF.import_opt('database_uri', 'savanna.storage.db', group='sqlalchemy')
-CONF.import_opt('echo', 'savanna.storage.db', group='sqlalchemy')
-
-
-class ValidationTestForNTApi(unittest.TestCase):
-    def setUp(self):
-        self.db_fd, self.db_path = tempfile.mkstemp()
-        self.maxDiff = 10000
-
-        # override configs
-        CONF.set_override('debug', True)
-        CONF.set_override('allow_cluster_ops', True)  # stub process
-        CONF.set_override('database_uri', 'sqlite:///' + self.db_path,
-                          group='sqlalchemy')
-        CONF.set_override('echo', False, group='sqlalchemy')
-
-        # store functions that will be stubbed
-        self._prev_auth_token = savanna.main.auth_token
-        self._prev_auth_valid = savanna.main.auth_valid
-        self._prev_cluster_launch = api.cluster_ops.launch_cluster
-        self._prev_cluster_stop = api.cluster_ops.stop_cluster
-        self._prev_get_flavors = nova.get_flavors
-        self._prev_get_images = nova.get_images
-
-        # stub functions
-        savanna.main.auth_token = _stub_auth_token
-        savanna.main.auth_valid = _stub_auth_valid
-        api.cluster_ops.launch_cluster = _stub_launch_cluster
-        api.cluster_ops.stop_cluster = _stub_stop_cluster
-        nova.get_flavors = _stub_get_flavors
-        nova.get_images = _stub_get_images
-
-        app = make_app()
-
-        DB.drop_all()
-        DB.create_all()
-        setup_defaults(True, True)
-
-        LOG.debug('Test db path: %s', self.db_path)
-        LOG.debug('Test app.config: %s', app.config)
-
-        self.app = app.test_client()
-        self.url = '/v0.2/some-tenant-id/node-templates.json'
-        self.url_not_json = '/v0.2/some-tenant-id/node-templates/'
-        self.long_field = "qwertyuiop"
-        for i in range(23):
-            self.long_field += "%d" % random_number.randint(1000000000,
-                                                            9999999999)
-
-        self.jtnn = dict(
-            node_template=dict(
-                name='test-template-1',
-                node_type='JT+NN',
-                flavor_id='test_flavor',
-                job_tracker={
-                    'heap_size': '1234'
-                },
-                name_node={
-                    'heap_size': '2345'
-                }
-            ))
-        self.ttdn = dict(
-            node_template=dict(
-                name='test-template-2',
-                node_type='TT+DN',
-                flavor_id='test_flavor',
-                task_tracker={
-                    'heap_size': '1234'
-                },
-                data_node={
-                    'heap_size': '2345'
-                }
-            ))
-        self.jt = dict(
-            node_template=dict(
-                name='test-template-3',
-                node_type='JT',
-                flavor_id='test_flavor',
-                job_tracker={
-                    'heap_size': '1234'
-                }
-            ))
-        self.nn = dict(
-            node_template=dict(
-                name='test-template-4',
-                node_type='NN',
-                flavor_id='test_flavor',
-                name_node={
-                    'heap_size': '2345'
-                }
-            ))
-        self.tt = dict(
-            node_template=dict(
-                name='test-template-5',
-                node_type='TT',
-                flavor_id='test_flavor',
-                task_tracker={
-                    'heap_size': '2345'
-                }
-            ))
-        self.dn = dict(
-            node_template=dict(
-                name='test-template-6',
-                node_type='DN',
-                flavor_id='test_flavor',
-                data_node={
-                    'heap_size': '2345'
-                }
-            ))
-
-    def tearDown(self):
-        # unstub functions
-        savanna.main.auth_token = self._prev_auth_token
-        savanna.main.auth_valid = self._prev_auth_valid
-        api.cluster_ops.launch_cluster = self._prev_cluster_launch
-        api.cluster_ops.stop_cluster = self._prev_cluster_stop
-        nova.get_flavors = self._prev_get_flavors
-        nova.get_images = self._prev_get_images
-
-        os.close(self.db_fd)
-        os.unlink(self.db_path)
-
-    def post_nt(self, body, code):
-        LOG.debug(body)
-        post = self.app.post(self.url, data=json.dumps(body))
-        self.assertEquals(post.status_code, code)
-        data = json.loads(post.data)
-        return data
-
-    def get_nt(self, ip, code):
-        rv = self.app.get(self.url_not_json + ip)
-        self.assertEquals(rv.status_code, code)
-        data = json.loads(rv.data)
-        return data
-
-    def del_nt(self, ip, code):
-        rv = self.app.delete(self.url_not_json + ip)
-        self.assertEquals(rv.status_code, code)
-        if rv.status_code != 204:
-            data = json.loads(rv.data)
-            return data
-
-    def test_list_node_templates(self):
-        rv = self.app.get(self.url)
-        self.assertEquals(rv.status_code, 200)
-        data = json.loads(rv.data)
-        for idx in xrange(0, len(data.get(u'node_templates'))):
-            del data.get(u'node_templates')[idx][u'id']
-
-        self.assertEquals(data, _get_templates_stub_data())
-
-    def post_incorrect_nt_ttdn(self, field, value, code, error):
-        body = self.ttdn.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-
-    def post_incorrect_nt_jtnn(self, field, value, code, error):
-        body = self.jtnn.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-
-    def post_incorrect_nt_jt(self, field, value, code, error):
-        body = self.jt.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-
-    def post_incorrect_nt_nn(self, field, value, code, error):
-        body = self.nn.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-
-    def post_incorrect_nt_tt(self, field, value, code, error):
-        body = self.tt.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
-
-    def post_incorrect_nt_dn(self, field, value, code, error):
-        body = self.dn.copy()
-        body['node_template']['%s' % field] = '%s' % value
-        rv = self.post_nt(body, code)
-        self.assertEquals(rv['error_name'], '%s' % error)
+class ValidationTestForNTApi(ValidationTestCase):
 
 #-----------------------positive_tests-----------------------------------------
 
     def test_create_and_delete_nt_ttdn(self):
         body = self.ttdn.copy()
-        data = self.post_nt(body, 202)
+        LOG.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        LOG.debug(body)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         self.assertEquals(data, {
             u'name': u'test-template-2',
             u'data_node': {u'heap_size': u'2345'},
@@ -301,9 +42,7 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'flavor_id': u'test_flavor'
         }
         )
-        get_data = self.get_nt(ip, 200)
-        LOG.debug("!!!!!!!!!!!!!!!{}!!!!!!!!!!!!!!!!!!!!!")
-        LOG.debug(get_data)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
         self.assertEquals(get_data, {
@@ -317,13 +56,13 @@ class ValidationTestForNTApi(unittest.TestCase):
             u'flavor_id': u'test_flavor'
         }
         )
-        self.del_nt(ip, 204)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
 
     def test_create_and_delete_nt_jtnn(self):
         body = self.jtnn.copy()
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         self.assertEquals(data, {
             u'name': u'test-template-1',
             u'name_node': {u'heap_size': u'2345'},
@@ -334,7 +73,7 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT+NN'},
             u'flavor_id': u'test_flavor'
         })
-        get_data = self.get_nt(ip, 200)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
         self.assertEquals(get_data, {
@@ -347,13 +86,13 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT+NN'},
             u'flavor_id': u'test_flavor'
         })
-        self.del_nt(ip, 204)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
 
     def test_create_and_delete_nt_nn(self):
         body = self.nn.copy()
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         self.assertEquals(data, {
             u'name': u'test-template-4',
             u'name_node': {u'heap_size': u'2345'},
@@ -362,7 +101,7 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'NN'},
             u'flavor_id': u'test_flavor'
         })
-        get_data = self.get_nt(ip, 200)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
         self.assertEquals(get_data, {
@@ -373,14 +112,13 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'NN'},
             u'flavor_id': u'test_flavor'
         })
-        delete = self.app.delete(self.url_not_json + ip)
-        self.assertEquals(delete.status_code, 204)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
 
     def test_create_and_delete_nt_jt(self):
         body = self.jt.copy()
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         self.assertEquals(data, {
             u'name': u'test-template-3',
             u'job_tracker': {u'heap_size': u'1234'},
@@ -389,7 +127,7 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT'},
             u'flavor_id': u'test_flavor'
         })
-        get_data = self.get_nt(ip, 200)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
         self.assertEquals(get_data, {
@@ -400,27 +138,33 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT'},
             u'flavor_id': u'test_flavor'
         })
-        self.del_nt(ip, 204)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
+
+    def test_list_node_templates(self):
+        data = self._list_objects(self.url_nt, 200)
+        for idx in xrange(0, len(data.get(u'node_templates'))):
+            del data.get(u'node_templates')[idx][u'id']
+        self.assertEquals(data, _get_templates_stub_data())
 
 #-----------------------negative_tests-----------------------------------------
 
     def test_create_nt_tt(self):
         body = self.tt.copy()
-        data = self.post_nt(body, 400)
+        data = self._post_object(self.url_nt, body, 400)
         LOG.debug(data)
         self.assertEquals(data['error_name'], u'NODE_TYPE_NOT_FOUND')
 
     def test_create_nt_dn(self):
         body = self.dn.copy()
-        data = self.post_nt(body, 400)
+        data = self._post_object(self.url_nt, body, 400)
         LOG.debug(data)
         self.assertEquals(data['error_name'], u'NODE_TYPE_NOT_FOUND')
 
     def test_secondary_delete_and_get_node_template(self):
         body = self.jt.copy()
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         self.assertEquals(data, {
             u'name': u'test-template-3',
             u'job_tracker': {u'heap_size': u'1234'},
@@ -429,7 +173,7 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT'},
             u'flavor_id': u'test_flavor'
         })
-        get_data = self.get_nt(ip, 200)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
         get_data = get_data['node_template']
         del get_data[u'id']
         self.assertEquals(get_data, {
@@ -440,193 +184,193 @@ class ValidationTestForNTApi(unittest.TestCase):
                 u'name': u'JT'},
             u'flavor_id': u'test_flavor'
         })
-        self.del_nt(ip, 204)
-        # get_data = self.get_nt(ip, 404)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
+        # get_data = self.get_object(self.url_nt_not_json, nt_id, 404)
         # self.assertEquals(get_data['error_name'], u'NodeTemplate not found')
-        # del_data = self.del_nt(ip, 404)
+        # del_data = self.del_object(self.url_nt_not_json, nt_id, 404)
         # self.assertEquals(del_data['error_name'], u'NodeTemplate not found')
 
     # def test_get_not_exist_nt(self):
-    #     get_data = self.get_nt("000000001", 404)
+    #     get_data = self.get_object(self.url_nt_not_json, "0000000001", 404)
     #     self.assertEquals(get_data['error_name'], 'NodeTemplate not found')
 
     # def test_delete_not_exist_nt(self):
-    #     delete_data = self.del_nt("00000001", 404)
+    #     delete_data = self.del_object(self.url_nt_not_json, "000000001", 404)
     #     self.assertEquals(delete_data['error_name'],
     #                       'NodeTemplate not found')
 
     def test_create_nt_with_already_used_name(self):
         body = self.jtnn.copy()
         body['node_template']['name'] = 'sec-name'
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
+        nt_id = data.pop(u'id')
         sec_body = self.ttdn.copy()
         sec_body['node_template']['name'] = 'sec-name'
-        sec_data = self.post_nt(sec_body, 400)
+        sec_data = self._post_object(self.url_nt, sec_body, 400)
         self.assertEquals(sec_data['error_name'],
                           'NODE_TEMPLATE_ALREADY_EXISTS')
-        self.del_nt(ip, 204)
-        thr_data = self.post_nt(sec_body, 202)
+        self._del_object(self.url_nt_not_json, nt_id, 204)
+        thr_data = self._post_object(self.url_nt, sec_body, 202)
         thr_data = thr_data['node_template']
-        sec_ip = thr_data.pop(u'id')
-        self.del_nt(sec_ip, 204)
+        sec_id = thr_data.pop(u'id')
+        self._del_object(self.url_nt_not_json, sec_id, 204)
 
 #--------------------incorrect_JSON--------------------------------------------
 
-    # def test_create_nt_with_empty_json(self):
-    #     body = dict()
-    #     rv = self.post_nt(body, 400)
-    #     self.assertEquals(rv['error_name'], '')
+    #def test_create_nt_with_empty_json(self):
+        # body = dict()
+        # rv = self.post_object(self.url_nt, body, 202)
+        # self.assertEquals(rv['error_name'], '')
 
-    # def test_create_nt_with_empty_json(self):
-    #     body = dict(cluster=dict())
-    #     rv = self.post_nt(body, 400)
-    #     self.assertEquals(rv['error_name'], '')
+    #def test_create_nt_with_empty_json(self):
+        # body = dict(cluster=dict())
+        # rv = self.post_object(self.url_nt, body, 202)
+        # self.assertEquals(rv['error_name'], '')
 
     def test_create_nt_without_name_json(self):
         body = self.nn.copy()
         del body['node_template']['name']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_type_json(self):
         body = self.nn.copy()
         del body['node_template']['node_type']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_flavor_id_json(self):
         body = self.nn.copy()
         del body['node_template']['flavor_id']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_nn(self):
         body = self.nn.copy()
         del body['node_template']['name_node']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_jt(self):
         body = self.jt.copy()
         del body['node_template']['job_tracker']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_jtnn(self):
         body = self.jtnn.copy()
         del body['node_template']['job_tracker']
         del body['node_template']['name_node']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
     def test_create_nt_without_node_param_json_ttdn(self):
         body = self.ttdn.copy()
         del body['node_template']['task_tracker']
         del body['node_template']['data_node']
-        rv = self.post_nt(body, 400)
+        rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
 
 #-------------------------incorrect_value--------------------------------------
 
     def test_create_nt_with_incorrect_name_ttdn(self):
-        self.post_incorrect_nt_ttdn('name', '', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '-p', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '1p', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '#p', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '-', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', 'node_template_2',
+        self._post_incorrect_nt_ttdn('name', '', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '-p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '1p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '#p', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '-', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '1', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '#', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', '*', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('name', 'node_template_2',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', '!@#$%^&*()_+|{}:"<>?',
+        self._post_incorrect_nt_ttdn('name', '!@#$%^&*()_+|{}:"<>?',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('name', self.long_field + "q",
+        self._post_incorrect_nt_ttdn('name', self.long_field + "q",
                                     400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_name_with_240_symbols(self):
         body = self.jtnn.copy()
         body['node_template']['name'] = 'w'
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         LOG.debug(data)
         data = data['node_template']
-        id = data.pop(u'id')
-        self.del_nt(id, 204)
+        nt_id = data.pop(u'id')
+        self._del_object(self.url_nt_not_json, nt_id, 204)
 
     def test_create_nt_with_name_with_1_symbol(self):
         body = self.jtnn.copy()
         body['node_template']['name'] = self.long_field
-        data = self.post_nt(body, 202)
+        data = self._post_object(self.url_nt, body, 202)
         data = data['node_template']
-        ip = data.pop(u'id')
-        self.del_nt(ip, 204)
+        nt_id = data.pop(u'id')
+        self._del_object(self.url_nt_not_json, nt_id, 204)
 
     def test_create_nt_with_incorrect_node_type(self):
-        self.post_incorrect_nt_ttdn('node_type', '*', 400,
+        self._post_incorrect_nt_ttdn('node_type', '*', 400,
                                     'NODE_TYPE_NOT_FOUND')
-        self.post_incorrect_nt_ttdn('node_type', 'T', 400,
+        self._post_incorrect_nt_ttdn('node_type', 'T', 400,
                                     'NODE_TYPE_NOT_FOUND')
-        self.post_incorrect_nt_ttdn('node_type', '%', 400,
+        self._post_incorrect_nt_ttdn('node_type', '%', 400,
                                     'NODE_TYPE_NOT_FOUND')
-        self.post_incorrect_nt_ttdn('node_type', '', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('node_type', self.long_field + "q",
+        self._post_incorrect_nt_ttdn('node_type', '', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('node_type', self.long_field + "q",
                                     400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_incorrect_flavor_id(self):
-        self.post_incorrect_nt_ttdn('flavor_id', '', 400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_ttdn('flavor_id', self.long_field + 'q',
+        self._post_incorrect_nt_ttdn('flavor_id', '', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt_ttdn('flavor_id', self.long_field + 'q',
                                     400, 'VALIDATION_ERROR')
 
 #-----------mismatch_node_type_and_object--------------------------------------
 
     def test_create_nt_ttdn_with_wront_objects(self):
-        self.post_incorrect_nt_jtnn('node_type', 'TT+DN',
+        self._post_incorrect_nt_jtnn('node_type', 'TT+DN',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_jt('node_type', 'TT+DN',
+        self._post_incorrect_nt_jt('node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_nn('node_type', 'TT+DN',
+        self._post_incorrect_nt_nn('node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_tt('node_type', 'TT+DN',
+        self._post_incorrect_nt_tt('node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_dn('node_type', 'TT+DN',
+        self._post_incorrect_nt_dn('node_type', 'TT+DN',
                                   400, 'VALIDATION_ERROR')
 
     def test_create_nt_jtnn_with_wront_objects(self):
-        self.post_incorrect_nt_ttdn('node_type', 'JT+NN',
+        self._post_incorrect_nt_ttdn('node_type', 'JT+NN',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_tt('node_type', 'JT+NN',
+        self._post_incorrect_nt_tt('node_type', 'JT+NN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_dn('node_type', 'JT+NN',
+        self._post_incorrect_nt_dn('node_type', 'JT+NN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_nn('node_type', 'JT+NN',
+        self._post_incorrect_nt_nn('node_type', 'JT+NN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_jt('node_type', 'JT+NN',
+        self._post_incorrect_nt_jt('node_type', 'JT+NN',
                                   400, 'VALIDATION_ERROR')
 
     def test_create_nt_nn_with_wront_objects(self):
-        self.post_incorrect_nt_ttdn('node_type', 'NN',
+        self._post_incorrect_nt_ttdn('node_type', 'NN',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_jtnn('node_type', 'NN',
+        self._post_incorrect_nt_jtnn('node_type', 'NN',
                                     400, 'NODE_PROCESS_DISCREPANCY')
-        self.post_incorrect_nt_tt('node_type', 'NN',
+        self._post_incorrect_nt_tt('node_type', 'NN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_dn('node_type', 'NN',
+        self._post_incorrect_nt_dn('node_type', 'NN',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_jt('node_type', 'NN',
+        self._post_incorrect_nt_jt('node_type', 'NN',
                                   400, 'VALIDATION_ERROR')
 
     def test_create_nt_jt_with_wront_objects(self):
-        self.post_incorrect_nt_ttdn('node_type', 'JT',
+        self._post_incorrect_nt_ttdn('node_type', 'JT',
                                     400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_jtnn('node_type', 'JT',
+        self._post_incorrect_nt_jtnn('node_type', 'JT',
                                     400, 'NODE_PROCESS_DISCREPANCY')
-        self.post_incorrect_nt_tt('node_type', 'JT',
+        self._post_incorrect_nt_tt('node_type', 'JT',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_dn('node_type', 'JT',
+        self._post_incorrect_nt_dn('node_type', 'JT',
                                   400, 'VALIDATION_ERROR')
-        self.post_incorrect_nt_nn('node_type', 'JT',
+        self._post_incorrect_nt_nn('node_type', 'JT',
                                   400, 'VALIDATION_ERROR')
 
 
