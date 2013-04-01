@@ -25,8 +25,8 @@ class ValidationTestCase(SavannaTestCase):
     def setUp(self):
         self.long_field = "qwertyuiop"
         for i in range(23):
-            self.long_field += "%d" % random_number.randint(1000000000,
-                                                        9999999999)
+            self.long_field += "%d" % random_number.randint(
+                1000000000, 9999999999)
 
     #----------------------add_value_for_node_templates------------------------
 
@@ -94,8 +94,49 @@ class ValidationTestCase(SavannaTestCase):
                 }
             ))
 
+        self.get_ttdn = {
+            u'name': u'test-template-2',
+            u'data_node': {u'heap_size': u'2345'},
+            u'task_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'task_tracker',
+                               u'data_node'],
+                u'name': u'TT+DN'},
+            u'flavor_id': u'test_flavor'
+        }
+
+        self.get_jtnn = {
+            u'name': u'test-template-1',
+            u'name_node': {u'heap_size': u'2345'},
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker',
+                               u'name_node'],
+                u'name': u'JT+NN'},
+            u'flavor_id': u'test_flavor'
+        }
+
+        self.get_nn = {
+            u'name': u'test-template-4',
+            u'name_node': {u'heap_size': u'2345'},
+            u'node_type': {
+                u'processes': [u'name_node'],
+                u'name': u'NN'},
+            u'flavor_id': u'test_flavor'
+        }
+
+        self.get_jt = {
+            u'name': u'test-template-3',
+            u'job_tracker': {u'heap_size': u'1234'},
+            u'node_type': {
+                u'processes': [u'job_tracker'],
+                u'name': u'JT'},
+            u'flavor_id': u'test_flavor'
+        }
+
         #----------------------add_value_for_clusters--------------------------
         self.url = '/v0.2/some-tenant-id/clusters'
+        self.url_not_json = '/v0.2/some-tenant-id/clusters/'
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -165,6 +206,23 @@ class ValidationTestCase(SavannaTestCase):
         self.assertEquals(rv.status_code, code)
         data = json.loads(rv.data)
         return data
+
+    def _grud_object(self, body, get_body, url, p_code, g_code, d_code):
+        data = self._post_object(url, body, p_code)
+        object = "cluster"
+        get_url = self.url
+        if url == self.url_nt:
+            object = "node_template"
+            get_url = self.url_nt_not_json
+        data = data["%s" % object]
+        nt_id = data.pop(u'id')
+        self.assertEquals(data, get_body)
+        get_data = self._get_object(get_url, nt_id, g_code)
+        get_data = get_data['%s' % object]
+        del get_data[u'id']
+        self.assertEquals(get_data, get_body)
+        self._del_object(get_url, nt_id, d_code)
+        return nt_id
 
 #---------------------for_node_templates---------------------------------------
 

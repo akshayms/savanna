@@ -24,121 +24,15 @@ class ValidationTestForNTApi(ValidationTestCase):
 
 #-----------------------positive_tests-----------------------------------------
 
-    def test_create_and_delete_nt_ttdn(self):
-        body = self.ttdn.copy()
-        LOG.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        LOG.debug(body)
-        data = self._post_object(self.url_nt, body, 202)
-        data = data['node_template']
-        nt_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'name': u'test-template-2',
-            u'data_node': {u'heap_size': u'2345'},
-            u'task_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'task_tracker',
-                               u'data_node'],
-            u'name': u'TT+DN'},
-            u'flavor_id': u'test_flavor'
-        }
-        )
-        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
-        get_data = get_data['node_template']
-        del get_data[u'id']
-        self.assertEquals(get_data, {
-            u'name': u'test-template-2',
-            u'data_node': {u'heap_size': u'2345'},
-            u'task_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'task_tracker',
-                               u'data_node'],
-                u'name': u'TT+DN'},
-            u'flavor_id': u'test_flavor'
-        }
-        )
-        self._del_object(self.url_nt_not_json, nt_id, 204)
-
-    def test_create_and_delete_nt_jtnn(self):
-        body = self.jtnn.copy()
-        data = self._post_object(self.url_nt, body, 202)
-        data = data['node_template']
-        nt_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'name': u'test-template-1',
-            u'name_node': {u'heap_size': u'2345'},
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker',
-                               u'name_node'],
-                u'name': u'JT+NN'},
-            u'flavor_id': u'test_flavor'
-        })
-        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
-        get_data = get_data['node_template']
-        del get_data[u'id']
-        self.assertEquals(get_data, {
-            u'name': u'test-template-1',
-            u'name_node': {u'heap_size': u'2345'},
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker',
-                               u'name_node'],
-                u'name': u'JT+NN'},
-            u'flavor_id': u'test_flavor'
-        })
-        self._del_object(self.url_nt_not_json, nt_id, 204)
-
-    def test_create_and_delete_nt_nn(self):
-        body = self.nn.copy()
-        data = self._post_object(self.url_nt, body, 202)
-        data = data['node_template']
-        nt_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'name': u'test-template-4',
-            u'name_node': {u'heap_size': u'2345'},
-            u'node_type': {
-                u'processes': [u'name_node'],
-                u'name': u'NN'},
-            u'flavor_id': u'test_flavor'
-        })
-        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
-        get_data = get_data['node_template']
-        del get_data[u'id']
-        self.assertEquals(get_data, {
-            u'name': u'test-template-4',
-            u'name_node': {u'heap_size': u'2345'},
-            u'node_type': {
-                u'processes': [u'name_node'],
-                u'name': u'NN'},
-            u'flavor_id': u'test_flavor'
-        })
-        self._del_object(self.url_nt_not_json, nt_id, 204)
-
-    def test_create_and_delete_nt_jt(self):
-        body = self.jt.copy()
-        data = self._post_object(self.url_nt, body, 202)
-        data = data['node_template']
-        nt_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'name': u'test-template-3',
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker'],
-                u'name': u'JT'},
-            u'flavor_id': u'test_flavor'
-        })
-        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
-        get_data = get_data['node_template']
-        del get_data[u'id']
-        self.assertEquals(get_data, {
-            u'name': u'test-template-3',
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker'],
-                u'name': u'JT'},
-            u'flavor_id': u'test_flavor'
-        })
-        self._del_object(self.url_nt_not_json, nt_id, 204)
+    def test_crud_nt(self):
+        self._grud_object(self.jtnn.copy(), self.get_jtnn.copy(),
+                          self.url_nt, 202, 200, 204)
+        # self._grud_object(self.ttdn.copy(), self.get_ttdn.copy(),
+        #                   self.url_nt, 202, 200, 204)
+        self._grud_object(self.nn.copy(), self.get_nn.copy(),
+                          self.url_nt, 202, 200, 204)
+        self._grud_object(self.jt.copy(), self.get_jt.copy(),
+                          self.url_nt, 202, 200, 204)
 
     def test_list_node_templates(self):
         data = self._list_objects(self.url_nt, 200)
