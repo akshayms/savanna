@@ -28,7 +28,7 @@ class ValidationTestCase(SavannaTestCase):
             self.long_field += "%d" % random_number.randint(
                 1000000000, 9999999999)
 
-            #----------------------add_value_for_node_templates------------------------
+    #----------------------add_value_for_node_templates-----------------------
 
         self.url_nt = '/v0.2/some-tenant-id/node-templates.json'
         self.url_nt_not_json = '/v0.2/some-tenant-id/node-templates/'
@@ -134,7 +134,7 @@ class ValidationTestCase(SavannaTestCase):
             u'flavor_id': u'test_flavor'
         }
 
-        #----------------------add_value_for_clusters--------------------------
+    #----------------------add_value_for_clusters-----------------------------
 
         self.url_cluster = '/v0.2/some-tenant-id/clusters.json'
         self.url_cluster_without_json = '/v0.2/some-tenant-id/clusters/'
@@ -180,7 +180,7 @@ class ValidationTestCase(SavannaTestCase):
             ))
         super(ValidationTestCase, self).setUp()
 
-    #---------------------close_setUp----------------------------------------------
+    #---------------------close_setUp-----------------------------------------
 
     def _post_object(self, url, body, code):
         LOG.debug(body)
@@ -225,27 +225,27 @@ class ValidationTestCase(SavannaTestCase):
         self._del_object(get_url, nt_id, d_code)
         return nt_id
 
-    #---------------------for_node_templates---------------------------------------
+    #---------------------for_node_templates----------------------------------
 
     def _post_incorrect_nt(self, body, field, value, code, error):
         body['node_template']['%s' % field] = '%s' % value
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
 
-    #---------------------for_clusters---------------------------------------------
+    #---------------------for_clusters----------------------------------------
 
     def _assert_error(self, resp, name, code):
         self.assertEquals(resp['error_name'], name)
         self.assertEquals(resp['error_code'], code)
 
-    def _assert_change_cluster_body(
-            self, body, del_node_type, set_node_type, value):
-        del body['cluster']['node_templates'][del_node_type]
-        body['cluster']['node_templates'][set_node_type] = value
-        return body
-
     def _assert_delete_part_of_cluster_body(self, body, del_node_type):
         del body['cluster']['node_templates'][del_node_type]
+        return body
+
+    def _assert_change_cluster_body(
+            self, body, del_node_type, set_node_type, value):
+        body = self._assert_delete_part_of_cluster_body(body, del_node_type)
+        body['cluster']['node_templates'][set_node_type] = value
         return body
 
     def _assert_incorrect_value_of_field(self, field, value_of_field):
