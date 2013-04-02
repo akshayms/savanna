@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -273,13 +271,27 @@
     <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">LOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
 
-    <span class="k">return</span> <span class="n">render_error_message</span><span class="p">(</span><span class="n">status_code</span><span class="p">,</span> <span class="n">descr</span><span class="p">,</span> <span class="s">&quot;INTERNAL_SERVER_ERROR&quot;</span><span class="p">)</span>
+    <span class="n">error_code</span> <span class="o">=</span> <span class="s">&quot;INTERNAL_SERVER_ERROR&quot;</span>
+    <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">501</span><span class="p">:</span>
+        <span class="n">error_code</span> <span class="o">=</span> <span class="s">&quot;NOT_IMPLEMENTED_ERROR&quot;</span>
+
+    <span class="k">return</span> <span class="n">render_error_message</span><span class="p">(</span><span class="n">status_code</span><span class="p">,</span> <span class="n">descr</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="bad_request"><a class="viewcode-back" href="../../../api/savanna.utils.api.html#savanna.utils.api.bad_request">[docs]</a><span class="k">def</span> <span class="nf">bad_request</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="n">error_code</span> <span class="o">=</span> <span class="mi">400</span>
 
     <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Validation Error occurred: &quot;</span>
+              <span class="s">&quot;error_code=</span><span class="si">%s</span><span class="s">, error_message=</span><span class="si">%s</span><span class="s">, error_name=</span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
+              <span class="n">error_code</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_error_message</span><span class="p">(</span><span class="n">error_code</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="not_found"><a class="viewcode-back" href="../../../api/savanna.utils.api.html#savanna.utils.api.not_found">[docs]</a><span class="k">def</span> <span class="nf">not_found</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="n">error_code</span> <span class="o">=</span> <span class="mi">404</span>
+
+    <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Not Found exception occurred: &quot;</span>
               <span class="s">&quot;error_code=</span><span class="si">%s</span><span class="s">, error_message=</span><span class="si">%s</span><span class="s">, error_name=</span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
               <span class="n">error_code</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
 
@@ -309,7 +321,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

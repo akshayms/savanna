@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -27,7 +25,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     'latest',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -119,9 +117,8 @@
 <div class="section" id="setup-prerequisites">
 <h2>1 Setup prerequisites<a class="headerlink" href="#setup-prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>1.1 OpenStack environment (Folsom+ version) installed.</p>
-<p>1.2 OpenStack compute has to have floating IP autoassigment. You can read more here: <a class="reference external" href="http://docs.openstack.org/trunk/openstack-compute/admin/content/associating-public-ip.html">http://docs.openstack.org/trunk/openstack-compute/admin/content/associating-public-ip.html</a></p>
-<p>1.3 Git should be installed on the machine where Savanna_API will be deployed.</p>
-<p>1.4 Your OpenStack should have flavors with &#8216;m1.small&#8217; and &#8216;m1.medium&#8217; names defined because these flavors are referenced by Savanna&#8217;s default Node Templates.
+<p>1.2 Git should be installed on the machine where Savanna_API will be deployed.</p>
+<p>1.3 Your OpenStack should have flavors with &#8216;m1.small&#8217; and &#8216;m1.medium&#8217; names defined because these flavors are referenced by Savanna&#8217;s default Node Templates.
 You can check which flavors you have by running</p>
 <div class="highlight-bash"><div class="highlight"><pre>nova flavor-list
 </pre></div>
@@ -189,41 +186,7 @@ apt-get install python-dev python-virtualenv
 <div class="highlight-bash"><div class="highlight"><pre>cp ./etc/savanna/savanna.conf.sample ./etc/savanna/savanna.conf
 </pre></div>
 </div>
-<p>3.6 In savanna.conf you should edit the following parameters:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>DEFAULT<span class="o">]</span>
-
-<span class="c"># REST API config</span>
-<span class="c">#port=8080</span>
-<span class="c">#allow_cluster_ops=false</span>
-
-<span class="c"># Address and credentials that will be used to check auth tokens</span>
-<span class="c">#os_auth_host=openstack</span>
-<span class="c">#os_auth_port=35357</span>
-<span class="c">#os_admin_username=admin</span>
-<span class="c">#os_admin_password=nova</span>
-<span class="c">#os_admin_tenant_name=admin</span>
-
-<span class="c"># Nova network name that will be used to access VMs</span>
-<span class="c">#nova_internal_net_name=novanetwork</span>
-
-<span class="c"># (Optional) Name of log file to output to. If not set,</span>
-<span class="c"># logging will go to stdout. (string value)</span>
-<span class="c">#log_file=&lt;None&gt;</span>
-
-<span class="o">[</span>cluster_node<span class="o">]</span>
-
-<span class="c"># An existing user on Hadoop image (string value)</span>
-<span class="c">#username=root</span>
-
-<span class="c"># User&#39;s password (string value)</span>
-<span class="c">#password=swordfish</span>
-
-<span class="o">[</span>sqlalchemy<span class="o">]</span>
-
-<span class="c"># URL for sqlalchemy database (string value)</span>
-<span class="c">#database_uri=sqlite:////tmp/savanna-server.db</span>
-</pre></div>
-</div>
+<p>3.6 Look through the savanna.conf and change parameters which default values do not suite you.</p>
 <p><strong>Note:</strong> Config file could be specified for <tt class="docutils literal"><span class="pre">savanna-api</span></tt> and <tt class="docutils literal"><span class="pre">savanna-manage</span></tt> commands using <tt class="docutils literal"><span class="pre">--config-file</span></tt> flag.</p>
 <p>3.7 To initialize Savanna database with created configuration just call:</p>
 <div class="highlight-bash"><div class="highlight"><pre>.venv/bin/python bin/savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
@@ -460,7 +423,7 @@ using <span class="s1">&#39;swordfish&#39;</span> as password
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

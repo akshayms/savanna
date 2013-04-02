@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -141,10 +139,19 @@
     <span class="k">return</span> <span class="n">flavors</span>
 
 </div>
+<div class="viewcode-block" id="get_flavor"><a class="viewcode-back" href="../../../../api/savanna.utils.openstack.nova.html#savanna.utils.openstack.nova.get_flavor">[docs]</a><span class="k">def</span> <span class="nf">get_flavor</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">novaclient</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">flavors</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="get_images"><a class="viewcode-back" href="../../../../api/savanna.utils.openstack.nova.html#savanna.utils.openstack.nova.get_images">[docs]</a><span class="k">def</span> <span class="nf">get_images</span><span class="p">(</span><span class="n">headers</span><span class="p">):</span>
     <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">image</span>
               <span class="ow">in</span> <span class="n">novaclient</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">list</span><span class="p">()]</span>
-    <span class="k">return</span> <span class="n">images</span></div>
+    <span class="k">return</span> <span class="n">images</span>
+
+</div>
+<div class="viewcode-block" id="get_limits"><a class="viewcode-back" href="../../../../api/savanna.utils.openstack.nova.html#savanna.utils.openstack.nova.get_limits">[docs]</a><span class="k">def</span> <span class="nf">get_limits</span><span class="p">(</span><span class="n">headers</span><span class="p">):</span>
+    <span class="n">limits</span> <span class="o">=</span> <span class="n">novaclient</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">absolute</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">limits</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -170,7 +177,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>
