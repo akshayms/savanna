@@ -25,73 +25,45 @@ class ValidationTestForNTApi(ValidationTestCase):
 #-----------------------positive_tests-----------------------------------------
 
     def test_crud_nt(self):
-        self._grud_object(self.jtnn.copy(), self.get_jtnn.copy(),
+        self._crud_object(self.jtnn.copy(), self.get_jtnn.copy(),
                           self.url_nt, 202, 200, 204)
-        # self._grud_object(self.ttdn.copy(), self.get_ttdn.copy(),
+        # self._crud_object(self.ttdn.copy(), self.get_ttdn.copy(),
         #                   self.url_nt, 202, 200, 204)
-        self._grud_object(self.nn.copy(), self.get_nn.copy(),
+        self._crud_object(self.nn.copy(), self.get_nn.copy(),
                           self.url_nt, 202, 200, 204)
-        self._grud_object(self.jt.copy(), self.get_jt.copy(),
+        self._crud_object(self.jt.copy(), self.get_jt.copy(),
                           self.url_nt, 202, 200, 204)
 
-    def test_list_node_templates(self):
-        data = self._list_objects(self.url_nt, 200)
-        for idx in xrange(0, len(data.get(u'node_templates'))):
-            del data.get(u'node_templates')[idx][u'id']
-        self.assertEquals(data, _get_templates_stub_data())
+    # def test_list_node_templates(self):
+    #     data = self._list_objects(self.url_nt, 200)
+    #     for idx in xrange(0, len(data.get(u'node_templates'))):
+    #         del data.get(u'node_templates')[idx][u'id']
+    #     self.assertEquals(data, _get_templates_stub_data())
 
 #-----------------------negative_tests-----------------------------------------
 
-    def test_create_nt_tt(self):
-        body = self.tt.copy()
-        data = self._post_object(self.url_nt, body, 400)
-        LOG.debug(data)
+    def test_create_nt_tt_and_dn(self):
+        data = self._post_object(self.url_nt, self.tt.copy(), 400)
         self.assertEquals(data['error_name'], u'NODE_TYPE_NOT_FOUND')
-
-    def test_create_nt_dn(self):
-        body = self.dn.copy()
-        data = self._post_object(self.url_nt, body, 400)
-        LOG.debug(data)
+        data = self._post_object(self.url_nt, self.dn.copy(), 400)
         self.assertEquals(data['error_name'], u'NODE_TYPE_NOT_FOUND')
 
     def test_secondary_delete_and_get_node_template(self):
-        body = self.jt.copy()
-        data = self._post_object(self.url_nt, body, 202)
-        data = data['node_template']
-        nt_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'name': u'test-template-3',
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker'],
-                u'name': u'JT'},
-            u'flavor_id': u'test_flavor'
-        })
-        get_data = self._get_object(self.url_nt_not_json, nt_id, 200)
-        get_data = get_data['node_template']
-        del get_data[u'id']
-        self.assertEquals(get_data, {
-            u'name': u'test-template-3',
-            u'job_tracker': {u'heap_size': u'1234'},
-            u'node_type': {
-                u'processes': [u'job_tracker'],
-                u'name': u'JT'},
-            u'flavor_id': u'test_flavor'
-        })
-        self._del_object(self.url_nt_not_json, nt_id, 204)
-        # get_data = self.get_object(self.url_nt_not_json, nt_id, 404)
-        # self.assertEquals(get_data['error_name'], u'NodeTemplate not found')
-        # del_data = self.del_object(self.url_nt_not_json, nt_id, 404)
-        # self.assertEquals(del_data['error_name'], u'NodeTemplate not found')
+        nt_id = self._crud_object(self.jt.copy(), self.get_jt.copy(),
+                                          self.url_nt, 202, 200, 204)
+        get_data = self._get_object(self.url_nt_not_json, nt_id, 404)
+        self.assertEquals(get_data['error_name'], 'NODE_TEMPLATE_NOT_FOUND')
+        del_data = self._del_object(self.url_nt_not_json, nt_id, 404)
+        self.assertEquals(del_data['error_name'], 'NODE_TEMPLATE_NOT_FOUND')
 
-    # def test_get_not_exist_nt(self):
-    #     get_data = self.get_object(self.url_nt_not_json, "0000000001", 404)
-    #     self.assertEquals(get_data['error_name'], 'NodeTemplate not found')
+    def test_get_not_exist_nt(self):
+        get_data = self._get_object(self.url_nt_not_json, "0000000001", 404)
+        self.assertEquals(get_data['error_name'], 'NODE_TEMPLATE_NOT_FOUND')
 
-    # def test_delete_not_exist_nt(self):
-    #     delete_data = self.del_object(self.url_nt_not_json, "000000001", 404)
-    #     self.assertEquals(delete_data['error_name'],
-    #                       'NodeTemplate not found')
+    def test_delete_not_exist_nt(self):
+        delete_data = self._del_object(self.url_nt_not_json, "000000001", 404)
+        self.assertEquals(delete_data['error_name'],
+                          'NODE_TEMPLATE_NOT_FOUND')
 
     def test_create_nt_with_already_used_name(self):
         body = self.jtnn.copy()
@@ -112,54 +84,43 @@ class ValidationTestForNTApi(ValidationTestCase):
 
 #--------------------incorrect_JSON--------------------------------------------
 
-    #def test_create_nt_with_empty_json(self):
-        # body = dict()
-        # rv = self.post_object(self.url_nt, body, 202)
-        # self.assertEquals(rv['error_name'], '')
-
-    #def test_create_nt_with_empty_json(self):
-        # body = dict(cluster=dict())
-        # rv = self.post_object(self.url_nt, body, 202)
-        # self.assertEquals(rv['error_name'], '')
-
-    def test_create_nt_without_name_json(self):
+    def test_create_nt_with_empty_json(self):
+        rv = self._post_object(self.url_nt, dict(), 400)
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
+        rv = self._post_object(self.url_nt, dict(cluster=dict()), 400)
+        self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
+        #test_create_nt_without_name_json
         body = self.nn.copy()
         del body['node_template']['name']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_node_type_json(self):
+        #test_create_nt_without_node_type_json
         body = self.nn.copy()
         del body['node_template']['node_type']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_flavor_id_json(self):
+        #test_create_nt_without_flavor_id_json
         body = self.nn.copy()
         del body['node_template']['flavor_id']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_node_param_json_nn(self):
+        #test_create_nt_without_node_param_json_nn
         body = self.nn.copy()
         del body['node_template']['name_node']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_node_param_json_jt(self):
+        #test_create_nt_without_node_param_json_jt
         body = self.jt.copy()
         del body['node_template']['job_tracker']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_node_param_json_jtnn(self):
+        #test_create_nt_without_node_param_json_jtnn
         body = self.jtnn.copy()
         del body['node_template']['job_tracker']
         del body['node_template']['name_node']
         rv = self._post_object(self.url_nt, body, 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
-
-    def test_create_nt_without_node_param_json_ttdn(self):
+        #test_create_nt_without_node_param_json_ttdn
         body = self.ttdn.copy()
         del body['node_template']['task_tracker']
         del body['node_template']['data_node']
@@ -268,6 +229,22 @@ class ValidationTestForNTApi(ValidationTestCase):
                                    400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT',
                                    400, 'VALIDATION_ERROR')
+
+    def test_create_nt_with_wrong_heap_size(self):
+        data = self._change_int_value(self.url_nt, self.jt.copy(),
+                                      "job_tracker", "heap_size", -2, 202)
+        self._del_object(self.url_nt_not_json, data, 204)
+        data = self._change_int_value(self.url_nt, self.jt.copy(),
+                                      "job_tracker", "heap_size", 1, 202)
+        self._del_object(self.url_nt_not_json, data, 204)
+        data = self._change_int_value(self.url_nt, self.jt.copy(),
+                                      "job_tracker", "heap_size", 'abs', 202)
+        self._del_object(self.url_nt_not_json, data, 204)
+
+    def test_create_nt_with_wtong_field(self):
+        data = self._change_field(self.url_nt, self.jt,
+                                  "name", "mame", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
 
 
 def _get_templates_stub_data():

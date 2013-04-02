@@ -180,7 +180,9 @@ class ValidationTestCase(SavannaTestCase):
             ))
         super(ValidationTestCase, self).setUp()
 
-    #---------------------close_setUp-----------------------------------------
+
+#---------------------close_setUp----------------------------------------------
+
 
     def _post_object(self, url, body, code):
         LOG.debug(body)
@@ -225,7 +227,31 @@ class ValidationTestCase(SavannaTestCase):
         self._del_object(get_url, nt_id, d_code)
         return nt_id
 
-    #---------------------for_node_templates----------------------------------
+    def _change_int_value(self, url, body, f_field, sec_field, value, code):
+        object = "cluster"
+        if url != self.url_cluster:
+            object = "node_template"
+        body["%s" % object]["%s" % f_field]["%s" % sec_field] = value
+        data = self._post_object(url, body, code)
+        if code != 202:
+            return data['error_name']
+        return data['%s' % object]['id']
+
+    def _change_field(self, url, body, old_field, new_field, code):
+        object = "cluster"
+        if url != self.url_cluster:
+            object = "node_template"
+        value = body["%s" % object]["%s" % old_field]
+        del body["%s" % object]["%s" % old_field]
+        body["%s" % object]["%s" % new_field] = value
+        data = self._post_object(url, body, code)
+        if code != 202:
+            return data['error_name']
+        return data['%s' % object]['id']
+
+
+#---------------------for_node_templates---------------------------------------
+
 
     def _post_incorrect_nt(self, body, field, value, code, error):
         body['node_template']['%s' % field] = '%s' % value
