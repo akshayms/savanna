@@ -28,7 +28,7 @@ class ValidationTestCase(SavannaTestCase):
             self.long_field += "%d" % random_number.randint(
                 1000000000, 9999999999)
 
-    #----------------------add_value_for_node_templates------------------------
+            #----------------------add_value_for_node_templates------------------------
 
         self.url_nt = '/v0.2/some-tenant-id/node-templates.json'
         self.url_nt_not_json = '/v0.2/some-tenant-id/node-templates/'
@@ -136,7 +136,8 @@ class ValidationTestCase(SavannaTestCase):
 
         #----------------------add_value_for_clusters--------------------------
 
-        self.url_cluster = '/v0.2/some-tenant-id/clusters'
+        self.url_cluster = '/v0.2/some-tenant-id/clusters.json'
+        self.url_cluster_without_json = '/v0.2/some-tenant-id/clusters/'
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -179,7 +180,7 @@ class ValidationTestCase(SavannaTestCase):
             ))
         super(ValidationTestCase, self).setUp()
 
-#---------------------close_setUp----------------------------------------------
+    #---------------------close_setUp----------------------------------------------
 
     def _post_object(self, url, body, code):
         LOG.debug(body)
@@ -207,10 +208,10 @@ class ValidationTestCase(SavannaTestCase):
         data = json.loads(rv.data)
         return data
 
-    def _grud_object(self, body, get_body, url, p_code, g_code, d_code):
+    def _crud_object(self, body, get_body, url, p_code, g_code, d_code):
         data = self._post_object(url, body, p_code)
         object = "cluster"
-        get_url = self.url
+        get_url = self.url_cluster_without_json
         if url == self.url_nt:
             object = "node_template"
             get_url = self.url_nt_not_json
@@ -224,33 +225,42 @@ class ValidationTestCase(SavannaTestCase):
         self._del_object(get_url, nt_id, d_code)
         return nt_id
 
-#---------------------for_node_templates---------------------------------------
+    #---------------------for_node_templates---------------------------------------
 
     def _post_incorrect_nt(self, body, field, value, code, error):
         body['node_template']['%s' % field] = '%s' % value
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
 
-#---------------------for_clusters---------------------------------------------
+    #---------------------for_clusters---------------------------------------------
 
     def _assert_error(self, resp, name, code):
         self.assertEquals(resp['error_name'], name)
         self.assertEquals(resp['error_code'], code)
 
-    def _assert_incorrect_cluster_name(self, name):
-        body = self.cluster_data_jtnn_ttdn.copy()
-        body['cluster']['name'] = name
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'VALIDATION_ERROR', 400)
+    def _assert_change_cluster_body(
+            self, body, del_node_type, set_node_type, value):
+        del body['cluster']['node_templates'][del_node_type]
+        body['cluster']['node_templates'][set_node_type] = value
+        return body
 
-    def _assert_incorrect_base_image_id(self, base_image_id):
+    def _assert_delete_part_of_cluster_body(self, body, del_node_type):
+        del body['cluster']['node_templates'][del_node_type]
+        return body
+
+    def _assert_incorrect_value_of_field(self, field, value_of_field):
         body = self.cluster_data_jtnn_ttdn.copy()
-        body['cluster']['base_image_id'] = base_image_id
-        resp = self._post_object(self.url_cluster, body, 400)
-        if base_image_id == '':
+        if field == 'name':
+            body['cluster']['name'] = value_of_field
+            resp = self._post_object(self.url_cluster, body, 400)
             self._assert_error(resp, u'VALIDATION_ERROR', 400)
         else:
-            self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
+            body['cluster']['base_image_id'] = value_of_field
+            resp = self._post_object(self.url_cluster, body, 400)
+            if value_of_field == '':
+                self._assert_error(resp, u'VALIDATION_ERROR', 400)
+            else:
+                self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
 
     def _assert_not_single_jt_nn(self, body, node_type, count):
         body['cluster']['node_templates'][node_type] = count
