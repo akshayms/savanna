@@ -136,7 +136,8 @@ class ValidationTestCase(SavannaTestCase):
 
         #----------------------add_value_for_clusters--------------------------
 
-        self.url_cluster = '/v0.2/some-tenant-id/clusters'
+        self.url_cluster = '/v0.2/some-tenant-id/clusters.json'
+        self.url_cluster_without_json = '/v0.2/some-tenant-id/clusters/'
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -207,10 +208,10 @@ class ValidationTestCase(SavannaTestCase):
         data = json.loads(rv.data)
         return data
 
-    def _grud_object(self, body, get_body, url, p_code, g_code, d_code):
+    def _crud_object(self, body, get_body, url, p_code, g_code, d_code):
         data = self._post_object(url, body, p_code)
         object = "cluster"
-        get_url = self.url
+        get_url = self.url_cluster_without_json
         if url == self.url_nt:
             object = "node_template"
             get_url = self.url_nt_not_json
