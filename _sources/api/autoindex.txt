@@ -20,6 +20,7 @@
    savanna.openstack.common.notifier.test_notifier.rst
    savanna.openstack.common.setup.rst
    savanna.openstack.common.timeutils.rst
+   savanna.openstack.common.uuidutils.rst
    savanna.openstack.common.wsgi.rst
    savanna.openstack.common.xmlutils.rst
    savanna.openstack.commons.rst

@@ -272,7 +272,14 @@
         <span class="n">nova</span><span class="o">.</span><span class="n">get_flavor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prev_get_flavor</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_fd</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span></div></div>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+
+        <span class="c"># place back default configs</span>
+        <span class="n">CONF</span><span class="o">.</span><span class="n">set_override</span><span class="p">(</span><span class="s">&#39;debug&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">CONF</span><span class="o">.</span><span class="n">set_override</span><span class="p">(</span><span class="s">&#39;allow_cluster_ops&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">CONF</span><span class="o">.</span><span class="n">set_override</span><span class="p">(</span><span class="s">&#39;database_uri&#39;</span><span class="p">,</span> <span class="s">&#39;sqlite:////tmp/savanna.db&#39;</span><span class="p">,</span>
+                          <span class="n">group</span><span class="o">=</span><span class="s">&#39;sqlalchemy&#39;</span><span class="p">)</span>
+        <span class="n">CONF</span><span class="o">.</span><span class="n">set_override</span><span class="p">(</span><span class="s">&#39;echo&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s">&#39;sqlalchemy&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

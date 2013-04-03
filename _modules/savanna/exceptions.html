@@ -157,14 +157,14 @@
 <div class="viewcode-block" id="NotSingleNameNodeException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NotSingleNameNodeException">[docs]</a><span class="k">class</span> <span class="nc">NotSingleNameNodeException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nn_count</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hadoop cluster should contain only 1 NameNode. &quot;</span> \
-                       <span class="s">&quot;Actual NN count is </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">nn_count</span>
+                       <span class="s">&quot;Actual NN count is </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">nn_count</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NOT_SINGLE_NAME_NODE&quot;</span>
 
 </div>
 <div class="viewcode-block" id="NotSingleJobTrackerException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.NotSingleJobTrackerException">[docs]</a><span class="k">class</span> <span class="nc">NotSingleJobTrackerException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jt_count</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hadoop cluster should contain only 1 JobTracker. &quot;</span> \
-                       <span class="s">&quot;Actual JT count is </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">jt_count</span>
+                       <span class="s">&quot;Actual JT count is </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">jt_count</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NOT_SINGLE_JOB_TRACKER&quot;</span>
 
 </div>

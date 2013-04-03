@@ -123,6 +123,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">ConfigParser</span>
 <span class="kn">import</span> <span class="nn">cStringIO</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -181,11 +182,11 @@
                <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;PATH&#39;</span><span class="p">,</span>
                <span class="n">deprecated_name</span><span class="o">=</span><span class="s">&#39;logfile&#39;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s">&#39;(Optional) Name of log file to output to. &#39;</span>
-                    <span class="s">&#39;If not set, logging will go to stdout.&#39;</span><span class="p">),</span>
+                    <span class="s">&#39;If no default is set, logging will go to stdout.&#39;</span><span class="p">),</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;log-dir&#39;</span><span class="p">,</span>
                <span class="n">deprecated_name</span><span class="o">=</span><span class="s">&#39;logdir&#39;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s">&#39;(Optional) The directory to keep log files in &#39;</span>
-                    <span class="s">&#39;(will be prepended to --log-file)&#39;</span><span class="p">),</span>
+               <span class="n">help</span><span class="o">=</span><span class="s">&#39;(Optional) The base directory used for relative &#39;</span>
+                    <span class="s">&#39;--log-file paths&#39;</span><span class="p">),</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">BoolOpt</span><span class="p">(</span><span class="s">&#39;use-syslog&#39;</span><span class="p">,</span>
                 <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                 <span class="n">help</span><span class="o">=</span><span class="s">&#39;Use syslog for logging.&#39;</span><span class="p">),</span>
@@ -205,9 +206,9 @@
 
 <span class="n">log_opts</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;logging_context_format_string&#39;</span><span class="p">,</span>
-               <span class="n">default</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s">.</span><span class="si">%(msecs)03d</span><span class="s"> </span><span class="si">%(levelname)s</span><span class="s"> </span><span class="si">%(name)s</span><span class="s"> &#39;</span>
-                       <span class="s">&#39;[</span><span class="si">%(request_id)s</span><span class="s"> </span><span class="si">%(user)s</span><span class="s"> </span><span class="si">%(tenant)s</span><span class="s">] </span><span class="si">%(instance)s</span><span class="s">&#39;</span>
-                       <span class="s">&#39;</span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s">.</span><span class="si">%(msecs)03d</span><span class="s"> </span><span class="si">%(process)d</span><span class="s"> </span><span class="si">%(levelname)s</span><span class="s"> &#39;</span>
+                       <span class="s">&#39;</span><span class="si">%(name)s</span><span class="s"> [</span><span class="si">%(request_id)s</span><span class="s"> </span><span class="si">%(user)s</span><span class="s"> </span><span class="si">%(tenant)s</span><span class="s">] &#39;</span>
+                       <span class="s">&#39;</span><span class="si">%(instance)s%(message)s</span><span class="s">&#39;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s">&#39;format string to use for log messages with context&#39;</span><span class="p">),</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">StrOpt</span><span class="p">(</span><span class="s">&#39;logging_default_format_string&#39;</span><span class="p">,</span>
                <span class="n">default</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s">.</span><span class="si">%(msecs)03d</span><span class="s"> </span><span class="si">%(process)d</span><span class="s"> </span><span class="si">%(levelname)s</span><span class="s"> &#39;</span>
@@ -417,10 +418,30 @@
     <span class="k">return</span> <span class="n">logging_excepthook</span>
 
 
+<div class="viewcode-block" id="LogConfigError"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.log.html#savanna.openstack.common.log.LogConfigError">[docs]</a><span class="k">class</span> <span class="nc">LogConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+
+    <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Error loading logging config </span><span class="si">%(log_config)s</span><span class="s">: </span><span class="si">%(err_msg)s</span><span class="s">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_config</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_config</span> <span class="o">=</span> <span class="n">log_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="o">=</span> <span class="n">err_msg</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">%</span> <span class="nb">dict</span><span class="p">(</span><span class="n">log_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log_config</span><span class="p">,</span>
+                                   <span class="n">err_msg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_load_log_config</span><span class="p">(</span><span class="n">log_config</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fileConfig</span><span class="p">(</span><span class="n">log_config</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ConfigParser</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">LogConfigError</span><span class="p">(</span><span class="n">log_config</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
+
+
 <div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.log.html#savanna.openstack.common.log.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">product_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Setup logging.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">CONF</span><span class="o">.</span><span class="n">log_config</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fileConfig</span><span class="p">(</span><span class="n">CONF</span><span class="o">.</span><span class="n">log_config</span><span class="p">)</span>
+        <span class="n">_load_log_config</span><span class="p">(</span><span class="n">CONF</span><span class="o">.</span><span class="n">log_config</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_setup_logging_from_conf</span><span class="p">()</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">_create_logging_excepthook</span><span class="p">(</span><span class="n">product_name</span><span class="p">)</span>
