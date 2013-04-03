@@ -70,7 +70,7 @@ class TestValidationApiForClusters(ValidationTestCase):
         data = self.app.delete(self.url_cluster_without_json + cluster_id)
         self.assertEquals(data.status_code, 204)
 
-        time.sleep(0.1)
+        time.sleep(0.001)
         data = self.app.delete(self.url_cluster_without_json + cluster_id)
         self.assertEquals(data.status_code, 404)
 
@@ -78,7 +78,7 @@ class TestValidationApiForClusters(ValidationTestCase):
         data = self.app.get(self.url_cluster_without_json + cluster_id)
         self.assertEquals(data.status_code, 404)
 
-    #-------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     # Negative tests for cluster creation
     # -------------------------------------------------------------------------
     def test_cluster_name_validation(self):
@@ -176,3 +176,20 @@ class TestValidationApiForClusters(ValidationTestCase):
         change_body = self._assert_delete_part_of_cluster_body(
             body, 'jt_nn.medium')
         self._assert_node_template_without_node_nn(change_body)
+
+    def test_validation_fields_of_cluster_body(self):
+        self._assert_incorrect_fields_of_cluster_body('name', 'abc')
+        self._assert_incorrect_fields_of_cluster_body('name', '')
+        self._assert_incorrect_fields_of_cluster_body('name', None)
+
+        self._assert_incorrect_fields_of_cluster_body('base_image_id', 'abc')
+        self._assert_incorrect_fields_of_cluster_body('base_image_id', '')
+        self._assert_incorrect_fields_of_cluster_body('base_image_id', None)
+
+        self._assert_incorrect_fields_of_cluster_body('node_templates', 'abc')
+        self._assert_incorrect_fields_of_cluster_body('node_templates', '')
+        self._assert_incorrect_fields_of_cluster_body('node_templates', None)
+
+        self._assert_incorrect_field_cluster('abc')
+        self._assert_incorrect_field_cluster('')
+        self._assert_incorrect_field_cluster(None)

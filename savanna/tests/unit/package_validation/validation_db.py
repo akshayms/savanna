@@ -313,3 +313,16 @@ class ValidationTestCase(SavannaTestCase):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
         body['cluster'].pop(component)
         self._assert_error(body, u'VALIDATION_ERROR')
+
+    def _assert_incorrect_fields_of_cluster_body(self, old_field, new_field):
+        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
+        resp = self._change_field(self.url_cluster, body, old_field,
+                                  new_field, 400)
+        self.assertEquals(resp, u'VALIDATION_ERROR')
+
+    def _assert_incorrect_field_cluster(self, field):
+        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
+        data = body['cluster']
+        del body['cluster']
+        body[field] = data
+        self._assert_error(body, u'VALIDATION_ERROR')
