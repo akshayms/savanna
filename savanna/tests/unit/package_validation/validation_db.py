@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import json
+import copy
 import random as random_number
 from savanna.openstack.common import log as logging
 from savanna.tests.unit.base import SavannaTestCase
@@ -28,7 +29,7 @@ class ValidationTestCase(SavannaTestCase):
             self.long_field += "%d" % random_number.randint(
                 1000000000, 9999999999)
 
-    #----------------------add_value_for_node_templates-----------------------
+#----------------------add_value_for_node_templates----------------------------
 
         self.url_nt = '/v0.2/some-tenant-id/node-templates.json'
         self.url_nt_not_json = '/v0.2/some-tenant-id/node-templates/'
@@ -134,7 +135,7 @@ class ValidationTestCase(SavannaTestCase):
             u'flavor_id': u'test_flavor'
         }
 
-    #----------------------add_value_for_clusters-----------------------------
+#----------------------add_value_for_clusters----------------------------------
 
         self.url_cluster = '/v0.2/some-tenant-id/clusters.json'
         self.url_cluster_without_json = '/v0.2/some-tenant-id/clusters/'
@@ -180,9 +181,7 @@ class ValidationTestCase(SavannaTestCase):
             ))
         super(ValidationTestCase, self).setUp()
 
-
 #---------------------close_setUp----------------------------------------------
-
 
     def _post_object(self, url, body, code):
         LOG.debug(body)
@@ -249,20 +248,18 @@ class ValidationTestCase(SavannaTestCase):
             return data['error_name']
         return data['%s' % object]['id']
 
-
 #---------------------for_node_templates---------------------------------------
-
 
     def _post_incorrect_nt(self, body, field, value, code, error):
         body['node_template']['%s' % field] = '%s' % value
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
 
-    #---------------------for_clusters----------------------------------------
+#---------------------for_clusters---------------------------------------------
 
-    def _assert_error(self, resp, name, code):
-        self.assertEquals(resp['error_name'], name)
-        self.assertEquals(resp['error_code'], code)
+    def _assert_error(self, body, error_name):
+        resp = self._post_object(self.url_cluster, body, 400)
+        self.assertEquals(resp['error_name'], error_name)
 
     def _assert_delete_part_of_cluster_body(self, body, del_node_type):
         del body['cluster']['node_templates'][del_node_type]
@@ -270,52 +267,49 @@ class ValidationTestCase(SavannaTestCase):
 
     def _assert_change_cluster_body(
             self, body, del_node_type, set_node_type, value):
-        body = self._assert_delete_part_of_cluster_body(body, del_node_type)
-        body['cluster']['node_templates'][set_node_type] = value
-        return body
+        data = copy.deepcopy(body)
+        data = self._assert_delete_part_of_cluster_body(data, del_node_type)
+        data['cluster']['node_templates'][set_node_type] = value
+        return data
 
     def _assert_incorrect_value_of_field(self, field, value_of_field):
-        body = self.cluster_data_jtnn_ttdn.copy()
+        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
         if field == 'name':
             body['cluster']['name'] = value_of_field
-            resp = self._post_object(self.url_cluster, body, 400)
-            self._assert_error(resp, u'VALIDATION_ERROR', 400)
+            self._assert_error(body, u'VALIDATION_ERROR')
         else:
             body['cluster']['base_image_id'] = value_of_field
             resp = self._post_object(self.url_cluster, body, 400)
             if value_of_field == '':
-                self._assert_error(resp, u'VALIDATION_ERROR', 400)
+                self.assertEquals(resp['error_name'], u'VALIDATION_ERROR')
             else:
-                self._assert_error(resp, u'IMAGE_NOT_FOUND', 400)
+                self.assertEquals(resp['error_name'], u'IMAGE_NOT_FOUND')
 
     def _assert_not_single_jt_nn(self, body, node_type, count):
-        body['cluster']['node_templates'][node_type] = count
-        resp = self._post_object(self.url_cluster, body, 400)
+        data = copy.deepcopy(body)
+        data['cluster']['node_templates'][node_type] = count
+        resp = self._post_object(self.url_cluster, data, 400)
         if (node_type == 'jt_nn.medium') or (node_type == 'nn.medium'):
-            self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
+            self.assertEquals(resp['error_name'], u'NOT_SINGLE_NAME_NODE')
         else:
-            self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
+            self.assertEquals(resp['error_name'], u'NOT_SINGLE_JOB_TRACKER')
 
     def _assert_node_template_with_incorrect_number_of_node(self, body,
                                                             node_type, count):
-        body['cluster']['node_templates'][node_type] = count
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'VALIDATION_ERROR', 400)
+        data = copy.deepcopy(body)
+        data['cluster']['node_templates'][node_type] = count
+        self._assert_error(data, u'VALIDATION_ERROR')
 
     def _assert_node_template_without_node_nn(self, body):
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'NOT_SINGLE_NAME_NODE', 400)
+        self._assert_error(body, u'NOT_SINGLE_NAME_NODE')
 
     def _assert_node_template_without_node_jt(self, body):
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'NOT_SINGLE_JOB_TRACKER', 400)
+        self._assert_error(body, u'NOT_SINGLE_JOB_TRACKER')
 
     def _assert_node_template_with_incorrect_node(self, body):
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'NODE_TEMPLATE_NOT_FOUND', 400)
+        self._assert_error(body, u'NODE_TEMPLATE_NOT_FOUND')
 
     def _assert_bad_cluster_body(self, component):
-        body = self.cluster_data_jtnn_ttdn.copy()
+        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
         body['cluster'].pop(component)
-        resp = self._post_object(self.url_cluster, body, 400)
-        self._assert_error(resp, u'VALIDATION_ERROR', 400)
+        self._assert_error(body, u'VALIDATION_ERROR')
