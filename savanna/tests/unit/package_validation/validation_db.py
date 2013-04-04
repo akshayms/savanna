@@ -150,33 +150,12 @@ class ValidationTestCase(SavannaTestCase):
                 }
             ))
 
-        self.cluster_data_jt_nn_ttdn = dict(
-            cluster=dict(
-                name='test-cluster',
-                base_image_id='base-image-id',
-                node_templates={
-                    'jt.medium': 1,
-                    'nn.medium': 1,
-                    'tt_dn.small': 5
-                }
-            ))
-
         self.cluster_data_jtnn = dict(
             cluster=dict(
                 name='test-cluster',
                 base_image_id='base-image-id',
                 node_templates={
                     'jt_nn.medium': 1
-                }
-            ))
-
-        self.cluster_data_jt_nn = dict(
-            cluster=dict(
-                name='test-cluster',
-                base_image_id='base-image-id',
-                node_templates={
-                    'jt.medium': 1,
-                    'nn.medium': 1
                 }
             ))
 
