@@ -34,11 +34,11 @@ class ValidationTestForNTApi(ValidationTestCase):
         self._crud_object(self.jt.copy(), self.get_jt.copy(),
                           self.url_nt, 202, 200, 204)
 
-    # def test_list_node_templates(self):
-    #     data = self._list_objects(self.url_nt, 200)
-    #     for idx in xrange(0, len(data.get(u'node_templates'))):
-    #         del data.get(u'node_templates')[idx][u'id']
-    #     self.assertEquals(data, _get_templates_stub_data())
+    def test_list_node_templates(self):
+        data = self._list_objects(self.url_nt, 200)
+        for idx in xrange(0, len(data.get(u'node_templates'))):
+            del data.get(u'node_templates')[idx][u'id']
+        self.assertEquals(data, _get_templates_stub_data())
 
 #-----------------------negative_tests-----------------------------------------
 
@@ -279,57 +279,6 @@ def _get_templates_stub_data():
                 u'flavor_id': u'm1.medium',
                 u'name_node': {
                     u'heap_size': u'1792'
-                }
-            },
-            {
-                u'job_tracker': {
-                    u'heap_size': u'1792'
-                },
-                u'name': u'jt.small',
-                u'node_type': {
-                    u'processes': [
-                        u'job_tracker'
-                    ],
-                    u'name': u'JT'
-                },
-                u'flavor_id': u'm1.small'
-            },
-            {
-                u'job_tracker': {
-                    u'heap_size': u'3712'
-                },
-                u'name': u'jt.medium',
-                u'node_type': {
-                    u'processes': [
-                        u'job_tracker'
-                    ],
-                    u'name': u'JT'},
-                u'flavor_id': u'm1.medium'
-            },
-            {
-                u'name': u'nn.small',
-                u'node_type': {
-                    u'processes': [
-                        u'name_node'
-                    ],
-                    u'name': u'NN'
-                },
-                u'flavor_id': u'm1.small',
-                u'name_node': {
-                    u'heap_size': u'1792'
-                }
-            },
-            {
-                u'name': u'nn.medium',
-                u'node_type': {
-                    u'processes': [
-                        u'name_node'
-                    ],
-                    u'name': u'NN'
-                },
-                u'flavor_id': u'm1.medium',
-                u'name_node': {
-                    u'heap_size': u'3712'
                 }
             },
             {
