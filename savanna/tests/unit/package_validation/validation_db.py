@@ -264,8 +264,9 @@ class ValidationTestCase(SavannaTestCase):
         return body
 
     def _assert_change_cluster_body(
-            self, body, del_node_type, set_node_type, value):
+            self, body, del_node_type, set_node_type):
         data = copy.deepcopy(body)
+        value = data['cluster']['node_templates'][del_node_type]
         data = self._assert_delete_part_of_cluster_body(data, del_node_type)
         data['cluster']['node_templates'][set_node_type] = value
         return data

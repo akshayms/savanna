@@ -29,7 +29,10 @@ class TestValidationApiForClusters(ValidationTestCase):
     # -------------------------------------------------------------------------
     def test_crud_operation_for_cluster(self):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-        self._crud_object(body, self.get_cluster_body,
+        body['cluster']['name'] = self.long_field
+        get_body = copy.deepcopy(self.get_cluster_body)
+        get_body[u'name'] = u'%s' % self.long_field
+        self._crud_object(body, get_body,
                           self.url_cluster, 202, 200, 204)
 
     # -------------------------------------------------------------------------
@@ -62,12 +65,7 @@ class TestValidationApiForClusters(ValidationTestCase):
         self._assert_incorrect_value_of_field('name', '')
         self._assert_incorrect_value_of_field('name', 'ab@#cd')
         self._assert_incorrect_value_of_field('name', 'ab cd')
-
-        str = "a"
-        name = "b"
-        while len(name) < 241:
-            name += str
-        self._assert_incorrect_value_of_field('name', name)
+        self._assert_incorrect_value_of_field('name', self.long_field + 'a')
 
     def test_cluster_creation_with_empty_body(self):
         self._assert_error(dict(cluster=dict()), u'VALIDATION_ERROR')
@@ -105,25 +103,21 @@ class TestValidationApiForClusters(ValidationTestCase):
             body, 'jt_nn.medium', 'abc')
         self._assert_node_template_with_incorrect_number_of_node(
             body, 'tt_dn.small', 'abc')
-        self._assert_node_template_with_incorrect_number_of_node(
-            body, 'jt_nn.medium', None)
-        self._assert_node_template_with_incorrect_number_of_node(
-            body, 'tt_dn.small', None)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', 'abc', 1)
+            body, 'jt_nn.medium', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', '', 1)
+            body, 'jt_nn.medium', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'tt_dn.small', '', 5)
+            body, 'tt_dn.small', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'tt_dn.small', 'abc', 5)
+            body, 'tt_dn.small', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_delete_part_of_cluster_body(
@@ -139,15 +133,13 @@ class TestValidationApiForClusters(ValidationTestCase):
         self._assert_not_single_jt_nn(body, 'jt_nn.medium', 2)
         self._assert_node_template_with_incorrect_number_of_node(
             body, 'jt_nn.medium', 'abc')
-        self._assert_node_template_with_incorrect_number_of_node(
-            body, 'jt_nn.medium', None)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', '', 1)
+            body, 'jt_nn.medium', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', 'abc', 1)
+            body, 'jt_nn.medium', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_delete_part_of_cluster_body(
@@ -157,16 +149,26 @@ class TestValidationApiForClusters(ValidationTestCase):
     def test_validation_fields_of_cluster_body(self):
         self._assert_incorrect_fields_of_cluster_body('name', 'abc')
         self._assert_incorrect_fields_of_cluster_body('name', '')
-        self._assert_incorrect_fields_of_cluster_body('name', None)
 
         self._assert_incorrect_fields_of_cluster_body('base_image_id', 'abc')
         self._assert_incorrect_fields_of_cluster_body('base_image_id', '')
-        self._assert_incorrect_fields_of_cluster_body('base_image_id', None)
 
         self._assert_incorrect_fields_of_cluster_body('node_templates', 'abc')
         self._assert_incorrect_fields_of_cluster_body('node_templates', '')
-        self._assert_incorrect_fields_of_cluster_body('node_templates', None)
 
         self._assert_incorrect_field_cluster('abc')
         self._assert_incorrect_field_cluster('')
-        self._assert_incorrect_field_cluster(None)
+
+    # def test_incorrect_json(self):
+    #     body = dict(
+    #         cluster=dict(
+    #             name='test-cluster',
+    #             base_image_id='base-image-id',
+    #             node_templates={
+    #                 'jt_nn.medium': 1
+    #             }
+    #         ))
+    #     body['cluster'].pop('}')
+    #     data=json.dumps(body)
+    #     self.assertEquals(body, 'error_name')
+    #     self._assert_error(body, 'error_name')
