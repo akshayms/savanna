@@ -30,19 +30,8 @@ class TestValidationApiForClusters(ValidationTestCase):
     # -------------------------------------------------------------------------
     def test_crud_operation_for_cluster(self):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-        get_body = {
-            u'status': u'Starting',
-            u'service_urls': {},
-            u'name': u'test-cluster',
-            u'base_image_id': u'base-image-id',
-            u'node_templates':
-            {
-                u'jt_nn.medium': 1,
-                u'tt_dn.small': 5
-            },
-            u'nodes': []
-        }
-        self._crud_object(body, get_body, self.url_cluster, 202, 200, 204)
+        self._crud_object(body, self.get_cluster_body,
+                          self.url_cluster, 202, 200, 204)
 
     # -------------------------------------------------------------------------
     # Negative tests for cluster deletion and get cluster
@@ -54,18 +43,7 @@ class TestValidationApiForClusters(ValidationTestCase):
         data = self._post_object(self.url_cluster, body, 202)
         data = data['cluster']
         cluster_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'status': u'Starting',
-            u'service_urls': {},
-            u'name': u'test-cluster',
-            u'base_image_id': u'base-image-id',
-            u'node_templates':
-            {
-                u'jt_nn.medium': 1,
-                u'tt_dn.small': 5
-            },
-            u'nodes': []
-        })
+        self.assertEquals(data, self.get_cluster_body)
 
         data = self.app.delete(self.url_cluster_without_json + cluster_id)
         self.assertEquals(data.status_code, 204)

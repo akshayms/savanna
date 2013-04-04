@@ -179,6 +179,20 @@ class ValidationTestCase(SavannaTestCase):
                     'nn.medium': 1
                 }
             ))
+
+        self.get_cluster_body = {
+            u'status': u'Starting',
+            u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'base-image-id',
+            u'node_templates':
+                {
+                    u'jt_nn.medium': 1,
+                    u'tt_dn.small': 5
+                },
+            u'nodes': []
+        }
+
         super(ValidationTestCase, self).setUp()
 
 #---------------------close_setUp----------------------------------------------
@@ -226,17 +240,21 @@ class ValidationTestCase(SavannaTestCase):
         self._del_object(get_url, nt_id, d_code)
         return nt_id
 
-    def _change_int_value(self, url, body, f_field, sec_field, value, code):
+    def _change_int_value(self, url, param, f_field, sec_field, value, code):
+        body = copy.deepcopy(param)
         object = "cluster"
         if url != self.url_cluster:
             object = "node_template"
         body["%s" % object]["%s" % f_field]["%s" % sec_field] = value
+        LOG.debug("`````````````(two)`````````````")
+        LOG.debug(body)
         data = self._post_object(url, body, code)
         if code != 202:
             return data['error_name']
         return data['%s' % object]['id']
 
-    def _change_field(self, url, body, old_field, new_field, code):
+    def _change_field(self, url, param, old_field, new_field, code):
+        body = copy.deepcopy(param)
         object = "cluster"
         if url != self.url_cluster:
             object = "node_template"
@@ -250,8 +268,11 @@ class ValidationTestCase(SavannaTestCase):
 
 #---------------------for_node_templates---------------------------------------
 
-    def _post_incorrect_nt(self, body, field, value, code, error):
-        body['node_template']['%s' % field] = '%s' % value
+    def _post_incorrect_nt(self, param, field, value, code, error):
+        body = copy.deepcopy(param)
+        body['node_template']['%s' % field] = value
+        LOG.debug("`````````````(one)`````````````")
+        LOG.debug(body)
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
 

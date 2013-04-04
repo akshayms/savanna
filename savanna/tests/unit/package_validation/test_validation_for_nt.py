@@ -27,8 +27,8 @@ class ValidationTestForNTApi(ValidationTestCase):
     def test_crud_nt(self):
         self._crud_object(self.jtnn.copy(), self.get_jtnn.copy(),
                           self.url_nt, 202, 200, 204)
-        # self._crud_object(self.ttdn.copy(), self.get_ttdn.copy(),
-        #                   self.url_nt, 202, 200, 204)
+        self._crud_object(self.ttdn.copy(), self.get_ttdn.copy(),
+                          self.url_nt, 202, 200, 204)
         self._crud_object(self.nn.copy(), self.get_nn.copy(),
                           self.url_nt, 202, 200, 204)
         self._crud_object(self.jt.copy(), self.get_jt.copy(),
@@ -132,6 +132,7 @@ class ValidationTestForNTApi(ValidationTestCase):
     def test_create_nt_with_incorrect_name_ttdn(self):
         param = self.ttdn.copy()
         self._post_incorrect_nt(param, 'name', '', 400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'name', None, 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '-p', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '1p', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '#p', 400, 'VALIDATION_ERROR')
@@ -167,6 +168,8 @@ class ValidationTestForNTApi(ValidationTestCase):
         param = self.ttdn.copy()
         self._post_incorrect_nt(param, 'node_type', '*', 400,
                                 'NODE_TYPE_NOT_FOUND')
+        self._post_incorrect_nt(param, 'node_type', None, 400,
+                                'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'T', 400,
                                 'NODE_TYPE_NOT_FOUND')
         self._post_incorrect_nt(param, 'node_type', '%', 400,
@@ -176,6 +179,10 @@ class ValidationTestForNTApi(ValidationTestCase):
         self._post_incorrect_nt(param, 'node_type', self.long_field + "q",
                                 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'flavor_id', '',
+                                400, 'VALIDATION_ERROR')
+        self._post_incorrect_nt(param, 'flavor_id', 'qweqwe',
+                                400, 'FLAVOR_NOT_FOUND')
+        self._post_incorrect_nt(param, 'flavor_id', None,
                                 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'flavor_id', self.long_field + 'q',
                                 400, 'VALIDATION_ERROR')
@@ -231,6 +238,9 @@ class ValidationTestForNTApi(ValidationTestCase):
                                    400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_wrong_heap_size(self):
+        # data = self._change_int_value(self.url_nt, self.jt.copy(),
+        #                               "job_tracker", "heap_size", None, 400)
+        # self.assertEquals(data, 'VALIDATION_ERROR')
         data = self._change_int_value(self.url_nt, self.jt.copy(),
                                       "job_tracker", "heap_size", -2, 202)
         self._del_object(self.url_nt_not_json, data, 204)
@@ -242,10 +252,38 @@ class ValidationTestForNTApi(ValidationTestCase):
         self._del_object(self.url_nt_not_json, data, 204)
 
     def test_create_nt_with_wtong_field(self):
-        data = self._change_field(self.url_nt, self.jt,
+        data = self._change_field(self.url_nt, self.jt.copy(),
                                   "name", "mame", 400)
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "name", "NAME", 400)
         self.assertEquals(data, 'VALIDATION_ERROR')
-
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "name", "", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "node_type", "qweqwe", 400)
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "node_type", "NODE_TYPE", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "node_type", "", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "flavor_id", "flavor", 400)
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "flavor_id", "FLAVOR_ID", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "flavor_id", "", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "job_tracker", "", 400)
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "job_tracker", "JOB_TRACKER", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
+        data = self._change_field(self.url_nt, self.jt.copy(),
+                                  "job_tracker", "job", 400)
+        self.assertEquals(data, 'VALIDATION_ERROR')
 
 def _get_templates_stub_data():
     return {
