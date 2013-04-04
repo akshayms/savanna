@@ -14,7 +14,6 @@
 # limitations under the License.
 
 import copy
-import json
 from savanna.openstack.common import log as logging
 from savanna.tests.unit.package_validation.validation_db \
     import ValidationTestCase

@@ -50,7 +50,7 @@ class ValidationTestForNTApi(ValidationTestCase):
 
     def test_secondary_delete_and_get_node_template(self):
         nt_id = self._crud_object(self.jt.copy(), self.get_jt.copy(),
-                                          self.url_nt, 202, 200, 204)
+                                  self.url_nt, 202, 200, 204)
         get_data = self._get_object(self.url_nt_not_json, nt_id, 404)
         self.assertEquals(get_data['error_name'], 'NODE_TEMPLATE_NOT_FOUND')
         del_data = self._del_object(self.url_nt_not_json, nt_id, 404)
@@ -141,11 +141,11 @@ class ValidationTestForNTApi(ValidationTestCase):
         self._post_incorrect_nt(param, 'name', '#', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '*', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', 'node_template_2',
-                                    400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '!@#$%^&*()_+|{}:"<>?',
-                                    400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', self.long_field + "q",
-                                    400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_name_with_240_symbols(self):
         body = self.jtnn.copy()
@@ -192,50 +192,50 @@ class ValidationTestForNTApi(ValidationTestCase):
     def test_create_nt_ttdn_with_wront_objects(self):
         param = self.jtnn.copy()
         self._post_incorrect_nt(param, 'node_type', 'TT+DN',
-                                    400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'NN',
-                                     400, 'NODE_PROCESS_DISCREPANCY')
+                                400, 'NODE_PROCESS_DISCREPANCY')
         self._post_incorrect_nt(param, 'node_type', 'JT',
-                                     400, 'NODE_PROCESS_DISCREPANCY')
+                                400, 'NODE_PROCESS_DISCREPANCY')
         param = self.jt.copy()
         self._post_incorrect_nt(param, 'node_type', 'TT+DN',
-                                  400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT+NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         param = self.nn.copy()
         self._post_incorrect_nt(param, 'node_type', 'TT+DN',
-                                  400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT+NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         param = self.ttdn.copy()
         self._post_incorrect_nt(param, 'node_type', 'JT+NN',
-                                     400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'NN',
-                                 400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT',
-                                 400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         param = self.tt.copy()
         self._post_incorrect_nt(param, 'node_type', 'TT+DN',
-                                  400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT+NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         param = self.dn.copy()
         self._post_incorrect_nt(param, 'node_type', 'TT+DN',
-                                  400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT+NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'NN',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'node_type', 'JT',
-                                   400, 'VALIDATION_ERROR')
+                                400, 'VALIDATION_ERROR')
 
     def test_create_nt_with_wrong_heap_size(self):
         # data = self._change_int_value(self.url_nt, self.jt.copy(),
@@ -284,6 +284,7 @@ class ValidationTestForNTApi(ValidationTestCase):
         data = self._change_field(self.url_nt, self.jt.copy(),
                                   "job_tracker", "job", 400)
         self.assertEquals(data, 'VALIDATION_ERROR')
+
 
 def _get_templates_stub_data():
     return {

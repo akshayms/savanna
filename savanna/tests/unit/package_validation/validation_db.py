@@ -150,17 +150,6 @@ class ValidationTestCase(SavannaTestCase):
                 }
             ))
 
-        self.cluster_data_jt_nn_ttdn = dict(
-            cluster=dict(
-                name='test-cluster',
-                base_image_id='base-image-id',
-                node_templates={
-                    'jt.medium': 1,
-                    'nn.medium': 1,
-                    'tt_dn.small': 5
-                }
-            ))
-
         self.cluster_data_jtnn = dict(
             cluster=dict(
                 name='test-cluster',
@@ -170,26 +159,16 @@ class ValidationTestCase(SavannaTestCase):
                 }
             ))
 
-        self.cluster_data_jt_nn = dict(
-            cluster=dict(
-                name='test-cluster',
-                base_image_id='base-image-id',
-                node_templates={
-                    'jt.medium': 1,
-                    'nn.medium': 1
-                }
-            ))
-
         self.get_cluster_body = {
             u'status': u'Starting',
             u'service_urls': {},
             u'name': u'test-cluster',
             u'base_image_id': u'base-image-id',
             u'node_templates':
-                {
-                    u'jt_nn.medium': 1,
-                    u'tt_dn.small': 5
-                },
+            {
+                u'jt_nn.medium': 1,
+                u'tt_dn.small': 5
+            },
             u'nodes': []
         }
 
@@ -271,8 +250,6 @@ class ValidationTestCase(SavannaTestCase):
     def _post_incorrect_nt(self, param, field, value, code, error):
         body = copy.deepcopy(param)
         body['node_template']['%s' % field] = value
-        LOG.debug("`````````````(one)`````````````")
-        LOG.debug(body)
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
 
