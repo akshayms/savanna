@@ -179,6 +179,20 @@ class ValidationTestCase(SavannaTestCase):
                     'nn.medium': 1
                 }
             ))
+
+        self.get_cluster_body = {
+            u'status': u'Starting',
+            u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'base-image-id',
+            u'node_templates':
+            {
+                u'jt_nn.medium': 1,
+                u'tt_dn.small': 5
+            },
+            u'nodes': []
+        }
+
         super(ValidationTestCase, self).setUp()
 
 #---------------------close_setUp----------------------------------------------
@@ -266,8 +280,9 @@ class ValidationTestCase(SavannaTestCase):
         return body
 
     def _assert_change_cluster_body(
-            self, body, del_node_type, set_node_type, value):
+            self, body, del_node_type, set_node_type):
         data = copy.deepcopy(body)
+        value = data['cluster']['node_templates'][del_node_type]
         data = self._assert_delete_part_of_cluster_body(data, del_node_type)
         data['cluster']['node_templates'][set_node_type] = value
         return data

@@ -30,18 +30,7 @@ class TestValidationApiForClusters(ValidationTestCase):
     # -------------------------------------------------------------------------
     def test_crud_operation_for_cluster(self):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-        get_body = {
-            u'status': u'Starting',
-            u'service_urls': {},
-            u'name': u'test-cluster',
-            u'base_image_id': u'base-image-id',
-            u'node_templates':
-            {
-                u'jt_nn.medium': 1,
-                u'tt_dn.small': 5
-            },
-            u'nodes': []
-        }
+        get_body = self.get_cluster_body
         self._crud_object(body, get_body, self.url_cluster, 202, 200, 204)
 
     # -------------------------------------------------------------------------
@@ -54,18 +43,7 @@ class TestValidationApiForClusters(ValidationTestCase):
         data = self._post_object(self.url_cluster, body, 202)
         data = data['cluster']
         cluster_id = data.pop(u'id')
-        self.assertEquals(data, {
-            u'status': u'Starting',
-            u'service_urls': {},
-            u'name': u'test-cluster',
-            u'base_image_id': u'base-image-id',
-            u'node_templates':
-            {
-                u'jt_nn.medium': 1,
-                u'tt_dn.small': 5
-            },
-            u'nodes': []
-        })
+        self.assertEquals(data, self.get_cluster_body)
 
         data = self.app.delete(self.url_cluster_without_json + cluster_id)
         self.assertEquals(data.status_code, 204)
@@ -134,19 +112,19 @@ class TestValidationApiForClusters(ValidationTestCase):
             body, 'tt_dn.small', None)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', 'abc', 1)
+            body, 'jt_nn.medium', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', '', 1)
+            body, 'jt_nn.medium', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'tt_dn.small', '', 5)
+            body, 'tt_dn.small', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'tt_dn.small', 'abc', 5)
+            body, 'tt_dn.small', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_delete_part_of_cluster_body(
@@ -166,11 +144,11 @@ class TestValidationApiForClusters(ValidationTestCase):
             body, 'jt_nn.medium', None)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', '', 1)
+            body, 'jt_nn.medium', '')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_change_cluster_body(
-            body, 'jt_nn.medium', 'abc', 1)
+            body, 'jt_nn.medium', 'abc')
         self._assert_node_template_with_incorrect_node(change_body)
 
         change_body = self._assert_delete_part_of_cluster_body(
@@ -193,3 +171,16 @@ class TestValidationApiForClusters(ValidationTestCase):
         self._assert_incorrect_field_cluster('abc')
         self._assert_incorrect_field_cluster('')
         self._assert_incorrect_field_cluster(None)
+
+    def test_dsk(self):
+        body = dict(
+            cluster=dict(
+                name='test-cluster',
+                base_image_id='base-image-id',
+                node_templates={
+                    'jt_nn.medium': None
+                }
+            ))
+        data=json.dumps(body)
+        self.assertEquals(data, 'error_name')
+        self._assert_error(body, 'error_name')
