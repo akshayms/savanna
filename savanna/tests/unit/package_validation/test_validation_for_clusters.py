@@ -30,8 +30,8 @@ class TestValidationApiForClusters(ValidationTestCase):
     # -------------------------------------------------------------------------
     def test_crud_operation_for_cluster(self):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-        get_body = self.get_cluster_body
-        self._crud_object(body, get_body, self.url_cluster, 202, 200, 204)
+        self._crud_object(body, self.get_cluster_body,
+                          self.url_cluster, 202, 200, 204)
 
     # -------------------------------------------------------------------------
     # Negative tests for cluster deletion and get cluster
@@ -184,3 +184,4 @@ class TestValidationApiForClusters(ValidationTestCase):
         data=json.dumps(body)
         self.assertEquals(data, 'error_name')
         self._assert_error(body, 'error_name')
+
