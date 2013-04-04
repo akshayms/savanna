@@ -74,7 +74,8 @@
         <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference internal" href="#">Savanna quickstart guide</a><ul>
+<li><a class="reference internal" href="#">Savanna quickstart guide</a></li>
+<li><a class="reference internal" href="#full-installation-guide">Full installation guide</a><ul>
 <li><a class="reference internal" href="#setup-prerequisites">1 Setup prerequisites</a></li>
 <li><a class="reference internal" href="#image-setup">2 Image setup</a></li>
 <li><a class="reference internal" href="#savanna-api-setup">3 Savanna API SETUP</a></li>
@@ -114,6 +115,36 @@
             
   <div class="section" id="savanna-quickstart-guide">
 <h1>Savanna quickstart guide<a class="headerlink" href="#savanna-quickstart-guide" title="Permalink to this headline">¶</a></h1>
+<p>1 Get Savanna archive from <a class="reference external" href="http://tarballs.openstack.org/savanna/">http://tarballs.openstack.org/savanna/</a> and install it using pip:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>pip install http://tarballs.openstack.org/savanna/savanna-master.tar.gz <span class="c">#egg=savanna</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Note:</strong>
+savanna-master.tar.gz contains the latest changes in the source code.
+savanna-some_version.tar.gz contains features related to specified Savanna release.</p>
+<p>2 After installation you should create configuration file or change default config to run Savanna properly. Default config file is located in:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>/usr/local/share/savanna/savanna.conf.sample
+</pre></div>
+</div>
+</div></blockquote>
+<p>3 To initialize Savanna database with created configuration just call:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>savanna-manage --config-file /pathToConfig reset-db --with-gen-templates
+</pre></div>
+</div>
+</div></blockquote>
+<p>4 To start Savanna call:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>savanna-api --config-file /pathToConfig
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="full-installation-guide">
+<h1>Full installation guide<a class="headerlink" href="#full-installation-guide" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="setup-prerequisites">
 <h2>1 Setup prerequisites<a class="headerlink" href="#setup-prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>1.1 OpenStack environment (Folsom+ version) installed.</p>
