@@ -17,12 +17,14 @@ import json
 import copy
 import random as random_number
 from savanna.openstack.common import log as logging
-from savanna.tests.unit.base import SavannaTestCase
+#from savanna.tests.unit.base import SavannaTestCase
+import requests
+import unittest
 
 LOG = logging.getLogger(__name__)
 
 
-class ValidationTestCase(SavannaTestCase):
+class ValidationTestCase(unittest.TestCase):
     def setUp(self):
         self.long_field = "qwertyuiop"
         for i in range(23):
@@ -31,8 +33,11 @@ class ValidationTestCase(SavannaTestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.url_nt = '/v0.2/some-tenant-id/node-templates.json'
-        self.url_nt_not_json = '/v0.2/some-tenant-id/node-templates/'
+        self.baseurl = 'http://127.0.0.1:8080'
+        self.tenant = '6b26f08455ec449ea7a2d3da75339255'
+        self.token = 'd194713645e94d3c965f41e9b95c03bb'
+        self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
+        self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
         self.jtnn = dict(
             node_template=dict(
@@ -137,8 +142,8 @@ class ValidationTestCase(SavannaTestCase):
 
 #----------------------add_value_for_clusters----------------------------------
 
-        self.url_cluster = '/v0.2/some-tenant-id/clusters.json'
-        self.url_cluster_without_json = '/v0.2/some-tenant-id/clusters/'
+        self.url_cluster = '/v0.2/%s/clusters.json' % self.tenant
+        self.url_cluster_without_json = '/v0.2/%s/clusters/' % self.tenant
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
@@ -160,7 +165,7 @@ class ValidationTestCase(SavannaTestCase):
             ))
 
         self.get_cluster_body = {
-            u'status': u'Starting',
+            u'status': u'Active',
             u'service_urls': {},
             u'name': u'test-cluster',
             u'base_image_id': u'base-image-id',
@@ -172,38 +177,69 @@ class ValidationTestCase(SavannaTestCase):
             u'nodes': []
         }
 
-        super(ValidationTestCase, self).setUp()
-
 #---------------------close_setUp----------------------------------------------
+
+    def post(self, url, body):
+        URL = self.baseurl + url
+        resp = requests.post(URL, data=body, headers={
+            "x-auth-token": self.token, "Content-Type": "application/json"})
+        print("URL = %s\ndata = %s\nresponse = %s\n"
+              % (URL, body, resp.status_code))
+        return resp
+
+
+    def put(self, url, body):
+        URL = self.baseurl + url
+        resp = requests.put(URL, data=body, headers={
+            "x-auth-token": self.token, "Content-Type": "application/json"})
+        print("URL = %s\ndata = %s\nresponse = %s\n"
+              % (URL, body, resp.status_code))
+        return resp
+
+
+    def get(self, url):
+        URL = self.baseurl + url
+        resp = requests.get(URL, headers={"x-auth-token": self.token})
+        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        return resp
+
+
+    def delete(self, url):
+        URL = self.baseurl + url
+        resp = requests.delete(URL, headers={"x-auth-token": self.token})
+        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        return resp
 
     def _post_object(self, url, body, code):
         LOG.debug(body)
-        post = self.app.post(url, data=json.dumps(body))
+        post = self.post(url, json.dumps(body))
         self.assertEquals(post.status_code, code)
-        data = json.loads(post.data)
+        data = json.loads(post.content)
         return data
 
     def _get_object(self, url, obj_id, code):
-        rv = self.app.get(url + obj_id)
+        rv = self.get(url + obj_id)
         self.assertEquals(rv.status_code, code)
-        data = json.loads(rv.data)
+        data = json.loads(rv.content)
         return data
 
     def _del_object(self, url, obj_id, code):
-        rv = self.app.delete(url + obj_id)
+        rv = self.delete(url + obj_id)
         self.assertEquals(rv.status_code, code)
         if rv.status_code != 204:
-            data = json.loads(rv.data)
+            data = json.loads(rv.content)
             return data
 
     def _list_objects(self, url, code):
-        rv = self.app.get(url)
+        rv = self.get(url)
         self.assertEquals(rv.status_code, code)
-        data = json.loads(rv.data)
+        data = json.loads(rv.content)
         return data
 
     def _crud_object(self, body, get_body, url, p_code, g_code, d_code):
         data = self._post_object(url, body, p_code)
+        LOG.debug("`````````````(two)`````````````")
+        LOG.debug(data)
         object = "cluster"
         get_url = self.url_cluster_without_json
         if url == self.url_nt:
@@ -225,8 +261,6 @@ class ValidationTestCase(SavannaTestCase):
         if url != self.url_cluster:
             object = "node_template"
         body["%s" % object]["%s" % f_field]["%s" % sec_field] = value
-        LOG.debug("`````````````(two)`````````````")
-        LOG.debug(body)
         data = self._post_object(url, body, code)
         if code != 202:
             return data['error_name']

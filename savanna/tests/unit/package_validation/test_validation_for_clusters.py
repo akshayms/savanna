@@ -89,7 +89,7 @@ class TestValidationApiForClusters(ValidationTestCase):
 
     def test_node_template_validation(self):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-
+        body['cluster']['name'] = 'qa-cluster-tv'
         self._assert_node_template_with_incorrect_number_of_node(
             body, 'jt_nn.medium', -1)
         self._assert_node_template_with_incorrect_number_of_node(
@@ -159,16 +159,3 @@ class TestValidationApiForClusters(ValidationTestCase):
         self._assert_incorrect_field_cluster('abc')
         self._assert_incorrect_field_cluster('')
 
-    # def test_incorrect_json(self):
-    #     body = dict(
-    #         cluster=dict(
-    #             name='test-cluster',
-    #             base_image_id='base-image-id',
-    #             node_templates={
-    #                 'jt_nn.medium': 1
-    #             }
-    #         ))
-    #     body['cluster'].pop('}')
-    #     data=json.dumps(body)
-    #     self.assertEquals(body, 'error_name')
-    #     self._assert_error(body, 'error_name')

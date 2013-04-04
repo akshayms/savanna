@@ -20,7 +20,7 @@ from savanna.tests.unit.package_validation.validation_db \
 LOG = logging.getLogger(__name__)
 
 
-class ValidationTestForNTApi(ValidationTestCase):
+class TestValidationApiForNodetemplates(ValidationTestCase):
 
 #-----------------------positive_tests-----------------------------------------
 
@@ -34,11 +34,11 @@ class ValidationTestForNTApi(ValidationTestCase):
         self._crud_object(self.jt.copy(), self.get_jt.copy(),
                           self.url_nt, 202, 200, 204)
 
-    def test_list_node_templates(self):
-        data = self._list_objects(self.url_nt, 200)
-        for idx in xrange(0, len(data.get(u'node_templates'))):
-            del data.get(u'node_templates')[idx][u'id']
-        self.assertEquals(data, _get_templates_stub_data())
+    # def test_list_node_templates(self):
+    #     data = self._list_objects(self.url_nt, 200)
+    #     for idx in xrange(0, len(data.get(u'node_templates'))):
+    #         del data.get(u'node_templates')[idx][u'id']
+    #     self.assertEquals(data, _get_templates_stub_data())
 
 #-----------------------negative_tests-----------------------------------------
 
@@ -286,71 +286,71 @@ class ValidationTestForNTApi(ValidationTestCase):
         self.assertEquals(data, 'VALIDATION_ERROR')
 
 
-def _get_templates_stub_data():
-    return {
-        u'node_templates': [
-            {
-                u'job_tracker': {
-                    u'heap_size': u'896'
-                },
-                u'name': u'jt_nn.small',
-                u'node_type': {
-                    u'processes': [
-                        u'job_tracker', u'name_node'
-                    ],
-                    u'name': u'JT+NN'
-                },
-                u'flavor_id': u'm1.small',
-                u'name_node': {
-                    u'heap_size': u'896'
-                }
-            },
-            {
-                u'job_tracker': {
-                    u'heap_size': u'1792'
-                },
-                u'name': u'jt_nn.medium',
-                u'node_type': {
-                    u'processes': [
-                        u'job_tracker', u'name_node'
-                    ], u'name': u'JT+NN'
-                },
-                u'flavor_id': u'm1.medium',
-                u'name_node': {
-                    u'heap_size': u'1792'
-                }
-            },
-            {
-                u'name': u'tt_dn.small',
-                u'task_tracker': {
-                    u'heap_size': u'896'
-                },
-                u'data_node': {
-                    u'heap_size': u'896'
-                },
-                u'node_type': {
-                    u'processes': [
-                        u'task_tracker', u'data_node'
-                    ],
-                    u'name': u'TT+DN'
-                },
-                u'flavor_id': u'm1.small'
-            },
-            {
-                u'name': u'tt_dn.medium',
-                u'task_tracker': {
-                    u'heap_size': u'1792'
-                },
-                u'data_node': {
-                    u'heap_size': u'1792'
-                },
-                u'node_type': {
-                    u'processes': [
-                        u'task_tracker', u'data_node'
-                    ],
-                    u'name': u'TT+DN'
-                },
-                u'flavor_id': u'm1.medium'
-            }
-        ]
-    }
+# def _get_templates_stub_data():
+#     return {
+#         u'node_templates': [
+#             {
+#                 u'job_tracker': {
+#                     u'heap_size': u'896'
+#                 },
+#                 u'name': u'jt_nn.small',
+#                 u'node_type': {
+#                     u'processes': [
+#                         u'job_tracker', u'name_node'
+#                     ],
+#                     u'name': u'JT+NN'
+#                 },
+#                 u'flavor_id': u'm1.small',
+#                 u'name_node': {
+#                     u'heap_size': u'896'
+#                 }
+#             },
+#             {
+#                 u'job_tracker': {
+#                     u'heap_size': u'1792'
+#                 },
+#                 u'name': u'jt_nn.medium',
+#                 u'node_type': {
+#                     u'processes': [
+#                         u'job_tracker', u'name_node'
+#                     ], u'name': u'JT+NN'
+#                 },
+#                 u'flavor_id': u'm1.medium',
+#                 u'name_node': {
+#                     u'heap_size': u'1792'
+#                 }
+#             },
+#             {
+#                 u'name': u'tt_dn.small',
+#                 u'task_tracker': {
+#                     u'heap_size': u'896'
+#                 },
+#                 u'data_node': {
+#                     u'heap_size': u'896'
+#                 },
+#                 u'node_type': {
+#                     u'processes': [
+#                         u'task_tracker', u'data_node'
+#                     ],
+#                     u'name': u'TT+DN'
+#                 },
+#                 u'flavor_id': u'm1.small'
+#             },
+#             {
+#                 u'name': u'tt_dn.medium',
+#                 u'task_tracker': {
+#                     u'heap_size': u'1792'
+#                 },
+#                 u'data_node': {
+#                     u'heap_size': u'1792'
+#                 },
+#                 u'node_type': {
+#                     u'processes': [
+#                         u'task_tracker', u'data_node'
+#                     ],
+#                     u'name': u'TT+DN'
+#                 },
+#                 u'flavor_id': u'm1.medium'
+#             }
+#         ]
+#     }
