@@ -35,7 +35,7 @@ class ValidationTestCase(unittest.TestCase):
 
         self.baseurl = 'http://127.0.0.1:8080'
         self.tenant = '6b26f08455ec449ea7a2d3da75339255'
-        self.token = 'd194713645e94d3c965f41e9b95c03bb'
+        self.token = 'b1480462679641f7a249aed7d44db743'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -165,7 +165,7 @@ class ValidationTestCase(unittest.TestCase):
             ))
 
         self.get_cluster_body = {
-            u'status': u'Active',
+            u'status': u'Starting',
             u'service_urls': {},
             u'name': u'test-cluster',
             u'base_image_id': u'base-image-id',
@@ -251,6 +251,8 @@ class ValidationTestCase(unittest.TestCase):
         get_data = self._get_object(get_url, nt_id, g_code)
         get_data = get_data['%s' % object]
         del get_data[u'id']
+        if url != self.url_nt:
+            get_body[u'status'] = u'Active'
         self.assertEquals(get_data, get_body)
         self._del_object(get_url, nt_id, d_code)
         return nt_id
