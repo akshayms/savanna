@@ -17,12 +17,19 @@ import json
 import copy
 import random as random_number
 from savanna.openstack.common import log as logging
-#from savanna.tests.unit.base import SavannaTestCase
 import requests
 import unittest
+from keystoneclient.v2_0 import Client as keystone_client
 
 LOG = logging.getLogger(__name__)
 
+keystone = keystone_client(
+    username="admin",
+    password="nova",
+    tenant_name="admin",
+    auth_url="http://172.18.79.139:35357/v2.0/"
+)
+result = keystone.authenticate()
 
 class ValidationTestCase(unittest.TestCase):
     def setUp(self):
@@ -34,8 +41,8 @@ class ValidationTestCase(unittest.TestCase):
 #----------------------add_value_for_node_templates----------------------------
 
         self.baseurl = 'http://127.0.0.1:8080'
-        self.tenant = '6b26f08455ec449ea7a2d3da75339255'
-        self.token = 'ea236c9fd90f47e3a324a621329bdc0a'
+        self.tenant = keystone.tenant_id
+        self.token = keystone.auth_token
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
