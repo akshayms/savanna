@@ -17,7 +17,6 @@ import copy
 from savanna.openstack.common import log as logging
 from savanna.tests.unit.package_validation.validation_db \
     import ValidationTestCase
-import time
 
 
 LOG = logging.getLogger(__name__)
@@ -160,4 +159,3 @@ class TestValidationApiForClusters(ValidationTestCase):
 
         self._assert_incorrect_field_cluster('abc')
         self._assert_incorrect_field_cluster('')
-

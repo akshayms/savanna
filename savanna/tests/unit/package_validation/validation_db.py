@@ -151,7 +151,7 @@ class ValidationTestCase(unittest.TestCase):
                 base_image_id='base-image-id',
                 node_templates={
                     'jt_nn.medium': 1,
-                    'tt_dn.small': 5
+                    'tt_dn.small': 2
                 }
             ))
 
@@ -172,7 +172,7 @@ class ValidationTestCase(unittest.TestCase):
             u'node_templates':
             {
                 u'jt_nn.medium': 1,
-                u'tt_dn.small': 5
+                u'tt_dn.small': 2
             },
             u'nodes': []
         }
@@ -187,7 +187,6 @@ class ValidationTestCase(unittest.TestCase):
               % (URL, body, resp.status_code))
         return resp
 
-
     def put(self, url, body):
         URL = self.baseurl + url
         resp = requests.put(URL, data=body, headers={
@@ -196,13 +195,11 @@ class ValidationTestCase(unittest.TestCase):
               % (URL, body, resp.status_code))
         return resp
 
-
     def get(self, url):
         URL = self.baseurl + url
         resp = requests.get(URL, headers={"x-auth-token": self.token})
         print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
         return resp
-
 
     def delete(self, url):
         URL = self.baseurl + url
