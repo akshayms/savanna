@@ -35,7 +35,7 @@ class ValidationTestCase(unittest.TestCase):
 
         self.baseurl = 'http://127.0.0.1:8080'
         self.tenant = '6b26f08455ec449ea7a2d3da75339255'
-        self.token = 'b1480462679641f7a249aed7d44db743'
+        self.token = 'ea236c9fd90f47e3a324a621329bdc0a'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -288,6 +288,75 @@ class ValidationTestCase(unittest.TestCase):
         body['node_template']['%s' % field] = value
         rv = self._post_object(self.url_nt, body, code)
         self.assertEquals(rv['error_name'], '%s' % error)
+
+    def _get_templates_stub_data(self):
+        return {
+            u'node_templates': [
+                {
+                    u'job_tracker': {
+                        u'heap_size': u'896'
+                    },
+                    u'name': u'jt_nn.small',
+                    u'node_type': {
+                        u'processes': [
+                            u'job_tracker', u'name_node'
+                        ],
+                        u'name': u'JT+NN'
+                    },
+                    u'flavor_id': u'm1.small',
+                    u'name_node': {
+                        u'heap_size': u'896'
+                    }
+                },
+                {
+                    u'job_tracker': {
+                        u'heap_size': u'1792'
+                    },
+                    u'name': u'jt_nn.medium',
+                    u'node_type': {
+                        u'processes': [
+                            u'job_tracker', u'name_node'
+                        ], u'name': u'JT+NN'
+                    },
+                    u'flavor_id': u'm1.medium',
+                    u'name_node': {
+                        u'heap_size': u'1792'
+                    }
+                },
+                {
+                    u'name': u'tt_dn.small',
+                    u'task_tracker': {
+                        u'heap_size': u'896'
+                    },
+                    u'data_node': {
+                        u'heap_size': u'896'
+                    },
+                    u'node_type': {
+                        u'processes': [
+                            u'task_tracker', u'data_node'
+                        ],
+                        u'name': u'TT+DN'
+                    },
+                    u'flavor_id': u'm1.small'
+                },
+                {
+                    u'name': u'tt_dn.medium',
+                    u'task_tracker': {
+                        u'heap_size': u'1792'
+                    },
+                    u'data_node': {
+                        u'heap_size': u'1792'
+                    },
+                    u'node_type': {
+                        u'processes': [
+                            u'task_tracker', u'data_node'
+                        ],
+                        u'name': u'TT+DN'
+                    },
+                    u'flavor_id': u'm1.medium'
+                }
+            ]
+        }
 
 #---------------------for_clusters---------------------------------------------
 
