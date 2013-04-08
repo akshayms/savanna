@@ -21,6 +21,9 @@ LOG = logging.getLogger(__name__)
 
 class TestValidationApiForNodetemplates(ValidationTestCase):
 
+    def test_01_telnet(self):
+        self._tn()
+
 #-----------------------positive_tests-----------------------------------------
 
     def test_crud_nt(self):

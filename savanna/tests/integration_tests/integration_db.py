@@ -21,6 +21,8 @@ import requests
 import unittest
 from keystoneclient.v2_0 import Client as keystone_client
 
+from telnetlib import Telnet
+
 LOG = logging.getLogger(__name__)
 
 keystone = keystone_client(
@@ -40,7 +42,9 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.baseurl = 'http://127.0.0.1:8080'
+        self.host = '127.0.0.1'
+        self.port = '8080'
+        self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
@@ -185,6 +189,10 @@ class ValidationTestCase(unittest.TestCase):
         }
 
 #---------------------close_setUp----------------------------------------------
+
+    def _tn(self):
+        self.assertEquals(result, True)
+        Telnet(self.host, self.port)
 
     def post(self, url, body):
         URL = self.baseurl + url

@@ -22,6 +22,10 @@ LOG = logging.getLogger(__name__)
 
 
 class TestValidationApiForClusters(ValidationTestCase):
+
+    def test_01_telnet(self):
+        self._tn()
+
     # -------------------------------------------------------------------------
     # Positive tests crud operation for cluster
     # -------------------------------------------------------------------------
