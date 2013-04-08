@@ -14,8 +14,7 @@
 # limitations under the License.
 
 from savanna.openstack.common import log as logging
-from savanna.tests.unit.package_validation.validation_db \
-    import ValidationTestCase
+from savanna.tests.integration_tests.integration_db import ValidationTestCase
 
 LOG = logging.getLogger(__name__)
 
@@ -140,8 +139,6 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         self._post_incorrect_nt(param, 'name', '1', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '#', 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '*', 400, 'VALIDATION_ERROR')
-        self._post_incorrect_nt(param, 'name', 'node_template_2',
-                                400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', '!@#$%^&*()_+|{}:"<>?',
                                 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'name', self.long_field + "q",
