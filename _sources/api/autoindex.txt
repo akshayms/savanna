@@ -34,6 +34,7 @@
    savanna.tests.unit.base.rst
    savanna.tests.unit.test_api_v02.rst
    savanna.tests.unit.test_service.rst
+   savanna.tests.unit.test_validation.rst
    savanna.utils.api.rst
    savanna.utils.openstack.base.rst
    savanna.utils.openstack.nova.rst
