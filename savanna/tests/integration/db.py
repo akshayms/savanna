@@ -22,6 +22,7 @@ import unittest
 from keystoneclient.v2_0 import Client as keystone_client
 
 from telnetlib import Telnet
+import time
 
 LOG = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class ValidationTestCase(unittest.TestCase):
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.flavor_id = '123'
-        self.image_id = '6e877b57-fb07-49a4-b932-ee60012bbc82'
+        self.image_id = '7ba73c45-49ff-442f-b337-f731057308e6'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -57,7 +58,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-1',
                 node_type='JT+NN',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 job_tracker={
                     'heap_size': '1234'
                 },
@@ -69,7 +70,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-2',
                 node_type='TT+DN',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 task_tracker={
                     'heap_size': '1234'
                 },
@@ -81,7 +82,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-3',
                 node_type='JT',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 job_tracker={
                     'heap_size': '1234'
                 }
@@ -90,7 +91,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-4',
                 node_type='NN',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 name_node={
                     'heap_size': '2345'
                 }
@@ -99,7 +100,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-5',
                 node_type='TT',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 task_tracker={
                     'heap_size': '2345'
                 }
@@ -108,7 +109,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-6',
                 node_type='DN',
-                flavor_id= self.flavor_id,
+                flavor_id=self.flavor_id,
                 data_node={
                     'heap_size': '2345'
                 }
@@ -181,7 +182,7 @@ class ValidationTestCase(unittest.TestCase):
         self.get_cluster_body = {
             u'status': u'Starting',
             u'service_urls': {},
-            u'name': u'test-cluster',
+            u'name': u'QA-test-cluster',
             u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
             {
@@ -266,9 +267,9 @@ class ValidationTestCase(unittest.TestCase):
         get_data = self._get_object(get_url, nt_id, g_code)
         get_data = get_data['%s' % object]
         del get_data[u'id']
-        if url != self.url_nt:
-            get_body[u'status'] = u'Active'
         self.assertEquals(get_data, get_body)
+        if object == "cluster":
+            time.sleep(180)
         self._del_object(get_url, nt_id, d_code)
         return nt_id
 
