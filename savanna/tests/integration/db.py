@@ -33,6 +33,7 @@ keystone = keystone_client(
 )
 result = keystone.authenticate()
 
+
 class ValidationTestCase(unittest.TestCase):
     def setUp(self):
         self.long_field = "qwertyuiop"
@@ -42,11 +43,13 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '127.0.0.1'
+        self.host = '172.18.79.207'
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
+        self.flavor_id = '123'
+        self.image_id = '6e877b57-fb07-49a4-b932-ee60012bbc82'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -54,7 +57,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-1',
                 node_type='JT+NN',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 job_tracker={
                     'heap_size': '1234'
                 },
@@ -66,7 +69,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-2',
                 node_type='TT+DN',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 task_tracker={
                     'heap_size': '1234'
                 },
@@ -78,7 +81,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-3',
                 node_type='JT',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 job_tracker={
                     'heap_size': '1234'
                 }
@@ -87,7 +90,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-4',
                 node_type='NN',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 name_node={
                     'heap_size': '2345'
                 }
@@ -96,7 +99,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-5',
                 node_type='TT',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 task_tracker={
                     'heap_size': '2345'
                 }
@@ -105,7 +108,7 @@ class ValidationTestCase(unittest.TestCase):
             node_template=dict(
                 name='test-template-6',
                 node_type='DN',
-                flavor_id='test_flavor',
+                flavor_id= self.flavor_id,
                 data_node={
                     'heap_size': '2345'
                 }
@@ -158,8 +161,8 @@ class ValidationTestCase(unittest.TestCase):
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
-                name='test-cluster',
-                base_image_id='base-image-id',
+                name='QA-test-cluster',
+                base_image_id=self.image_id,
                 node_templates={
                     'jt_nn.medium': 1,
                     'tt_dn.small': 2
@@ -169,7 +172,7 @@ class ValidationTestCase(unittest.TestCase):
         self.cluster_data_jtnn = dict(
             cluster=dict(
                 name='test-cluster',
-                base_image_id='base-image-id',
+                base_image_id=self.image_id,
                 node_templates={
                     'jt_nn.medium': 1
                 }
@@ -179,7 +182,7 @@ class ValidationTestCase(unittest.TestCase):
             u'status': u'Starting',
             u'service_urls': {},
             u'name': u'test-cluster',
-            u'base_image_id': u'base-image-id',
+            u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
             {
                 u'jt_nn.medium': 1,

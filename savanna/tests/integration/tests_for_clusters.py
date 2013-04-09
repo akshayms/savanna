@@ -37,6 +37,14 @@ class TestValidationApiForClusters(ValidationTestCase):
         self._crud_object(body, get_body,
                           self.url_cluster, 202, 200, 204)
 
+        # body = copy.deepcopy(self.cluster_data_jtnn)
+        # get_body = del self.get_cluster_body[u'node_templates'][u'tt_dn.small']
+        # self._crud_object(body, get_body,
+        #               self.url_cluster, 202, 200, 204)
+
+    #TODO: ylobankov. Create crud operations for cluster with node template
+    #TODO: with one JT and NN.
+
     # -------------------------------------------------------------------------
     # Negative tests for cluster deletion and get cluster
     # -------------------------------------------------------------------------
