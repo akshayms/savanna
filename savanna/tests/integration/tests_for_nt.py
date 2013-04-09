@@ -26,13 +26,19 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
 
 #-----------------------positive_tests-----------------------------------------
 
-    def test_crud_nt(self):
+    def test_crud_nt_jtnn(self):
         self._crud_object(self.jtnn.copy(), self.get_jtnn.copy(),
                           self.url_nt, 202, 200, 204)
+
+    def test_crud_nt_ttdn(self):
         self._crud_object(self.ttdn.copy(), self.get_ttdn.copy(),
                           self.url_nt, 202, 200, 204)
+
+    def test_crud_nt_nn(self):
         self._crud_object(self.nn.copy(), self.get_nn.copy(),
                           self.url_nt, 202, 200, 204)
+
+    def test_crud_nt_jt(self):
         self._crud_object(self.jt.copy(), self.get_jt.copy(),
                           self.url_nt, 202, 200, 204)
 
@@ -180,8 +186,8 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
                                 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'flavor_id', '',
                                 400, 'VALIDATION_ERROR')
-        # self._post_incorrect_nt(param, 'flavor_id', 'qweqwe',
-        #                         400, 'FLAVOR_NOT_FOUND')
+        self._post_incorrect_nt(param, 'flavor_id', 'qweqwe',
+                                400, 'FLAVOR_NOT_FOUND')
         self._post_incorrect_nt(param, 'flavor_id', None,
                                 400, 'VALIDATION_ERROR')
         self._post_incorrect_nt(param, 'flavor_id', self.long_field + 'q',

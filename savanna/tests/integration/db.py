@@ -44,12 +44,12 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '172.18.79.207'
+        self.host = '172.18.79.215'
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
-        self.flavor_id = '123'
+        self.flavor_id = 'm1.medium'
         self.image_id = '7ba73c45-49ff-442f-b337-f731057308e6'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
@@ -123,7 +123,7 @@ class ValidationTestCase(unittest.TestCase):
                 u'processes': [u'task_tracker',
                                u'data_node'],
                 u'name': u'TT+DN'},
-            u'flavor_id': u'test_flavor'
+            u'flavor_id': u'm1.medium'
         }
 
         self.get_jtnn = {
@@ -134,7 +134,7 @@ class ValidationTestCase(unittest.TestCase):
                 u'processes': [u'job_tracker',
                                u'name_node'],
                 u'name': u'JT+NN'},
-            u'flavor_id': u'test_flavor'
+            u'flavor_id': u'm1.medium'
         }
 
         self.get_nn = {
@@ -143,7 +143,7 @@ class ValidationTestCase(unittest.TestCase):
             u'node_type': {
                 u'processes': [u'name_node'],
                 u'name': u'NN'},
-            u'flavor_id': u'test_flavor'
+            u'flavor_id': u'm1.medium'
         }
 
         self.get_jt = {
@@ -152,7 +152,7 @@ class ValidationTestCase(unittest.TestCase):
             u'node_type': {
                 u'processes': [u'job_tracker'],
                 u'name': u'JT'},
-            u'flavor_id': u'test_flavor'
+            u'flavor_id': u'm1.medium'
         }
 
 #----------------------add_value_for_clusters----------------------------------
@@ -202,28 +202,36 @@ class ValidationTestCase(unittest.TestCase):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
             "x-auth-token": self.token, "Content-Type": "application/json"})
-        print("URL = %s\ndata = %s\nresponse = %s\n"
-              % (URL, body, resp.status_code))
+        data = json.loads(resp.content)
+        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+              % (URL, body, resp.status_code, data))
         return resp
 
     def put(self, url, body):
         URL = self.baseurl + url
         resp = requests.put(URL, data=body, headers={
             "x-auth-token": self.token, "Content-Type": "application/json"})
-        print("URL = %s\ndata = %s\nresponse = %s\n"
-              % (URL, body, resp.status_code))
+        data = json.loads(resp.content)
+        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+              % (URL, body, resp.status_code, data))
         return resp
 
     def get(self, url):
         URL = self.baseurl + url
         resp = requests.get(URL, headers={"x-auth-token": self.token})
         print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        if resp.status_code != 200:
+            data = json.loads(resp.content)
+            print("data= %s\n") % data
         return resp
 
     def delete(self, url):
         URL = self.baseurl + url
         resp = requests.delete(URL, headers={"x-auth-token": self.token})
         print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        if resp.status_code != 204:
+            data = json.loads(resp.content)
+            print("data= %s\n") % data
         return resp
 
     def _post_object(self, url, body, code):
