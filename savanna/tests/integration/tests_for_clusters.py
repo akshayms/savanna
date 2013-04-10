@@ -90,7 +90,7 @@ class TestValidationApiForClusters(ValidationTestCase):
 
     def test_base_image_id_validation(self):
         self._assert_incorrect_value_of_field('base_image_id', '')
-        #self._assert_incorrect_value_of_field('base_image_id', 'abc')
+        self._assert_incorrect_value_of_field('base_image_id', 'abc')
 
     def test_validation_cluster_body(self):
         self._assert_bad_cluster_body('name')

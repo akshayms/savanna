@@ -23,6 +23,7 @@ import unittest
 from keystoneclient.v2_0 import Client as keystone_client
 
 from telnetlib import Telnet
+import time
 
 LOG = logging.getLogger(__name__)
 
@@ -197,7 +198,7 @@ class ValidationTestCase(unittest.TestCase):
         self.get_cluster_body = {
             u'status': u'Starting',
             u'service_urls': {},
-            u'name': u'test-cluster',
+            u'name': u'QA-test-cluster',
             u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
             {
