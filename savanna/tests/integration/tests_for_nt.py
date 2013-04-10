@@ -28,19 +28,19 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
 
     def test_crud_nt_jtnn(self):
         self._crud_object(self.jtnn.copy(), self.get_jtnn.copy(),
-                          self.url_nt, 202, 200, 204)
+                          self.url_nt)
 
     def test_crud_nt_ttdn(self):
         self._crud_object(self.ttdn.copy(), self.get_ttdn.copy(),
-                          self.url_nt, 202, 200, 204)
+                          self.url_nt)
 
     def test_crud_nt_nn(self):
         self._crud_object(self.nn.copy(), self.get_nn.copy(),
-                          self.url_nt, 202, 200, 204)
+                          self.url_nt)
 
     def test_crud_nt_jt(self):
         self._crud_object(self.jt.copy(), self.get_jt.copy(),
-                          self.url_nt, 202, 200, 204)
+                          self.url_nt)
 
     def test_list_node_templates(self):
         data = self._list_objects(self.url_nt, 200)
@@ -58,7 +58,7 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
 
     def test_secondary_delete_and_get_node_template(self):
         nt_id = self._crud_object(self.jt.copy(), self.get_jt.copy(),
-                                  self.url_nt, 202, 200, 204)
+                                  self.url_nt)
         get_data = self._get_object(self.url_nt_not_json, nt_id, 404)
         self.assertEquals(get_data['error_name'], 'NODE_TEMPLATE_NOT_FOUND')
         del_data = self._del_object(self.url_nt_not_json, nt_id, 404)
