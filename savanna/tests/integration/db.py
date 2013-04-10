@@ -15,6 +15,7 @@
 
 import json
 import copy
+import eventlet
 import random as random_number
 from savanna.openstack.common import log as logging
 import requests
@@ -27,9 +28,11 @@ LOG = logging.getLogger(__name__)
 
 keystone = keystone_client(
     username="admin",
-    password="nova",
+    #password="nova",
+    password="password",
     tenant_name="admin",
-    auth_url="http://172.18.79.139:35357/v2.0/"
+    #auth_url="http://172.18.79.139:35357/v2.0/"
+    auth_url="http://172.18.78.111:5000/v2.0/"
 )
 result = keystone.authenticate()
 
@@ -43,13 +46,16 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '172.18.79.215'
+        #self.host = '172.18.79.215'
+        self.host = '172.18.78.111'
+        self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.flavor_id = 'm1.medium'
-        self.image_id = '6e877b57-fb07-49a4-b932-ee60012bbc82'
+        #self.image_id = '6e877b57-fb07-49a4-b932-ee60012bbc82'
+        self.image_id = '30a85995-8d19-4040-b3f6-8f86965a5c47'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -169,12 +175,22 @@ class ValidationTestCase(unittest.TestCase):
                 }
             ))
 
+        self.cluster_data_small = dict(
+            cluster=dict(
+                name='QA-test-cluster',
+                base_image_id=self.image_id,
+                node_templates={
+                    'jt_nn.small': 1,
+                    'tt_dn.small': 1
+                }
+            ))
+
         self.cluster_data_jtnn = dict(
             cluster=dict(
                 name='test-cluster',
                 base_image_id=self.image_id,
                 node_templates={
-                    'jt_nn.medium': 1
+                    'jt_nn.small': 1
                 }
             ))
 
@@ -188,6 +204,31 @@ class ValidationTestCase(unittest.TestCase):
                 u'jt_nn.medium': 1,
                 u'tt_dn.small': 2
             },
+            u'nodes': []
+        }
+
+        self.get_cluster_small = {
+            u'status': u'Starting',
+            u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'%s' % self.image_id,
+            u'node_templates':
+                {
+                    u'jt_nn.small': 1,
+                    u'tt_dn.small': 1
+                },
+            u'nodes': []
+        }
+
+        self.get_cluster_jtnn = {
+            u'status': u'Starting',
+            u'service_urls': {},
+            u'name': u'test-cluster',
+            u'base_image_id': u'%s' % self.image_id,
+            u'node_templates':
+                {
+                    u'jt_nn.small': 1
+                },
             u'nodes': []
         }
 
@@ -261,24 +302,35 @@ class ValidationTestCase(unittest.TestCase):
 
     def _crud_object(self, body, get_body, url, p_code, g_code, d_code):
         data = self._post_object(url, body, p_code)
-        LOG.debug("`````````````(two)`````````````")
-        LOG.debug(data)
         object = "cluster"
         get_url = self.url_cluster_without_json
         if url == self.url_nt:
             object = "node_template"
             get_url = self.url_nt_not_json
         data = data["%s" % object]
-        nt_id = data.pop(u'id')
+        object_id = data.pop(u'id')
         self.assertEquals(data, get_body)
-        get_data = self._get_object(get_url, nt_id, g_code)
+        get_data = self._get_object(get_url, object_id, g_code)
         get_data = get_data['%s' % object]
         del get_data[u'id']
         if url != self.url_nt:
             get_body[u'status'] = u'Active'
+            del get_body[u'service_urls']
+            del get_body[u'nodes']
+            i = 1
+            while get_data[u'status'] != u'Active':
+                if i > 60:
+                    self._del_object(get_url, object_id, d_code)
+                get_data = self._get_object(get_url, object_id, g_code)
+                get_data = get_data['%s' % object]
+                del get_data[u'id']
+                del get_data[u'service_urls']
+                del get_data[u'nodes']
+                eventlet.sleep(10)
+                i += 1
         self.assertEquals(get_data, get_body)
-        self._del_object(get_url, nt_id, d_code)
-        return nt_id
+        self._del_object(get_url, object_id, d_code)
+        return object_id
 
     def _change_int_value(self, url, param, f_field, sec_field, value, code):
         body = copy.deepcopy(param)

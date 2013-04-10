@@ -29,21 +29,19 @@ class TestValidationApiForClusters(ValidationTestCase):
     # -------------------------------------------------------------------------
     # Positive tests crud operation for cluster
     # -------------------------------------------------------------------------
-    def test_crud_operation_for_cluster(self):
-        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
+    def test_crud_operation_for_cluster_with_long_field(self):
+        body = copy.deepcopy(self.cluster_data_small)
         body['cluster']['name'] = self.long_field
-        get_body = copy.deepcopy(self.get_cluster_body)
+        get_body = copy.deepcopy(self.get_cluster_small)
         get_body[u'name'] = u'%s' % self.long_field
         self._crud_object(body, get_body,
                           self.url_cluster, 202, 200, 204)
 
-        # body = copy.deepcopy(self.cluster_data_jtnn)
-        # get_body = del self.get_cluster_body[u'node_templates'][u'tt_dn.small']
-        # self._crud_object(body, get_body,
-        #               self.url_cluster, 202, 200, 204)
-
-    #TODO: ylobankov. Create crud operations for cluster with node template
-    #TODO: with one JT and NN.
+    def test_crud_operation_for_cluster_with_multi_nodes(self):
+        body = copy.deepcopy(self.cluster_data_jtnn)
+        get_body = copy.deepcopy(self.get_cluster_jtnn)
+        self._crud_object(body, get_body,
+                          self.url_cluster, 202, 200, 204)
 
     # -------------------------------------------------------------------------
     # Negative tests for cluster deletion and get cluster
