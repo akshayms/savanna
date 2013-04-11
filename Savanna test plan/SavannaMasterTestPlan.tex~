@@ -1,0 +1,221 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{color}
+\usepackage[top=2cm, bottom=2cm, margin=2cm]{geometry}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{mirantis}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+\begin{document}
+
+
+\thispagestyle{empty}
+\titleGWP{Vyatta SNMPv3 Test Plan}{}
+
+\clearpage
+
+\pagestyle{fancy}
+\thispagestyle{fancy}
+
+\tableofcontents
+
+\newpage
+
+\section{Revision History}
+
+
+\begin{tabular}{|l|p{4cm}|p{10cm}|}
+\hline
+{\bf Date} & {\bf Author} & {\bf Comments} \\ 
+\hline
+11/29/2012 & QA team & Initial Draft \\ 
+\hline
+\end{tabular}
+
+\section{Introduction}
+
+The main goal of this document is to present a detailed test cases for Vyatta SNMPv3 testing. This test plan includes functional test cases for the features and non-functional test cases for  performance, load and scalability testing types. This document is divided into sections by the testing type. 
+
+
+\section{System Under Test Specifications}
+\begin{itemize}
+\item Vyatta VC6.5 (VSE)
+\end{itemize}
+
+\section{DevTest Team Responsibilities}
+QA team is responsible to:
+\begin{itemize}
+\item make a test plan contains acceptance, functional, performance, scalability, reliability and compatibility test cases
+\item add regression test cases to the test plan in case of regression
+\item define acceptance tests suite for every iteration
+\item execute acceptance tests for candidate build for every iteration
+\item execute acceptance and regression tests for release candidate
+\item execute all functional, scalability, reliability and compatibility test cases on stable nightly builds when corresponding features will be implemented
+\item maintain test lab infrastructure
+\item automate as many acceptance tests as possible
+\item execute automated test suite for every nightly build
+\item maintain infrastructure for making nightly builds and run automated tests
+\item notify Dev team about found bugs via bug tracking system
+\item help Dev team with bug reproduction
+\item verify bugs fixed by Dev team
+\end{itemize}
+
+\subsection{Test Deliverables}
+The following items should be delivered after product release:
+\begin{enumerate}
+\item test plan
+\item test cases specification
+\item test cases execution report
+\item project status and metrics
+\end{enumerate}
+
+
+\subsection{Test Schedule}
+\begin{enumerate}
+\item Users and Groups tests - Iteration 3
+\item Traps and Informs tests - Iteration 4
+\end{enumerate}
+
+
+\subsection{Test Cycles}
+\begin{enumerate}
+\item Implemented functionality (pass 1)
+\item Working functionality (pass 2)
+\item All critical bugs and bugs related to functionality fixed - acceptance for demo (pass 3)
+\end{enumerate}
+
+
+\section{Suspension Criteria and Resumption Requirements}
+
+The main criteria to suspend the testing for candidate build is having at least one 'Blocker' bug(Priority 1 in JIRA). Resumption criteria in that case is fixing all 'Blocker' bugs and make a new candidate build.
+Performance testing can be suspended if the product is unstable on the load. Resumption criteria for that case is fixing corresponding bugs and make a new stable build.
+
+
+\section{Risk Areas Evaluation}
+
+Risk Areas were evaluated by their severity and priority. These potential risks will be addressed by tests. Number of test cases for each feature is determined by the priorities defined on the basis of severity and probability of risks, related to this feature.
+
+Each test case has a priority according to and probability of a particular risk, related to this test case. Also each test case has a priority for automation.
+\newpage
+\begin{longtable}{|c|p{3cm}|c|c|p{8cm}|}
+\hline
+\# & {\bf Risk} & {\bf Severity} & {\bf Probability} & {\bf Comments}\\
+\hline
+1&Breakage dependent programs& High & Low & The following items must be tested: 
+\begin{itemize}
+\item ntp
+\item vyatta-quagga
+\item lldpd 
+\item vyatta-keepalived 
+\end{itemize}
+\\ \hline
+2&SNMP compatibility with old releases & High & Low & The following items must be tested:
+\begin{itemize}
+\item compatibility with SNMP v2 mibs
+\item compatibility with existing CLI commands
+\item compatibility with Vyatta specific non net-snmp mibs:
+\begin{itemize}
+\item BGP4‐MIB
+\item OSPF-MIB
+\item KEEPALIVED‐MIB 	
+\end{itemize}
+\end{itemize}
+\\ \hline
+3&SNMP compatibility with network monitoring and management software & Medium & Low &  The following compatibility with free software must be tested:
+\begin{itemize}
+\item Cacti
+\item Nagios
+\item Zabbix 
+\item Pandora FMS
+\item OpenNMS
+\item MRTG
+\end{itemize}
+Additionally, we can test:
+\begin{itemize}
+\item HP OpenView NNM
+\end{itemize} \\ \hline
+4&Compatibility with IPv6 protocol & High & Low & Functionality of the new version must be tested
+with working through IPv6 protocol \\ \hline
+5&SNMP vulnerability & High & High & Functionality of the new version must be tested with vulnerability scanner SNORT \\ \hline
+6&Errors in new CLI commands & High &  Medium & All new CLI commands must be tested in full and short forms. Commands for confguration, reconfguration and showing confguration must be tested. Also the commands for previewing, committing and saving all changes must be tested\\ \hline
+7&Errors in help messages for CLI commands & Low & High & Help messages for all new CLI commands must
+be tested. All tests for help messages must be automated\\ \hline
+8&Error in SNMP MIBs & Medium & Low & Compare SNMP statistic with CLI statistic \\ \hline
+9&Working in HA mode & High & Medium & New SNMP v3 feature must be tested in Vyatta HA mode \\ \hline
+\end{longtable}
+
+\section{Features To Be Tested}
+\subsection{Configuration of SNMP v3}
+\begin{itemize}
+\item Configuration of users, groups, views
+\item Configuration of TLS
+\item Support SNMP for IPv4 and IPv6
+\item Support View Access Control Mode
+\item Support SNMP v3 informs
+\item Working in HA mode
+\end{itemize} 
+
+\subsection{Compatibility with network management software}
+Discovering and displaying on the free network management software:
+\begin{itemize}
+\item Cacti
+\item Nagios
+\item Zabbix 
+\item Pandora FMS
+\item OpenNMS
+\item MRTG
+\end{itemize}
+
+
+\subsection{New CLI commands}
+All new CLI commands for SNMP configuring and monitoring will be be tested
+
+\subsection{SNMP security}
+New snmp daemon will be scanned with SNORT in the different configurations. 
+
+
+\section{Features NOT to be tested}
+\begin{tabular}{|p{5cm}|p{10cm}|}
+\hline
+\ \bf Feature & \bf Reason \\ \hline
+Generic Vyatta CLI&Existing Vyatta CLI should not be affected by SNMP v3 changes. However, commands for previewing, committing and saving all changes must be tested. \\ \hline
+\end{tabular}
+
+
+\newpage
+\section{Test lab network topology}
+
+\subsection{Descriptions of network topology and servers destination}
+\paragraph{} Virtualized infrastructure is used for SNMPv3 testing presented on the Figure 1.
+\begin{itemize}
+\item Vyatta routers and servers with SNMP clients are hosted on ESXi servers (Server 1 and Server 2). VMware is used for virtual network creation between Vyatta routers and servers with SNMP clients.
+\item For SNMP clients one server is dedicated (Server 3).
+\item On the hardware server ESXi will be installed. Vyatta will be started from HDD.
+\item Cisco 3845 will be used for routing/multicast mib testing.
+\end{itemize}
+
+\subsection{Network scheme for tests}
+This scheme is used in all test cases for SNMPv3.
+
+\begin{figure}[hb]
+\caption{Network scheme for tests}
+ \begin{center}
+  \includegraphics[width=9cm]{SNMPLAbScheme.png}
+ \end{center}
+\label{fig:MainScheme}
+\end{figure}
+
+
+
+\section{Test Cases Requirements}
+
+\begin{itemize}
+\item All possible test cases should be automated.
+\item At least 70\% of the test cases should be automated.
+\end{itemize}
+
+
+\end{document}
