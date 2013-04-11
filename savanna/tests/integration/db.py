@@ -46,7 +46,7 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '172.18.79.213'
+        self.host = '172.18.79.214'
         self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
@@ -165,7 +165,7 @@ class ValidationTestCase(unittest.TestCase):
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
-                name='vrovachev',
+                name='QA-test-cluster',
                 base_image_id=self.image_id,
                 node_templates={
                     'jt_nn.medium': 1,
