@@ -23,7 +23,6 @@ import unittest
 from keystoneclient.v2_0 import Client as keystone_client
 
 from telnetlib import Telnet
-import time
 
 LOG = logging.getLogger(__name__)
 
@@ -47,16 +46,14 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '172.18.79.214'
-        #self.host = '172.18.78.111'
+        self.host = '172.18.79.213'
         self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.flavor_id = 'm1.medium'
-        self.image_id = '28eb1fc3-5e69-46ee-ab61-3f60b073393e'
-        #self.image_id = '30a85995-8d19-4040-b3f6-8f86965a5c47'
+        self.image_id = '7ba73c45-49ff-442f-b337-f731057308e6'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -176,7 +173,7 @@ class ValidationTestCase(unittest.TestCase):
                 }
             ))
 
-        self.cluster_data_small = dict(
+        self.cluster_data_jtnn_ttdn_small = dict(
             cluster=dict(
                 name='QA-test-cluster',
                 base_image_id=self.image_id,
@@ -195,7 +192,7 @@ class ValidationTestCase(unittest.TestCase):
                 }
             ))
 
-        self.get_cluster_body = {
+        self.get_cluster_data_jtnn_ttdn = {
             u'status': u'Starting',
             u'service_urls': {},
             u'name': u'QA-test-cluster',
@@ -208,28 +205,28 @@ class ValidationTestCase(unittest.TestCase):
             u'nodes': []
         }
 
-        self.get_cluster_small = {
+        self.get_cluster_data_jtnn_ttdn_small = {
             u'status': u'Starting',
             u'service_urls': {},
             u'name': u'test-cluster',
             u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
-                {
-                    u'jt_nn.small': 1,
-                    u'tt_dn.small': 1
-                },
+            {
+                u'jt_nn.small': 1,
+                u'tt_dn.small': 1
+            },
             u'nodes': []
         }
 
-        self.get_cluster_jtnn = {
+        self.get_cluster_data_jtnn = {
             u'status': u'Starting',
             u'service_urls': {},
             u'name': u'test-cluster',
             u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
-                {
-                    u'jt_nn.small': 1
-                },
+            {
+                u'jt_nn.small': 1
+            },
             u'nodes': []
         }
 
@@ -301,8 +298,8 @@ class ValidationTestCase(unittest.TestCase):
         data = json.loads(rv.content)
         return data
 
-    def _crud_object(self, body, get_body, url, p_code, g_code, d_code):
-        data = self._post_object(url, body, p_code)
+    def _crud_object(self, body, get_body, url):
+        data = self._post_object(url, body, 202)
         object = "cluster"
         get_url = self.url_cluster_without_json
         if url == self.url_nt:
@@ -311,7 +308,7 @@ class ValidationTestCase(unittest.TestCase):
         data = data["%s" % object]
         object_id = data.pop(u'id')
         self.assertEquals(data, get_body)
-        get_data = self._get_object(get_url, object_id, g_code)
+        get_data = self._get_object(get_url, object_id, 200)
         get_data = get_data['%s' % object]
         del get_data[u'id']
         if url != self.url_nt:
@@ -321,8 +318,8 @@ class ValidationTestCase(unittest.TestCase):
             i = 1
             while get_data[u'status'] != u'Active':
                 if i > 60:
-                    self._del_object(get_url, object_id, d_code)
-                get_data = self._get_object(get_url, object_id, g_code)
+                    self._del_object(get_url, object_id, 204)
+                get_data = self._get_object(get_url, object_id, 200)
                 get_data = get_data['%s' % object]
                 del get_data[u'id']
                 del get_data[u'service_urls']
@@ -330,7 +327,9 @@ class ValidationTestCase(unittest.TestCase):
                 eventlet.sleep(10)
                 i += 1
         self.assertEquals(get_data, get_body)
-        self._del_object(get_url, object_id, d_code)
+        self._del_object(get_url, object_id, 204)
+        if url != self.url_nt:
+            eventlet.sleep(10)
         return object_id
 
     def _change_int_value(self, url, param, f_field, sec_field, value, code):
@@ -479,15 +478,6 @@ class ValidationTestCase(unittest.TestCase):
         data = copy.deepcopy(body)
         data['cluster']['node_templates'][node_type] = count
         self._assert_error(data, u'VALIDATION_ERROR')
-
-    def _assert_node_template_without_node_nn(self, body):
-        self._assert_error(body, u'NOT_SINGLE_NAME_NODE')
-
-    def _assert_node_template_without_node_jt(self, body):
-        self._assert_error(body, u'NOT_SINGLE_JOB_TRACKER')
-
-    def _assert_node_template_with_incorrect_node(self, body):
-        self._assert_error(body, u'NODE_TEMPLATE_NOT_FOUND')
 
     def _assert_bad_cluster_body(self, component):
         body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
