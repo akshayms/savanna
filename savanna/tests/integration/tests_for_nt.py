@@ -289,4 +289,3 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         data = self._change_field(self.url_nt, self.jt.copy(),
                                   "job_tracker", "job", 400)
         self.assertEquals(data, 'VALIDATION_ERROR')
->>>>>>> 2aad090374a52759d78274ecb42f4a48d325b375
