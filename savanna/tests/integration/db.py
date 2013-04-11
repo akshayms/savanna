@@ -29,11 +29,11 @@ LOG = logging.getLogger(__name__)
 
 keystone = keystone_client(
     username="admin",
-    #password="nova",
-    password="password",
+    password="nova",
+    #password="password",
     tenant_name="admin",
-    #auth_url="http://172.18.79.139:35357/v2.0/"
-    auth_url="http://172.18.78.111:5000/v2.0/"
+    auth_url="http://172.18.79.139:35357/v2.0/"
+    #auth_url="http://172.18.78.111:5000/v2.0/"
 )
 result = keystone.authenticate()
 
@@ -47,16 +47,16 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        #self.host = '172.18.79.215'
-        self.host = '172.18.78.111'
+        self.host = '172.18.79.214'
+        #self.host = '172.18.78.111'
         self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.flavor_id = 'm1.medium'
-        #self.image_id = '6e877b57-fb07-49a4-b932-ee60012bbc82'
-        self.image_id = '30a85995-8d19-4040-b3f6-8f86965a5c47'
+        self.image_id = '28eb1fc3-5e69-46ee-ab61-3f60b073393e'
+        #self.image_id = '30a85995-8d19-4040-b3f6-8f86965a5c47'
         self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
@@ -168,7 +168,7 @@ class ValidationTestCase(unittest.TestCase):
 
         self.cluster_data_jtnn_ttdn = dict(
             cluster=dict(
-                name='QA-test-cluster',
+                name='vrovachev',
                 base_image_id=self.image_id,
                 node_templates={
                     'jt_nn.medium': 1,
