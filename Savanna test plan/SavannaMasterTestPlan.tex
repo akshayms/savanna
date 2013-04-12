@@ -48,7 +48,9 @@ The main goal of this document is to present a detailed test cases for Savanna t
 \section{System Under Test Specifications}
 
 \begin{itemize}
-\item TBD
+\item OpenStack Folsom
+\item Savanna version 0.1
+\item Python version 2.7.6
 \end{itemize}
 
 
@@ -61,17 +63,14 @@ QA team is responsible to:
 \begin{itemize}
 \item make a test plan contains acceptance, functional, performance, scalability, reliability and compatibility test cases
 \item add regression test cases to the test plan in case of regression
-\item define acceptance tests suite for every iteration
-\item execute acceptance tests for candidate build for every iteration
 \item execute acceptance and regression tests for release candidate
-\item execute all functional, scalability, reliability and compatibility test cases on stable nightly builds when corresponding features will be implemented
-\item maintain test lab infrastructure
+\item execute all automated functional, scalability, reliability and compatibility test cases on stable nightly builds when corresponding features will be implemented
 \item automate as many acceptance tests as possible
-\item execute automated test suite for each nightly build
 \item maintain infrastructure for making nightly builds and run automated tests
 \item notify Dev team about found bugs via bug tracking system
 \item help Dev team with bug reproduction
 \item verify bugs fixed by Dev team
+\item community support about QA and automation on the project
 \end{itemize}
 
 \subsection{Test Deliverables}
@@ -85,7 +84,9 @@ The following items should be delivered after product release:
 
 \subsection{Test Schedule}
 \begin{enumerate}
-\item TBD
+\item Basic Cluster Provisioning - end of April 2013
+\item Cluster Operations - middle of July 2013
+\item Analytics as a Service - middle of October 2013 
 \end{enumerate}
 
 \subsection{Test Cycles}
@@ -102,7 +103,9 @@ The following items should be delivered after product release:
 \section{Suspension Criteria and Resumption Requirements}
 
 The main criteria to suspend the testing for candidate build is having at least one 'Blocker' bug. Resumption criteria in that case is fixing all 'Blocker' bugs and make a new candidate build.
+The second criteria to suspend the testing is instability or unavailability of the test lab. Resumption criteria in that case is fixing all issues and problems with the test lab.
 Performance testing can be suspended if the product is unstable on the load. Resumption criteria for that case is fixing corresponding bugs and make a new stable build.
+
 
 
 
@@ -121,14 +124,15 @@ Each test case has a priority according to and probability of a particular risk,
 \hline
 1&Difference between REST API requirements and implementation& High & Low & The following items must be tested:
 \begin{itemize}
-\item Node template requests: create, modify, delete
-\item Cluster requests: create, modify, delete
+\item Node template requests: create, modify, delete, get, list
+\item Cluster requests: create, modify, delete, get, list
 \end{itemize}
 \\ \hline
 2&Errors in the REST API implementation& High & High & The following items must be tested:
 \begin{itemize}
 \item Deploy acceptance
 \item Hadoop acceptance
+\item REST API requests both for node templates and clusters: get, list
 \end{itemize}
 \\ \hline
 3&Errors in the plugin API functionality & High & High & REST API requests should be tested for the following Hadoop implementations:
