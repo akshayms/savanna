@@ -11,7 +11,6 @@
 
 \begin{document}
 
-
 \thispagestyle{empty}
 \titleGWP{Savanna Test Plan}{}
 
@@ -26,7 +25,6 @@
 
 \section{Revision History}
 
-
 \begin{tabular}{|l|p{4cm}|p{10cm}|}
 \hline
 {\bf Date} & {\bf Author} & {\bf Comments} \\ 
@@ -35,17 +33,30 @@
 \hline
 \end{tabular}
 
+
+
+
+
 \section{Introduction}
 
 The main goal of this document is to present a detailed test cases for Savanna testing. This test plan includes functional test cases for the features and non-functional test cases for performance, load and compatibility testing types. This document is divided to sections by the testing types. 
 
 
+
+
+
 \section{System Under Test Specifications}
+
 \begin{itemize}
 \item TBD
 \end{itemize}
 
+
+
+
+
 \section{QA Team Responsibilities}
+
 QA team is responsible to:
 \begin{itemize}
 \item make a test plan contains acceptance, functional, performance, scalability, reliability and compatibility test cases
@@ -72,12 +83,10 @@ The following items should be delivered after product release:
 \item project status and metrics
 \end{enumerate}
 
-
 \subsection{Test Schedule}
 \begin{enumerate}
 \item TBD
 \end{enumerate}
-
 
 \subsection{Test Cycles}
 \begin{enumerate}
@@ -87,10 +96,16 @@ The following items should be delivered after product release:
 \end{enumerate}
 
 
+
+
+
 \section{Suspension Criteria and Resumption Requirements}
 
 The main criteria to suspend the testing for candidate build is having at least one 'Blocker' bug. Resumption criteria in that case is fixing all 'Blocker' bugs and make a new candidate build.
 Performance testing can be suspended if the product is unstable on the load. Resumption criteria for that case is fixing corresponding bugs and make a new stable build.
+
+
+
 
 
 \section{Risk Areas Evaluation}
@@ -147,22 +162,65 @@ Clouderra Manager, Intel Hadoop, etc \\ \hline
 \\ \hline
 \end{longtable}
 
+
+
+
+
 \section{Features To Be Tested}
 %\subsection{TBD}
+\textbf{Basic Cluster Provisioning}
+
 \begin{itemize}
-\item REST API for Savanna
-\item Virtual machine provisioning 
-\item Hadoop-cluster operations
-\item UI
- 
-\end{itemize} 
+    \item Cluster provisioning
+    \item Deployment Engine implementation for pre-installed images
+    \item Templates for Hadoop cluster configuration
+    \item REST API for cluster startup and operations
+    \item UI integrated into Horizon
+\end{itemize}
+\textbf{Cluster Operations}
+
+\begin{itemize}
+    \item Manual cluster scaling (add/remove nodes)
+    \item Hadoop cluster topology configuration parameters
+	\begin{itemize}
+    		\item Data node placement control
+        \item HDFS location
+        \item Swift integration
+    \end{itemize}
+
+    \item Integration with vendor specific deployment/management tooling
+    \item Monitoring support - integration with 3rd-party monitoring tools (Zabbix, Nagios)
+\end{itemize}
+\textbf{Analytics as a Service}
+
+\begin{itemize}
+    \item API to execute Map/Reduce jobs without exposing details of underlying infrastructure (similar to AWS EMR)
+    \item User-friendly UI for ad-hoc analytics queries based on Hive or Pig
+\end{itemize}
+\textbf{Further Roadmap}
+\begin{itemize}
+    \item HDFS and Swift integration
+	\begin{itemize}
+    		\item Caching of Swift data on HDFS
+        \item Avoid issues with Swift eventual consistency while running job
+	\end{itemize}
+    \item HBase support
+\end{itemize}
+
+
+
+
 
 \section{Features NOT to be tested}
+
 \begin{tabular}{|p{5cm}|p{10cm}|}
 \hline
 \ \bf Feature & \bf Reason \\ \hline
 TBD&TBD \\ \hline
 \end{tabular}
+
+
+
 
 
 \newpage
@@ -190,12 +248,13 @@ This scheme is used in all test cases for Savanna.
 
 
 
+
+
 \section{Test Cases Requirements}
 
 \begin{itemize}
 \item All possible test cases should be automated.
 \item At least 70\% of the test cases should be automated.
 \end{itemize}
-
 
 \end{document}
