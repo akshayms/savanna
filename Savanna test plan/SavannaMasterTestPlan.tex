@@ -31,7 +31,7 @@
 \hline
 {\bf Date} & {\bf Author} & {\bf Comments} \\ 
 \hline
-04/11/2013 & QA team & Initial Draft \\ 
+12/03/2013 & QA team & Initial Draft \\ 
 \hline
 \end{tabular}
 
@@ -165,21 +165,21 @@ TBD&TBD \\ \hline
 \section{Test lab network topology}
 
 \subsection{Descriptions of network topology and servers destination}
-\paragraph{} Virtualized infrastructure is used for SNMPv3 testing presented on the Figure 1.
+\paragraph{} Virtualized infrastructure is used for Savanna testing presented on the Figure 1.
 \begin{itemize}
-\item Vyatta routers and servers with SNMP clients are hosted on ESXi servers (Server 1 and Server 2). VMware is used for virtual network creation between Vyatta routers and servers with SNMP clients.
-\item For SNMP clients one server is dedicated (Server 3).
-\item On the hardware server ESXi will be installed. Vyatta will be started from HDD.
-\item Cisco 3845 will be used for routing/multicast mib testing.
+\item \textit{Switch} - usual a switch-device.
+\item \textit{Swift node} - on this nodes can run the virtual machine.
+\item \textit{Management node} - this node manage lab.
+\item \textit{Compute node} - on this node run the virtual machines.
 \end{itemize}
 
 \subsection{Network scheme for tests}
-This scheme is used in all test cases for SNMPv3.
+This scheme is used in all test cases for Savanna.
 
 \begin{figure}[hb]
 \caption{Network scheme for tests}
  \begin{center}
-  \includegraphics[width=9cm]{SNMPLAbScheme.png}
+  \includegraphics[width=9cm]{HadoopLabSchema.jpg}
  \end{center}
 \label{fig:MainScheme}
 \end{figure}
