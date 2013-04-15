@@ -295,19 +295,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;cluster&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;cluster&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">{}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;name&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;name&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;some-name&quot;</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;base_image_id&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;base_image_id&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -315,7 +315,7 @@
                 <span class="s">&quot;base_image_id&quot;</span><span class="p">:</span> <span class="s">&quot;some-image-id&quot;</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;node_templates&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;node_templates&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
 </div>
 <div class="viewcode-block" id="TestValidation.test_cluster_create_v_name"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_cluster_create_v_name">[docs]</a>    <span class="k">def</span> <span class="nf">test_cluster_create_v_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -338,9 +338,9 @@
                        <span class="s">u&quot;&#39;&#39; is too short&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
-            <span class="n">_cluster</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;a&quot;</span> <span class="o">*</span> <span class="mi">241</span><span class="p">),</span>
+            <span class="n">_cluster</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;a&quot;</span> <span class="o">*</span> <span class="mi">51</span><span class="p">),</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; is too long&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">241</span><span class="p">))</span>
+                       <span class="s">u&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; is too long&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">51</span><span class="p">))</span>
         <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_assert_cluster_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -405,19 +405,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;node_template&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;node_template&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;name&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;name&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;some-name&quot;</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;node_type&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;node_type&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -425,7 +425,7 @@
                 <span class="s">&quot;node_type&quot;</span><span class="p">:</span> <span class="s">&quot;some-node-type&quot;</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;flavor_id&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;flavor_id&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -434,7 +434,7 @@
                 <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;name_node&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;name_node&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -444,7 +444,7 @@
                 <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{}</span>
             <span class="p">}},</span>
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
-                       <span class="s">u&quot;&#39;job_tracker&#39; is required property&quot;</span><span class="p">)</span>
+                       <span class="s">u&quot;&#39;job_tracker&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
