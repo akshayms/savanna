@@ -217,9 +217,10 @@ glance image-create --name<span class="o">=</span>hdp.image --disk-format<span c
 <div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>savanna
 </pre></div>
 </div>
-<p>3.3 Install python headers and virtualenv:</p>
+<p>3.3 Install python headers, virtualenv and tox:</p>
 <div class="highlight-bash"><div class="highlight"><pre>apt-get update
 apt-get install python-dev python-virtualenv
+pip install tox
 </pre></div>
 </div>
 <p>3.4 Prepare virtual environment:</p>
@@ -234,11 +235,12 @@ apt-get install python-dev python-virtualenv
 <p><strong>Note:</strong> Config file could be specified for <tt class="docutils literal"><span class="pre">savanna-api</span></tt> and <tt class="docutils literal"><span class="pre">savanna-manage</span></tt> commands using <tt class="docutils literal"><span class="pre">--config-file</span></tt> flag.</p>
 <p><strong>Note:</strong> If your OpenStack cluster doesn&#8217;t automatically assign floating ips then you should set <tt class="docutils literal"><span class="pre">use_floating_ips</span></tt> configuration option to <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
 <p>3.7 To initialize Savanna database with created configuration just call:</p>
-<div class="highlight-bash"><div class="highlight"><pre>.venv/bin/python bin/savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
+<div class="highlight-bash"><div class="highlight"><pre>tox -evenv -- savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
 </pre></div>
 </div>
+<p>Virtualenv with all requirements installed into it is now available in <tt class="docutils literal"><span class="pre">.tox/venv</span></tt>. You can create it by executing <tt class="docutils literal"><span class="pre">tools/install_venv</span></tt>.</p>
 <p>3.8 To start Savanna call:</p>
-<div class="highlight-bash"><div class="highlight"><pre>.venv/bin/python bin/savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
+<div class="highlight-bash"><div class="highlight"><pre>tox -evenv -- savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
 </pre></div>
 </div>
 <p>Now Savanna service is running. Further steps show how you can verify from console that Savanna API works properly.</p>
