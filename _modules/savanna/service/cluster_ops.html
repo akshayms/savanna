@@ -213,7 +213,7 @@
         <span class="n">configs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">nc</span><span class="o">.</span><span class="n">node_template</span><span class="o">.</span><span class="n">node_template_configs</span><span class="p">:</span>
             <span class="n">proc_name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">node_process_property</span><span class="o">.</span><span class="n">node_process</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="n">proc_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">proc_name</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
                 <span class="n">configs</span><span class="p">[</span><span class="n">proc_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
             <span class="n">name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">node_process_property</span><span class="o">.</span><span class="n">name</span>
@@ -370,8 +370,7 @@
 
 
 <span class="k">def</span> <span class="nf">_extract_environment_confs</span><span class="p">(</span><span class="n">node_configs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns list of Hadoop parameters which should be passed via environment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="s">&quot;Returns list of Hadoop parameters which should be passed via environment&quot;</span>
 
     <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -387,8 +386,7 @@
 
 <span class="k">def</span> <span class="nf">_extract_xml_confs</span><span class="p">(</span><span class="n">node_configs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns list of Hadoop parameters which should be passed into general</span>
-<span class="sd">    configs like core-site.xml</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    configs like core-site.xml&quot;&quot;&quot;</span>
 
     <span class="c"># For now we assume that all parameters outside of ENV_CONFS</span>
     <span class="c"># are passed to xml files</span>
