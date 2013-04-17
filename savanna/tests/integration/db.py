@@ -46,7 +46,8 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        self.host = '172.18.79.214'
+        #self.host = '172.18.79.214'
+        self.host = '127.0.0.1'
         self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port
