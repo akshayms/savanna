@@ -20,7 +20,7 @@ LOG = logging.getLogger(__name__)
 
 class TestValidationApiForNodetemplates(ValidationTestCase):
 
-    def test_01_telnet(self):
+    def test_01_telnet(self): # TODO: setUpClass
         self._tn()
 
 #-----------------------positive_tests-----------------------------------------
@@ -91,7 +91,7 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
 
 #--------------------incorrect_JSON--------------------------------------------
 
-    def test_create_nt_with_empty_json(self):
+    def test_create_nt_with_empty_fields(self):
         rv = self._post_object(self.url_nt, dict(), 400)
         self.assertEquals(rv['error_name'], 'VALIDATION_ERROR')
         rv = self._post_object(self.url_nt, dict(cluster=dict()), 400)

@@ -1,6 +1,7 @@
 import copy
 import eventlet
 import paramiko
+from os import getcwd
 from re import search
 from savanna.openstack.common import log as logging
 from savanna.tests.integration.db import ValidationTestCase
@@ -14,8 +15,8 @@ def _setup_ssh_connection(host, ssh):
     ssh.connect(
         host,
         username='root',
-        #password='swordfish'
-        password='watchThis'
+        password='swordfish'
+        #assword='watchThis'
     )
 
 
@@ -88,9 +89,11 @@ class TestForHadoop(ValidationTestCase):
         print("!!!!!!!!! start !!!!!!!!!!!!")
         print(ip)
         print("!!!!!!!!! end !!!!!!!!!!!!!!")
-        ip = '127.0.0.1'
+        #ip = '127.0.0.1'
+        dir = getcwd()
+        print(dir)
         _execute_transfer_on_node(
-            ip, '/home/hadoop/script.sh', '/script.sh')
+            ip, '%s/script.sh' % dir, '/script.sh')
         try:
             self.assertEquals(
                 _execute_command_on_node(ip, "cd .. && ./script.sh"), 0)

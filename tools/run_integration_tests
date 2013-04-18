@@ -2,7 +2,7 @@
 
 if [ ${VIRTUAL_ENV:+x} ]
     then echo "VIRTUAL_ENV is already specified"
-    else export VIRTUAL_ENV=.venv
+    else export VIRTUAL_ENV=.tox/venv
 fi
 
 echo "VIRTUAL_ENV = $VIRTUAL_ENV"
@@ -40,7 +40,7 @@ if [ $com == '3' ]; then
     elif [ $com == '2' ]; then
     $VIRTUAL_ENV/bin/nosetests ../integration/load_test.py $@
         elif [ $com == '1' ]; then
-            $VIRTUAL_ENV/bin/nosetests ../integration/hadoop_test.py -x $@
+            $VIRTUAL_ENV/bin/nosetests integration/hadoop_test.py -x $@
             elif [ $com == '0' ]; then
                 $VIRTUAL_ENV/bin/nosetests ../integration/ -x -I \
                  "load_test.*" -I "hadoop_test.*"  $@

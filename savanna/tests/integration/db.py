@@ -301,16 +301,16 @@ class ValidationTestCase(unittest.TestCase):
 
     def _crud_object(self, body, get_body, url):
         data = self._post_object(url, body, 202)
-        object = "cluster"
+        obj = "cluster"
         get_url = self.url_cluster_without_json
         if url == self.url_nt:
-            object = "node_template"
+            obj = "node_template"
             get_url = self.url_nt_not_json
-        data = data["%s" % object]
+        data = data["%s" % obj]
         object_id = data.pop(u'id')
         self.assertEquals(data, get_body)
         get_data = self._get_object(get_url, object_id, 200)
-        get_data = get_data['%s' % object]
+        get_data = get_data['%s' % obj]
         del get_data[u'id']
         if url != self.url_nt:
             get_body[u'status'] = u'Active'
@@ -321,7 +321,7 @@ class ValidationTestCase(unittest.TestCase):
                 if i > 60:
                     self._del_object(get_url, object_id, 204)
                 get_data = self._get_object(get_url, object_id, 200)
-                get_data = get_data['%s' % object]
+                get_data = get_data['%s' % obj]
                 del get_data[u'id']
                 del get_data[u'service_urls']
                 del get_data[u'nodes']
@@ -330,32 +330,32 @@ class ValidationTestCase(unittest.TestCase):
         self.assertEquals(get_data, get_body)
         self._del_object(get_url, object_id, 204)
         if url != self.url_nt:
-            eventlet.sleep(10)
+            eventlet.sleep(10) #TODO: get cluster while not deleted
         return object_id
 
     def _change_int_value(self, url, param, f_field, sec_field, value, code):
         body = copy.deepcopy(param)
-        object = "cluster"
+        obj = "cluster"
         if url != self.url_cluster:
-            object = "node_template"
-        body["%s" % object]["%s" % f_field]["%s" % sec_field] = value
+            obj = "node_template"
+        body["%s" % obj]["%s" % f_field]["%s" % sec_field] = value
         data = self._post_object(url, body, code)
         if code != 202:
             return data['error_name']
-        return data['%s' % object]['id']
+        return data['%s' % obj]['id']
 
     def _change_field(self, url, param, old_field, new_field, code):
         body = copy.deepcopy(param)
-        object = "cluster"
+        obj = "cluster"
         if url != self.url_cluster:
-            object = "node_template"
-        value = body["%s" % object]["%s" % old_field]
-        del body["%s" % object]["%s" % old_field]
-        body["%s" % object]["%s" % new_field] = value
+            obj = "node_template"
+        value = body["%s" % obj]["%s" % old_field]
+        del body["%s" % obj]["%s" % old_field]
+        body["%s" % obj]["%s" % new_field] = value
         data = self._post_object(url, body, code)
         if code != 202:
             return data['error_name']
-        return data['%s' % object]['id']
+        return data['%s' % obj]['id']
 
 #---------------------for_node_templates---------------------------------------
 
