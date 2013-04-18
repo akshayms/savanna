@@ -201,6 +201,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Discrepancies in Node Processes. Required: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;NODE_PROCESS_DISCREPANCY&quot;</span>
 
+</div>
+<div class="viewcode-block" id="RequiredParamMissedException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.RequiredParamMissedException">[docs]</a><span class="k">class</span> <span class="nc">RequiredParamMissedException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Required parameter &#39;</span><span class="si">%s</span><span class="s">&#39; of process &#39;</span><span class="si">%s</span><span class="s">&#39; should be &quot;</span> \
+                       <span class="s">&quot;specified&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;REQUIRED_PARAM_MISSED&quot;</span>
+
 
 <span class="c">## NodeTypes operations exceptions</span>
 </div>

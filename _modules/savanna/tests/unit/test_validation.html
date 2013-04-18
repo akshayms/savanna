@@ -218,9 +218,11 @@
         <span class="n">get_templates_p</span> <span class="o">=</span> <span class="n">patch</span><span class="p">(</span><span class="s">&quot;savanna.service.api.get_node_templates&quot;</span><span class="p">)</span>
         <span class="n">get_template_p</span> <span class="o">=</span> <span class="n">patch</span><span class="p">(</span><span class="s">&quot;savanna.service.api.get_node_template&quot;</span><span class="p">)</span>
         <span class="n">get_types_p</span> <span class="o">=</span> <span class="n">patch</span><span class="p">(</span><span class="s">&quot;savanna.service.api.get_node_types&quot;</span><span class="p">)</span>
+        <span class="n">get_node_type_required_params_p</span> <span class="o">=</span> \
+            <span class="n">patch</span><span class="p">(</span><span class="s">&quot;savanna.service.api.get_node_type_required_params&quot;</span><span class="p">)</span>
         <span class="n">patchers</span> <span class="o">=</span> <span class="p">(</span><span class="n">request_data_p</span><span class="p">,</span> <span class="n">bad_req_p</span><span class="p">,</span> <span class="n">not_found_p</span><span class="p">,</span> <span class="n">int_err_p</span><span class="p">,</span>
                     <span class="n">get_clusters_p</span><span class="p">,</span> <span class="n">get_templates_p</span><span class="p">,</span> <span class="n">get_template_p</span><span class="p">,</span>
-                    <span class="n">get_types_p</span><span class="p">)</span>
+                    <span class="n">get_types_p</span><span class="p">,</span> <span class="n">get_node_type_required_params_p</span><span class="p">)</span>
 
         <span class="n">request_data</span> <span class="o">=</span> <span class="n">request_data_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">bad_req</span> <span class="o">=</span> <span class="n">bad_req_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
@@ -230,6 +232,7 @@
         <span class="n">get_templates</span> <span class="o">=</span> <span class="n">get_templates_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">get_template</span> <span class="o">=</span> <span class="n">get_template_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">get_types</span> <span class="o">=</span> <span class="n">get_types_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">get_node_type_required_params</span> <span class="o">=</span> <span class="n">get_node_type_required_params_p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
         <span class="c"># stub clusters list</span>
         <span class="n">get_clusters</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;_clusters_data&quot;</span><span class="p">,</span> <span class="p">[</span>
@@ -256,9 +259,9 @@
             <span class="p">})</span>
         <span class="p">])</span>
 
-        <span class="k">def</span> <span class="nf">_get_template</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_get_template</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">get_templates</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">template</span>
             <span class="k">return</span> <span class="bp">None</span>
 
@@ -270,6 +273,13 @@
                 <span class="s">&quot;processes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;job_tracker&quot;</span><span class="p">,</span> <span class="s">&quot;name_node&quot;</span><span class="p">]</span>
             <span class="p">})</span>
         <span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">_get_r_params</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">&quot;JT+NN&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;jt_param&quot;</span><span class="p">]}</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">get_node_type_required_params</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">_get_r_params</span>
 
         <span class="c"># mock function that should be validated</span>
         <span class="n">m_func</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
@@ -453,6 +463,30 @@
                 <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span><span class="p">,</span>
                 <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{},</span>
                 <span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}},</span>
+            <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;REQUIRED_PARAM_MISSED&quot;</span><span class="p">,</span>
+                       <span class="s">u&quot;Required parameter &#39;jt_param&#39; of process &quot;</span>
+                       <span class="s">u&quot;&#39;job_tracker&#39; should be specified&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
+            <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;some-name&quot;</span><span class="p">,</span>
+                <span class="s">&quot;node_type&quot;</span><span class="p">:</span> <span class="s">&quot;JT+NN&quot;</span><span class="p">,</span>
+                <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span><span class="p">,</span>
+                <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s">&quot;jt_param&quot;</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">}</span>
+            <span class="p">}},</span>
+            <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;REQUIRED_PARAM_MISSED&quot;</span><span class="p">,</span>
+                       <span class="s">u&quot;Required parameter &#39;jt_param&#39; of process &quot;</span>
+                       <span class="s">u&quot;&#39;job_tracker&#39; should be specified&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
+            <span class="p">{</span><span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;some-name&quot;</span><span class="p">,</span>
+                <span class="s">&quot;node_type&quot;</span><span class="p">:</span> <span class="s">&quot;JT+NN&quot;</span><span class="p">,</span>
+                <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span><span class="p">,</span>
+                <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s">&quot;jt_param&quot;</span><span class="p">:</span> <span class="s">&quot;some value&quot;</span><span class="p">}</span>
             <span class="p">}}</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>

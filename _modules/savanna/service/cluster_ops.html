@@ -325,11 +325,13 @@
 
             <span class="c"># we assume that floating IP comes last in the list</span>
             <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">node</span><span class="p">[</span><span class="s">&#39;internal_ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c"># private IP is not assigned yet</span>
                 <span class="k">return</span>
             <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">node</span><span class="p">[</span><span class="s">&#39;internal_ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">_execute_command_on_node</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="s">&#39;ls -l /&#39;</span><span class="p">)</span>
@@ -404,7 +406,7 @@
     <span class="k">return</span> <span class="n">lst</span>
 
 
-<span class="k">def</span> <span class="nf">_pre_cluster_setup</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_analyze_templates</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
     <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_ip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slaves&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;nodes&#39;</span><span class="p">]:</span>
@@ -419,8 +421,18 @@
     <span class="k">if</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_ip&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;No master node is defined in the cluster&quot;</span><span class="p">)</span>
 
-    <span class="n">configfiles</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/etc/hadoop/core-site.xml&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;/etc/hadoop/mapred-site.xml&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_generate_hosts</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
+    <span class="n">hosts</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1 localhost</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;nodes&#39;</span><span class="p">]:</span>
+        <span class="n">hosts</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;internal_ip&#39;</span><span class="p">],</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">])</span>
+
+    <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;hosts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hosts</span>
+
+
+<span class="k">def</span> <span class="nf">_pre_cluster_setup</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
+    <span class="n">_analyze_templates</span><span class="p">(</span><span class="n">clmap</span><span class="p">)</span>
+    <span class="n">_generate_hosts</span><span class="p">(</span><span class="n">clmap</span><span class="p">)</span>
 
     <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&#39;</span><span class="si">%%%hd</span><span class="s">fs_namenode_url</span><span class="si">%%</span><span class="s">%&#39;</span><span class="p">,</span> <span class="s">&#39;hdfs:</span><span class="se">\\</span><span class="s">/</span><span class="se">\\</span><span class="s">/</span><span class="si">%s</span><span class="s">:8020&#39;</span>
@@ -435,7 +447,10 @@
             <span class="n">script_file</span> <span class="o">=</span> <span class="s">&#39;setup-general.sh&#39;</span>
 
         <span class="n">templ_args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;configfiles&#39;</span><span class="p">:</span> <span class="n">configfiles</span><span class="p">,</span>
+            <span class="s">&#39;configfiles&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s">&#39;/etc/hadoop/core-site.xml&#39;</span><span class="p">,</span>
+                <span class="s">&#39;/etc/hadoop/mapred-site.xml&#39;</span>
+            <span class="p">],</span>
             <span class="s">&#39;configs&#39;</span><span class="p">:</span> <span class="n">configs</span><span class="p">,</span>
             <span class="s">&#39;slaves&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slaves&#39;</span><span class="p">],</span>
             <span class="s">&#39;master_hostname&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">],</span>
@@ -453,6 +468,10 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">_setup_ssh_connection</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="n">ssh</span><span class="p">)</span>
         <span class="n">sftp</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
+
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/etc/hosts&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">clmap</span><span class="p">[</span><span class="s">&#39;hosts&#39;</span><span class="p">])</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-cfg.xsl&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
         <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xsl&#39;</span><span class="p">])</span>
