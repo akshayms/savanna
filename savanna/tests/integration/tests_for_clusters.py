@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import eventlet
 import copy
+import eventlet
 from savanna.openstack.common import log as logging
 from savanna.tests.integration.db import ValidationTestCase
 

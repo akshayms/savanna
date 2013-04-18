@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import copy
 import eventlet
-import random as random_number
-from savanna.openstack.common import log as logging
-import requests
-import unittest
+import json
 from keystoneclient.v2_0 import Client as keystone_client
+import random as random_number
+import requests
+from savanna.openstack.common import log as logging
+import unittest
 
 from telnetlib import Telnet
 
@@ -46,8 +46,8 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_node_templates----------------------------
 
-        #self.host = '172.18.79.214'
-        self.host = '127.0.0.1'
+        self.host = '172.18.79.214'
+        #self.host = '127.0.0.1'
         self.maxDiff = None
         self.port = '8080'
         self.baseurl = 'http://' + self.host + ':' + self.port

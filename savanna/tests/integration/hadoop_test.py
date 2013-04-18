@@ -1,11 +1,9 @@
 import copy
-from savanna.openstack.common import log as logging
-from savanna.tests.integration.db import ValidationTestCase
 import eventlet
 import paramiko
-from urlparse import urlparse
-from urlparse import urlsplit
-from re import match, search
+from re import search
+from savanna.openstack.common import log as logging
+from savanna.tests.integration.db import ValidationTestCase
 from scp import SCPClient
 
 LOG = logging.getLogger(__name__)
@@ -45,6 +43,7 @@ def _execute_transfer_on_node(host, locfile, nodefile):
     finally:
         ssh.close()
 
+
 def _execute_transfer_from_node(host, nodefile, localfile):
     ssh = paramiko.SSHClient()
     try:
@@ -55,49 +54,49 @@ def _execute_transfer_from_node(host, nodefile, localfile):
         ssh.close()
 
 
-
 class TestForHadoop(ValidationTestCase):
 
-    # def test_01_telnet(self):
-    #     self._tn()
+    def test_01_telnet(self):
+        self._tn()
 
     def test_hadoop(self):
-        # body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
-        # body = self._assert_change_cluster_body(body, 'tt_dn.small',
-        #                                         'tt_dn.medium')
-        # data = self._post_object(self.url_cluster, body, 202)
-        # data = data["cluster"]
-        # object_id = data.pop(u'id')
-        # get_data = self._get_object(self.url_cluster_without_json,
-        #                             object_id, 200)
-        # get_data = get_data['%s' % "cluster"]
-        # id = get_data[u'id']
-        # i = 1
-        # while get_data[u'status'] != u'Active':
-        #     if i > 60:
-        #         self._del_object(self.url_cluster_without_json,
-        #                          object_id, 204)
-        #     get_data = self._get_object(self.url_cluster_without_json,
-        #                                 object_id, 200)
-        #     get_data = get_data['%s' % "cluster"]
-        #     eventlet.sleep(10)
-        #     i += 1
-        # print(get_data)
-        # ip = get_data[u'service_urls'][u'namenode']
-        # p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
-        # m = search(p, ip)
-        # ip = m.group('host')
-        # print("!!!!!!!!! start !!!!!!!!!!!!")
-        # print(ip)
-        # print("!!!!!!!!! end !!!!!!!!!!!!!!")
+        body = copy.deepcopy(self.cluster_data_jtnn_ttdn)
+        body = self._assert_change_cluster_body(body, 'tt_dn.small',
+                                                'tt_dn.medium')
+        data = self._post_object(self.url_cluster, body, 202)
+        data = data["cluster"]
+        object_id = data.pop(u'id')
+        get_data = self._get_object(self.url_cluster_without_json,
+                                    object_id, 200)
+        get_data = get_data['%s' % "cluster"]
+        id = get_data[u'id']
+        i = 1
+        while get_data[u'status'] != u'Active':
+            if i > 60:
+                self._del_object(self.url_cluster_without_json,
+                                 object_id, 204)
+            get_data = self._get_object(self.url_cluster_without_json,
+                                        object_id, 200)
+            get_data = get_data['%s' % "cluster"]
+            eventlet.sleep(10)
+            i += 1
+        print(get_data)
+        ip = get_data[u'service_urls'][u'namenode']
+        p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
+        m = search(p, ip)
+        ip = m.group('host')
+        print("!!!!!!!!! start !!!!!!!!!!!!")
+        print(ip)
+        print("!!!!!!!!! end !!!!!!!!!!!!!!")
         ip = '127.0.0.1'
         _execute_transfer_on_node(
             ip, '/home/hadoop/script.sh', '/script.sh')
         try:
-            self.assertEquals(_execute_command_on_node(ip, "cd .. && ./script.sh"),
-                          0)
-        except:
-            _execute_transfer_from_node(ip, '/outputTestMapReduce/log.txt', '/home/hadoop/')
+            self.assertEquals(
+                _execute_command_on_node(ip, "cd .. && ./script.sh"), 0)
+        except Exception:
+            _execute_transfer_from_node(
+                ip, '/outputTestMapReduce/log.txt', '/home/hadoop/')
             self.fail("run script is failure")
-
-        #self._del_object(self.url_nt_not_json, id, 204)
+            self._del_object(self.url_nt_not_json, id, 204)
+        self._del_object(self.url_nt_not_json, id, 204)
