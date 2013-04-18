@@ -124,9 +124,11 @@ class TestValidation(unittest.TestCase):
         get_templates_p = patch("savanna.service.api.get_node_templates")
         get_template_p = patch("savanna.service.api.get_node_template")
         get_types_p = patch("savanna.service.api.get_node_types")
+        get_node_type_required_params_p = \
+            patch("savanna.service.api.get_node_type_required_params")
         patchers = (request_data_p, bad_req_p, not_found_p, int_err_p,
                     get_clusters_p, get_templates_p, get_template_p,
-                    get_types_p)
+                    get_types_p, get_node_type_required_params_p)
 
         request_data = request_data_p.start()
         bad_req = bad_req_p.start()
@@ -136,6 +138,7 @@ class TestValidation(unittest.TestCase):
         get_templates = get_templates_p.start()
         get_template = get_template_p.start()
         get_types = get_types_p.start()
+        get_node_type_required_params = get_node_type_required_params_p.start()
 
         # stub clusters list
         get_clusters.return_value = getattr(self, "_clusters_data", [
@@ -162,9 +165,9 @@ class TestValidation(unittest.TestCase):
             })
         ])
 
-        def _get_template(**kwargs):
+        def _get_template(name):
             for template in get_templates():
-                if template.name == kwargs['name']:
+                if template.name == name:
                     return template
             return None
 
@@ -176,6 +179,13 @@ class TestValidation(unittest.TestCase):
                 "processes": ["job_tracker", "name_node"]
             })
         ])
+
+        def _get_r_params(name):
+            if name == "JT+NN":
+                return {"job_tracker": ["jt_param"]}
+            return dict()
+
+        get_node_type_required_params.side_effect = _get_r_params
 
         # mock function that should be validated
         m_func = Mock()
@@ -201,19 +211,19 @@ class TestValidation(unittest.TestCase):
         self._assert_create_object_validation(
             {},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'cluster' is required property")
+                       u"'cluster' is a required property")
         )
         self._assert_create_object_validation(
             {"cluster": {}},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'name' is required property")
+                       u"'name' is a required property")
         )
         self._assert_create_object_validation(
             {"cluster": {
                 "name": "some-name"
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'base_image_id' is required property")
+                       u"'base_image_id' is a required property")
         )
         self._assert_create_object_validation(
             {"cluster": {
@@ -221,7 +231,7 @@ class TestValidation(unittest.TestCase):
                 "base_image_id": "some-image-id"
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'node_templates' is required property")
+                       u"'node_templates' is a required property")
         )
 
     def test_cluster_create_v_name(self):
@@ -244,9 +254,9 @@ class TestValidation(unittest.TestCase):
                        u"'' is too short")
         )
         self._assert_create_object_validation(
-            _cluster(cluster, name="a" * 241),
+            _cluster(cluster, name="a" * 51),
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'%s' is too long" % ('a' * 241))
+                       u"'%s' is too long" % ('a' * 51))
         )
 
         def _assert_cluster_name_pattern(self, name):
@@ -311,19 +321,19 @@ class TestValidation(unittest.TestCase):
         self._assert_create_object_validation(
             {},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'node_template' is required property")
+                       u"'node_template' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {}},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'name' is required property")
+                       u"'name' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {
                 "name": "some-name"
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'node_type' is required property")
+                       u"'node_type' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {
@@ -331,7 +341,7 @@ class TestValidation(unittest.TestCase):
                 "node_type": "some-node-type"
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'flavor_id' is required property")
+                       u"'flavor_id' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {
@@ -340,7 +350,7 @@ class TestValidation(unittest.TestCase):
                 "flavor_id": "flavor-1"
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'name_node' is required property")
+                       u"'name_node' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {
@@ -350,7 +360,7 @@ class TestValidation(unittest.TestCase):
                 "name_node": {}
             }},
             bad_req_i=(1, "VALIDATION_ERROR",
-                       u"'job_tracker' is required property")
+                       u"'job_tracker' is a required property")
         )
         self._assert_create_object_validation(
             {"node_template": {
@@ -359,6 +369,30 @@ class TestValidation(unittest.TestCase):
                 "flavor_id": "flavor-1",
                 "name_node": {},
                 "job_tracker": {}
+            }},
+            bad_req_i=(1, "REQUIRED_PARAM_MISSED",
+                       u"Required parameter 'jt_param' of process "
+                       u"'job_tracker' should be specified")
+        )
+        self._assert_create_object_validation(
+            {"node_template": {
+                "name": "some-name",
+                "node_type": "JT+NN",
+                "flavor_id": "flavor-1",
+                "name_node": {},
+                "job_tracker": {"jt_param": ""}
+            }},
+            bad_req_i=(1, "REQUIRED_PARAM_MISSED",
+                       u"Required parameter 'jt_param' of process "
+                       u"'job_tracker' should be specified")
+        )
+        self._assert_create_object_validation(
+            {"node_template": {
+                "name": "some-name",
+                "node_type": "JT+NN",
+                "flavor_id": "flavor-1",
+                "name_node": {},
+                "job_tracker": {"jt_param": "some value"}
             }}
         )
         self._assert_create_object_validation(

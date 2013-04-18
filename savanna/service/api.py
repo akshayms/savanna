@@ -16,10 +16,10 @@
 import eventlet
 from oslo.config import cfg
 
+from savanna import exceptions as ex
 from savanna.openstack.common import log as logging
 from savanna.service import cluster_ops
 import savanna.storage.storage as storage
-from savanna import exceptions as ex
 
 LOG = logging.getLogger(__name__)
 
@@ -130,6 +130,17 @@ def get_node_type(**args):
 
 def get_node_types(**args):
     return [_node_type(t) for t in storage.get_node_types(**args)]
+
+
+def get_node_type_required_params(**args):
+    result = {}
+    for process in storage.get_node_type(**args).processes:
+        result[process.name] = []
+        for prop in process.node_process_properties:
+            if prop.required and not prop.default:
+                result[process.name] += [prop.name]
+
+    return result
 
 
 ## Utils and DB object to Resource converters

@@ -41,7 +41,7 @@ CLUSTER_CREATE_SCHEMA = {
             "properties": {
                 "name": {"type": "string",
                          "minLength": 1,
-                         "maxLength": 240,
+                         "maxLength": 50,
                          "pattern": r"^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]"
                                     r"*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z]"
                                     r"[A-Za-z0-9\-]*[A-Za-z0-9])$"},
@@ -232,6 +232,12 @@ def validate_node_template_create(nt_values):
     for proc in processes:
         if proc not in req_procs:
             raise ex.DiscrepancyNodeProcessException(req_procs)
+
+    req_params = api.get_node_type_required_params(name=values['node_type'])
+    for process in req_params:
+        for param in req_params[process]:
+            if param not in values[process] or not values[process][param]:
+                raise ex.RequiredParamMissedException(process, param)
 
     if api.CONF.allow_cluster_ops:
         flavor = values['flavor_id']

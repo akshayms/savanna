@@ -2,11 +2,17 @@
 Savanna quickstart guide
 ************************
 
-1 Get Savanna archive from http://tarballs.openstack.org/savanna/ and install it using pip:
+1 You can install the latest Savanna release version (currently, 0.1) from pypi:
 
     .. sourcecode:: bash
 
-        pip install http://tarballs.openstack.org/savanna/savanna-master.tar.gz #egg=savanna
+        pip install savanna
+
+Or you can get Savanna archive from http://tarballs.openstack.org/savanna/ and install it using pip:
+
+    .. sourcecode:: bash
+
+        pip install http://tarballs.openstack.org/savanna/savanna-master.tar.gz#egg=savanna
 
 **Note:**
 savanna-master.tar.gz contains the latest changes in the source code.
@@ -63,14 +69,14 @@ You can check which flavors you have by running
 
 .. sourcecode:: bash
 
-    wget http://savanna-files.mirantis.com/hdp-img-01.tar.gz
+    wget http://savanna-files.mirantis.com/savanna-0.1-hdp-img.tar.gz
 
 2.3 Unpack image and import it into Glance:
 
 .. sourcecode:: bash
 
-    tar -xzf hdp-img-01.tar.gz
-    glance image-create --name=hdp.image --disk-format=qcow2 --container-format=bare < ./hdp.img
+    tar -xzf savanna-xxxx-hdp-img.tar.gz
+    glance image-create --name=hdp.image --disk-format=qcow2 --container-format=bare < ./savanna-xxxx-hdp-img.img
 
 You should see the output similar to the following:
 
@@ -113,12 +119,13 @@ You should see the output similar to the following:
 
     cd savanna
 
-3.3 Install python headers and virtualenv:
+3.3 Install python headers, virtualenv and tox:
 
 .. sourcecode:: bash
 
     apt-get update
     apt-get install python-dev python-virtualenv
+    pip install tox
 
 3.4 Prepare virtual environment:
 
@@ -136,17 +143,21 @@ You should see the output similar to the following:
 
 **Note:** Config file could be specified for ``savanna-api`` and ``savanna-manage`` commands using ``--config-file`` flag.
 
+**Note:** If your OpenStack cluster doesn't automatically assign floating ips then you should set ``use_floating_ips`` configuration option to ``False``. 
+
 3.7 To initialize Savanna database with created configuration just call:
 
 .. sourcecode:: bash
 
-    .venv/bin/python bin/savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
+    tox -evenv -- savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
+
+Virtualenv with all requirements installed into it is now available in ``.tox/venv``. You can create it by executing ``tools/install_venv``.
 
 3.8 To start Savanna call:
 
 .. sourcecode:: bash
 
-    .venv/bin/python bin/savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
+    tox -evenv -- savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
 
 Now Savanna service is running. Further steps show how you can verify from console that Savanna API works properly.
 
