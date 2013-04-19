@@ -13,19 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.openstack.common import log as logging
-import savanna.tests.integration.config as config
 from savanna.tests.integration.db import ValidationTestCase
 from telnetlib import Telnet
-
-
-LOG = logging.getLogger(__name__)
 
 
 class TestValidationApiForNodetemplates(ValidationTestCase):
     def setUp(self):
         super(TestValidationApiForNodetemplates, self).setUp()
-        Telnet(config.SAVANNA_HOST, config.SAVANNA_PORT)
+        Telnet(self.host, self.port)
 
     def test_crud_nt_jtnn(self):
         self._crud_object(self.jtnn, self.get_jtnn.copy(),

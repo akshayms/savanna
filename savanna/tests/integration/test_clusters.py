@@ -14,21 +14,15 @@
 # limitations under the License.
 
 import copy
-from savanna.openstack.common import log as logging
-import savanna.tests.integration.config as config
 from savanna.tests.integration.db import ValidationTestCase
 from telnetlib import Telnet
-
-
-
-LOG = logging.getLogger(__name__)
 
 
 class TestValidationApiForClusters(ValidationTestCase):
 
     def setUp(self):
         super(TestValidationApiForClusters, self).setUp()
-        Telnet(config.SAVANNA_HOST, config.SAVANNA_PORT)
+        Telnet(self.host, self.port)
 
     def test_crud_operation_for_cluster(self):
         get_body = copy.deepcopy(self.get_cluster_data_jtnn_ttdn)

@@ -4,4 +4,4 @@ OS_TENANT_NAME = "admin"
 OS_AUTH_URL = "http://192.168.1.1:35357/v2.0/" # URL for keystone
 SAVANNA_HOST = '192.168.1.1' # IP for Savanna API
 SAVANNA_PORT = '8080'
-OS_IMAGE_ID = '7ba73c45-49ff-442f-b337-f731057308e6' # ID for instance image
+SAVANNA_IMAGE_ID = '42' # ID for instance image

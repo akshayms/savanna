@@ -17,31 +17,42 @@ import eventlet
 import json
 from keystoneclient.v2_0 import Client as keystone_client
 import requests
-from savanna.openstack.common import log as logging
-import savanna.tests.integration.config as config
+import savanna.openstack.common.importutils as importutils
 import unittest
 
-LOG = logging.getLogger(__name__)
+_CONF = importutils.try_import("savanna.tests.integration.config")
+
+
+def _get_conf(key, default):
+    return getattr(_CONF, key) if _CONF and hasattr(_CONF, key) else default
+
+OS_USERNAME = _get_conf("OS_USERNAME", "admin")
+OS_PASSWORD = _get_conf("OS_PASSWORD", "nova")
+OS_TENANT_NAME = _get_conf("OS_TENANT_NAME", "admin")
+OS_AUTH_URL = _get_conf("OS_AUTH_URL", "http://localhost:35357/v2.0/")
+SAVANNA_HOST = _get_conf("SAVANNA_HOST", "192.168.1.1")
+SAVANNA_PORT = _get_conf("SAVANNA_PORT", "8080")
+SAVANNA_IMAGE_ID = _get_conf("SAVANNA_IMAGE_ID", "42")
 
 keystone = keystone_client(
-    username=config.OS_USERNAME or "admin",
-    password=config.OS_PASSWORD or "nova",
-    tenant_name=config.OS_TENANT_NAME or "admin",
-    auth_url=config.OS_AUTH_URL or "http://localhost:35357/v2.0/"
+    username=OS_USERNAME,
+    password=OS_PASSWORD,
+    tenant_name=OS_TENANT_NAME,
+    auth_url=OS_AUTH_URL
 )
 
 
 class ValidationTestCase(unittest.TestCase):
     def setUp(self):
-        self.host = config.SAVANNA_HOST
+        self.host = SAVANNA_HOST
         self.maxDiff = None
-        self.port = config.SAVANNA_PORT
+        self.port = SAVANNA_PORT
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
         self.flavor_id = 'm1.medium'
-        self.image_id = config.OS_IMAGE_ID
-        self.url_nt = '/v0.2/%s/node-templates.json' % self.tenant
+        self.image_id = SAVANNA_IMAGE_ID
+        self.url_nt = '/v0.2/%s/node-templates' % self.tenant
         self.url_nt_not_json = '/v0.2/%s/node-templates/' % self.tenant
 
 #----------------------add_value_for_node_templates----------------------------
@@ -149,7 +160,7 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------add_value_for_clusters----------------------------------
 
-        self.url_cluster = '/v0.2/%s/clusters.json' % self.tenant
+        self.url_cluster = '/v0.2/%s/clusters' % self.tenant
         self.url_cluster_without_json = '/v0.2/%s/clusters/' % self.tenant
 
         self.cluster_data_jtnn_ttdn = dict(
@@ -225,7 +236,10 @@ class ValidationTestCase(unittest.TestCase):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
             "x-auth-token": self.token, "Content-Type": "application/json"})
-        data = json.loads(resp.content)
+        if resp.status_code == 202:
+            data = json.loads(resp.content)
+        else:
+            data = resp.content
         print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
               % (URL, body, resp.status_code, data))
         return resp
@@ -258,7 +272,6 @@ class ValidationTestCase(unittest.TestCase):
         return resp
 
     def _post_object(self, url, body, code):
-        LOG.debug(body)
         post = self.post(url, json.dumps(body))
         self.assertEquals(post.status_code, code)
         data = json.loads(post.content)
@@ -284,6 +297,8 @@ class ValidationTestCase(unittest.TestCase):
 
     def _crud_object(self, body, get_body, url):
         data = self._post_object(url, body, 202)
+        get_url = None
+        object_id = None
         try:
             obj = "cluster"
             get_url = self.url_cluster_without_json
@@ -299,7 +314,7 @@ class ValidationTestCase(unittest.TestCase):
             if obj == "cluster":
                 self._asrtCluster(get_body, get_data, get_url, object_id)
         except Exception as e:
-            LOG.debug("failure:" + str(e))
+            print("failure:" + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
@@ -311,7 +326,7 @@ class ValidationTestCase(unittest.TestCase):
         i = 1
         while get_data[u'status'] != u'Active':
             if i > 60:
-                LOG.debug(self.fail(
+                print(self.fail(
                     "cluster not Starting -> Active, remaining 10 minutes"))
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
