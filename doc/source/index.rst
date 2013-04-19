@@ -10,13 +10,16 @@ Useful links
     architecture
     roadmap
     restapi/v02
-    horizon/index
     quickstart
+    horizon/index
+    horizon/howto
     how-to-participate
 
 * `Sources repo <https://github.com/stackforge/savanna>`_
-* `Launchpad project <https://launchpad.net/savanna>`_
+* `Launchpad project (bugs, blueprints, etc.) <https://launchpad.net/savanna>`_
 * `Savanna REST API and custom Horizon screencast <http://www.youtube.com/watch?v=UUt2gqGHcPg>`_
+* `Savanna talk slides from OpenStack Summit'13 <http://www.slideshare.net/mirantis/savanna-hadoop-on-openstack>`_
+
 
 Introduction
 ------------
@@ -157,9 +160,12 @@ Useful links
     architecture
     roadmap
     restapi/v02
-    horizon/index
     quickstart
+    horizon/index
+    horizon/howto
+    how-to-participate
 
 * `Sources repo <https://github.com/stackforge/savanna>`_
-* `Launchpad project <https://launchpad.net/savanna>`_
+* `Launchpad project (bugs, blueprints, etc.) <https://launchpad.net/savanna>`_
 * `Savanna REST API and custom Horizon screencast <http://www.youtube.com/watch?v=UUt2gqGHcPg>`_
+* `Savanna talk slides from OpenStack Summit'13 <http://www.slideshare.net/mirantis/savanna-hadoop-on-openstack>`_

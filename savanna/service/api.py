@@ -16,10 +16,10 @@
 import eventlet
 from oslo.config import cfg
 
+from savanna import exceptions as ex
 from savanna.openstack.common import log as logging
 from savanna.service import cluster_ops
 import savanna.storage.storage as storage
-from savanna.utils.api import abort_and_log
 
 LOG = logging.getLogger(__name__)
 
@@ -132,26 +132,37 @@ def get_node_types(**args):
     return [_node_type(t) for t in storage.get_node_types(**args)]
 
 
+def get_node_type_required_params(**args):
+    result = {}
+    for process in storage.get_node_type(**args).processes:
+        result[process.name] = []
+        for prop in process.node_process_properties:
+            if prop.required and not prop.default:
+                result[process.name] += [prop.name]
+
+    return result
+
+
 ## Utils and DB object to Resource converters
 
 def _clean_nones(obj):
-    d_type = type(obj)
-    if d_type is not dict or d_type is not list:
+    if not isinstance(obj, dict) and not isinstance(obj, list):
         return obj
 
-    if d_type is dict:
+    if isinstance(obj, dict):
         remove = []
-        for key in obj:
-            value = _clean_nones(obj.get(key))
-            if value is None or len(value) == 0:
+        for key, value in obj.iteritems():
+            if value is None:
                 remove.append(key)
         for key in remove:
             obj.pop(key)
-    elif d_type is list:
+        for value in obj.values():
+            _clean_nones(value)
+    elif isinstance(obj, list):
         new_list = []
         for elem in obj:
             elem = _clean_nones(elem)
-            if elem is not None and len(elem) == 0:
+            if elem is not None:
                 new_list.append(elem)
         return new_list
 
@@ -185,7 +196,8 @@ class Resource(object):
 
 def _node_template(nt):
     if not nt:
-        abort_and_log(404, 'NodeTemplate not found')
+        raise ex.NodeTemplateNotFoundException(nt)
+
     d = {
         'id': nt.id,
         'name': nt.name,
@@ -208,7 +220,8 @@ def _node_template(nt):
 
 def _cluster(cluster):
     if not cluster:
-        abort_and_log(404, 'Cluster not found')
+        raise ex.ClusterNotFoundException(cluster)
+
     d = {
         'id': cluster.id,
         'name': cluster.name,
@@ -234,7 +247,7 @@ def _cluster(cluster):
 
 def _node_type(nt):
     if not nt:
-        abort_and_log(404, 'NodeType not found')
+        raise ex.NodeTypeNotFoundException(nt)
 
     d = {
         'id': nt.id,

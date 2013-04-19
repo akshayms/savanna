@@ -2,16 +2,54 @@
 Savanna quickstart guide
 ************************
 
+1 You can install the latest Savanna release version (currently, 0.1) from pypi:
+
+    .. sourcecode:: bash
+
+        pip install savanna
+
+Or you can get Savanna archive from http://tarballs.openstack.org/savanna/ and install it using pip:
+
+    .. sourcecode:: bash
+
+        pip install http://tarballs.openstack.org/savanna/savanna-master.tar.gz#egg=savanna
+
+**Note:**
+savanna-master.tar.gz contains the latest changes in the source code.
+savanna-some_version.tar.gz contains features related to specified Savanna release.
+
+
+2 After installation you should create configuration file or change default config to run Savanna properly. Default config file is located in:
+
+    .. sourcecode:: bash
+
+        /usr/local/share/savanna/savanna.conf.sample
+
+3 To initialize Savanna database with created configuration just call:
+
+    .. sourcecode:: bash
+
+        savanna-manage --config-file /pathToConfig reset-db --with-gen-templates
+
+4 To start Savanna call:
+
+    .. sourcecode:: bash
+
+        savanna-api --config-file /pathToConfig
+
+
+***********************
+Full installation guide
+***********************
+
 1 Setup prerequisites
 =====================
 
 1.1 OpenStack environment (Folsom+ version) installed.
 
-1.2 OpenStack compute has to have floating IP autoassigment. You can read more here: http://docs.openstack.org/trunk/openstack-compute/admin/content/associating-public-ip.html
+1.2 Git should be installed on the machine where Savanna_API will be deployed.
 
-1.3 Git should be installed on the machine where Savanna_API will be deployed.
-
-1.4 Your OpenStack should have flavors with 'm1.small' and 'm1.medium' names defined because these flavors are referenced by Savanna's default Node Templates.
+1.3 Your OpenStack should have flavors with 'm1.small' and 'm1.medium' names defined because these flavors are referenced by Savanna's default Node Templates.
 You can check which flavors you have by running
 
 .. sourcecode:: bash
@@ -31,14 +69,14 @@ You can check which flavors you have by running
 
 .. sourcecode:: bash
 
-    wget http://savanna-files.mirantis.com/hdp-img-01.tar.gz
+    wget http://savanna-files.mirantis.com/savanna-0.1-hdp-img.tar.gz
 
 2.3 Unpack image and import it into Glance:
 
 .. sourcecode:: bash
 
-    tar -xzf hdp-img-01.tar.gz
-    glance image-create --name=hdp.image --disk-format=qcow2 --container-format=bare < ./hdp.img
+    tar -xzf savanna-xxxx-hdp-img.tar.gz
+    glance image-create --name=hdp.image --disk-format=qcow2 --container-format=bare < ./savanna-xxxx-hdp-img.img
 
 You should see the output similar to the following:
 
@@ -81,12 +119,13 @@ You should see the output similar to the following:
 
     cd savanna
 
-3.3 Install python headers and virtualenv:
+3.3 Install python headers, virtualenv and tox:
 
 .. sourcecode:: bash
 
     apt-get update
     apt-get install python-dev python-virtualenv
+    pip install tox
 
 3.4 Prepare virtual environment:
 
@@ -100,56 +139,25 @@ You should see the output similar to the following:
 
     cp ./etc/savanna/savanna.conf.sample ./etc/savanna/savanna.conf
 
-3.6 In savanna.conf you should edit the following parameters:
-
-.. sourcecode:: bash
-
-    [DEFAULT]
-
-    # REST API config
-    #port=8080
-    #allow_cluster_ops=false
-
-    # Address and credentials that will be used to check auth tokens
-    #os_auth_host=openstack
-    #os_auth_port=35357
-    #os_admin_username=admin
-    #os_admin_password=nova
-    #os_admin_tenant_name=admin
-
-    # Nova network name that will be used to access VMs
-    #nova_internal_net_name=novanetwork
-
-    # (Optional) Name of log file to output to. If not set,
-    # logging will go to stdout. (string value)
-    #log_file=<None>
-
-    [cluster_node]
-
-    # An existing user on Hadoop image (string value)
-    #username=root
-
-    # User's password (string value)
-    #password=swordfish
-
-    [sqlalchemy]
-
-    # URL for sqlalchemy database (string value)
-    #database_uri=sqlite:////tmp/savanna-server.db
+3.6 Look through the savanna.conf and change parameters which default values do not suite you.
 
 **Note:** Config file could be specified for ``savanna-api`` and ``savanna-manage`` commands using ``--config-file`` flag.
+
+**Note:** If your OpenStack cluster doesn't automatically assign floating ips then you should set ``use_floating_ips`` configuration option to ``False``. 
 
 3.7 To initialize Savanna database with created configuration just call:
 
 .. sourcecode:: bash
 
-    .venv/bin/python bin/savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
+    tox -evenv -- savanna-manage --config-file etc/savanna/savanna.conf reset-db --with-gen-templates
+
+Virtualenv with all requirements installed into it is now available in ``.tox/venv``. You can create it by executing ``tools/install_venv``.
 
 3.8 To start Savanna call:
 
 .. sourcecode:: bash
 
-    .venv/bin/python bin/savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
+    tox -evenv -- savanna-api --config-file etc/savanna/savanna.conf --allow-cluster-ops
 
 Now Savanna service is running. Further steps show how you can verify from console that Savanna API works properly.
 

@@ -8,7 +8,7 @@ project = 'savanna'
 
 setuptools.setup(
     name=project,
-    version=common_setup.get_version(project, '0.1'),
+    version=common_setup.get_version(project, '0.1.1'),
     description='Savanna project',
     author='Mirantis Inc.',
     author_email='savanna-team@mirantis.com',
@@ -23,14 +23,15 @@ setuptools.setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
     ],
+    license='Apache Software License',
     cmdclass=common_setup.get_cmdclass(),
     packages=setuptools.find_packages(exclude=['bin']),
     package_data={'savanna': ['resources/*.template']},
     install_requires=requires,
     dependency_links=depend_links,
+    setup_requires=['setuptools-git>=0.4'],
     include_package_data=True,
     test_suite='nose.collector',
-    setup_requires=['setuptools_git>=0.4'],
     scripts=[
         'bin/savanna-api',
         'bin/savanna-manage',

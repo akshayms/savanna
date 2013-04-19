@@ -29,6 +29,16 @@ class SavannaException(ex.ApiError):
         return self.message
 
 
+class NotFoundException(SavannaException):
+
+    # It could be a various property of object which was not found
+    value = None
+
+    def __init__(self, value):
+        self.code = "NOT_FOUND"
+        self.value = value
+
+
 ## Cluster operations exceptions
 
 class NotEnoughResourcesException(SavannaException):
@@ -53,22 +63,30 @@ class ImageNotFoundException(SavannaException):
 class NotSingleNameNodeException(SavannaException):
     def __init__(self, nn_count):
         self.message = "Hadoop cluster should contain only 1 NameNode. " \
-                       "Actual NN count is %s " % nn_count
+                       "Actual NN count is %s" % nn_count
         self.code = "NOT_SINGLE_NAME_NODE"
 
 
 class NotSingleJobTrackerException(SavannaException):
     def __init__(self, jt_count):
         self.message = "Hadoop cluster should contain only 1 JobTracker. " \
-                       "Actual JT count is %s " % jt_count
+                       "Actual JT count is %s" % jt_count
         self.code = "NOT_SINGLE_JOB_TRACKER"
+
+
+class ClusterNotFoundException(NotFoundException):
+    def __init__(self, value):
+        self.value = value
+        self.message = "Cluster '%s' not found" % self.value
+        self.code = "CLUSTER_NOT_FOUND"
 
 
 ## NodeTemplates operations exceptions
 
-class NodeTemplateNotFoundException(SavannaException):
+class NodeTemplateNotFoundException(NotFoundException):
     def __init__(self, value):
-        self.message = "Cannot find NodeTemplate '%s'" % value
+        self.value = value
+        self.message = "NodeTemplate '%s' not found" % self.value
         self.code = "NODE_TEMPLATE_NOT_FOUND"
 
 
@@ -90,9 +108,17 @@ class DiscrepancyNodeProcessException(SavannaException):
         self.code = "NODE_PROCESS_DISCREPANCY"
 
 
+class RequiredParamMissedException(SavannaException):
+    def __init__(self, process, param):
+        self.message = "Required parameter '%s' of process '%s' should be " \
+                       "specified" % (param, process)
+        self.code = "REQUIRED_PARAM_MISSED"
+
+
 ## NodeTypes operations exceptions
 
-class NodeTypeNotFoundException(SavannaException):
+class NodeTypeNotFoundException(NotFoundException):
     def __init__(self, value):
-        self.message = "Cannot find NodeType '%s'" % value
+        self.value = value
+        self.message = "NodeType '%s' not found" % self.value
         self.code = "NODE_TYPE_NOT_FOUND"
