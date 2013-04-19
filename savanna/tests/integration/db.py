@@ -24,10 +24,10 @@ import unittest
 LOG = logging.getLogger(__name__)
 
 keystone = keystone_client(
-    username=config.OS_USERNAME,
-    password=config.OS_PASSWORD,
-    tenant_name=config.OS_TENANT_NAME,
-    auth_url=config.OS_AUTH_URL
+    username=config.OS_USERNAME or "admin",
+    password=config.OS_PASSWORD or "nova",
+    tenant_name=config.OS_TENANT_NAME or "admin",
+    auth_url=config.OS_AUTH_URL or "http://localhost:35357/v2.0/"
 )
 
 
@@ -284,20 +284,24 @@ class ValidationTestCase(unittest.TestCase):
 
     def _crud_object(self, body, get_body, url):
         data = self._post_object(url, body, 202)
-        obj = "cluster"
-        get_url = self.url_cluster_without_json
-        if url == self.url_nt:
-            obj = "node_template"
-            get_url = self.url_nt_not_json
-        data = data["%s" % obj]
-        object_id = data.pop(u'id')
-        self.assertEquals(data, get_body)
-        get_data = self._get_object(get_url, object_id, 200)
-        get_data = get_data['%s' % obj]
-        del get_data[u'id']
-        if obj == "cluster":
-            self._asrtCluster(get_body, get_data, get_url, object_id)
-        self._del_object(get_url, object_id, 204)
+        try:
+            obj = "cluster"
+            get_url = self.url_cluster_without_json
+            if url == self.url_nt:
+                obj = "node_template"
+                get_url = self.url_nt_not_json
+            data = data["%s" % obj]
+            object_id = data.pop(u'id')
+            self.assertEquals(data, get_body)
+            get_data = self._get_object(get_url, object_id, 200)
+            get_data = get_data['%s' % obj]
+            del get_data[u'id']
+            if obj == "cluster":
+                self._asrtCluster(get_body, get_data, get_url, object_id)
+        except Exception as e:
+            LOG.debug("failure:" + str(e))
+        finally:
+            self._del_object(get_url, object_id, 204)
         return object_id
 
     def _asrtCluster(self, get_body, get_data, get_url, object_id):
@@ -307,7 +311,8 @@ class ValidationTestCase(unittest.TestCase):
         i = 1
         while get_data[u'status'] != u'Active':
             if i > 60:
-                self._del_object(get_url, object_id, 204)
+                LOG.debug(self.fail(
+                    "cluster not Starting -> Active, remaining 10 minutes"))
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']

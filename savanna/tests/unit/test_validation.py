@@ -518,4 +518,4 @@ class TestValidation(unittest.TestCase):
                        u"NodeType 'JJ' not found")
         )
 
-        # TODO(slukjanov): add tests for allow_cluster_ops = True
+# TODO(slukjanov): add tests for allow_cluster_ops = True

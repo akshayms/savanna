@@ -13,31 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 from savanna.openstack.common import log as logging
 import savanna.tests.integration.config as config
 from savanna.tests.integration.db import ValidationTestCase
-import savanna.tests.integration.utils as utils
+from telnetlib import Telnet
+
+
 
 LOG = logging.getLogger(__name__)
 
 
-class TestValidationApiForNodetemplates(ValidationTestCase):
+class TestValidationApiForClusters(ValidationTestCase):
+
     def setUp(self):
-        super(TestValidationApiForNodetemplates, self).setUp()
-        utils.telnet(config.SAVANNA_HOST, config.SAVANNA_PORT)
+        super(TestValidationApiForClusters, self).setUp()
+        Telnet(config.SAVANNA_HOST, config.SAVANNA_PORT)
 
-    def test_crud_nt_jtnn(self):
-        self._crud_object(self.jtnn, self.get_jtnn.copy(),
-                          self.url_nt)
+    def test_crud_operation_for_cluster(self):
+        get_body = copy.deepcopy(self.get_cluster_data_jtnn_ttdn)
+        self._crud_object(
+            self.cluster_data_jtnn_ttdn, get_body, self.url_cluster)
 
-    def test_crud_nt_ttdn(self):
-        self._crud_object(self.ttdn, self.get_ttdn.copy(),
-                          self.url_nt)
-
-    def test_crud_nt_nn(self):
-        self._crud_object(self.nn, self.get_nn.copy(),
-                          self.url_nt)
-
-    def test_crud_nt_jt(self):
-        self._crud_object(self.jt, self.get_jt.copy(),
-                          self.url_nt)
+    def test_crud_operation_for_cluster_with_one_node(self):
+        get_body = copy.deepcopy(self.get_cluster_data_jtnn)
+        self._crud_object(self.cluster_data_jtnn, get_body, self.url_cluster)
