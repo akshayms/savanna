@@ -236,10 +236,8 @@ class ValidationTestCase(unittest.TestCase):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
             "x-auth-token": self.token, "Content-Type": "application/json"})
-        if resp.status_code == 202:
-            data = json.loads(resp.content)
-        else:
-            data = resp.content
+        data = json.loads(resp.content) if resp.status_code == 202 \
+            else resp.content
         print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
               % (URL, body, resp.status_code, data))
         return resp
@@ -300,11 +298,9 @@ class ValidationTestCase(unittest.TestCase):
         get_url = None
         object_id = None
         try:
-            obj = "cluster"
-            get_url = self.url_cluster_without_json
-            if url == self.url_nt:
-                obj = "node_template"
-                get_url = self.url_nt_not_json
+            obj = "node_template" if url == self.url_nt else "cluster"
+            get_url = self.url_nt_not_json if url == self.url_nt \
+                else self.url_cluster_without_json
             data = data["%s" % obj]
             object_id = data.pop(u'id')
             self.assertEquals(data, get_body)
@@ -312,14 +308,14 @@ class ValidationTestCase(unittest.TestCase):
             get_data = get_data['%s' % obj]
             del get_data[u'id']
             if obj == "cluster":
-                self._asrtCluster(get_body, get_data, get_url, object_id)
+                self._assertCluster(get_body, get_data, get_url, object_id)
         except Exception as e:
             print("failure:" + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
 
-    def _asrtCluster(self, get_body, get_data, get_url, object_id):
+    def _assertCluster(self, get_body, get_data, get_url, object_id):
         get_body[u'status'] = u'Active'
         del get_body[u'service_urls']
         del get_body[u'nodes']
