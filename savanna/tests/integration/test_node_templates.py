@@ -23,17 +23,20 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         Telnet(self.host, self.port)
 
     def test_crud_nt_jtnn(self):
-        self._crud_object(self.jtnn, self.get_jtnn.copy(),
-                          self.url_nt)
+        nt_jtnn = self.make_nt("master", "jtnn", 1024, 1024)
+        get_jtnn = self._get_body_nt("jtnn", "master", 1024, 1024)
+        self._crud_object(nt_jtnn, get_jtnn, self.url_nt)
 
     def test_crud_nt_ttdn(self):
-        self._crud_object(self.ttdn, self.get_ttdn.copy(),
-                          self.url_nt)
+        nt_ttdn = self.make_nt("worker", "jtnn", 1024, 1024)
+        get_ttdn = self._get_body_nt("jtnn", "worker", 1024, 1024)
+        self._crud_object(nt_ttdn, get_ttdn, self.url_nt)
 
-    def test_crud_nt_nn(self):
-        self._crud_object(self.nn, self.get_nn.copy(),
-                          self.url_nt)
 
-    def test_crud_nt_jt(self):
-        self._crud_object(self.jt, self.get_jt.copy(),
-                          self.url_nt)
+    # def test_crud_nt_nn(self):
+    #     self._crud_object(self.nn, self.get_nn.copy(),
+    #                       self.url_nt)
+    #
+    # def test_crud_nt_jt(self):
+    #     self._crud_object(self.jt, self.get_jt.copy(),
+    #                       self.url_nt)
