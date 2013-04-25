@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import copy
 import eventlet
 import json
 from keystoneclient.v2_0 import Client as keystone_client
@@ -58,7 +57,7 @@ class ValidationTestCase(unittest.TestCase):
         self.url_cluster = '/v0.2/%s/clusters' % self.tenant
         self.url_cl_wj = '/v0.2/%s/clusters/' % self.tenant
 
-#----------------------CRUD_comands---------------------------------------------
+#----------------------CRUD_comands--------------------------------------------
 
     def post(self, url, body):
         URL = self.baseurl + url
@@ -121,7 +120,7 @@ class ValidationTestCase(unittest.TestCase):
                 eventlet.sleep(1)
                 code = self.delete(url + obj_id).status_code
 
-#----------------------other_commands-------------------------------------------
+#----------------------other_commands------------------------------------------
 
     def _get_body_nt(self, name, type, hs1, hs2):
         node = 'name' if type == "master" else 'data'

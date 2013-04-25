@@ -1,3 +1,15 @@
+commit e1b034f825027f0475081fb9240ab484cd98d6f8
+Author: vadim <vadim@vrovachev.(none)>
+Date:   Wed Apr 24 13:53:50 2013 +0400
+
+    add changes in integration db for make body and add hadoop test
+
+commit 372a3b3c99b8a81424ae5b8f9e0a88435882af55
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Apr 22 16:02:48 2013 +0400
+
+    added new changes
+
 commit 0c4d8542f90995feb17112c77d679c945b14f234
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Mon Apr 22 15:49:15 2013 +0400
