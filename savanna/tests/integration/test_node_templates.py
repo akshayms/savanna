@@ -23,13 +23,13 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         Telnet(self.host, self.port)
 
     def test_crud_nt_jtnn(self):
-        nt_jtnn = self.make_nt("master", "jtnn", 1024, 1024)
-        get_jtnn = self._get_body_nt("jtnn", "master", 1024, 1024)
+        nt_jtnn = self.make_nt('master', 'jt_nn', 1024, 1024)
+        get_jtnn = self._get_body_nt('jt_nn', 'master', 1024, 1024)
         self._crud_object(nt_jtnn, get_jtnn, self.url_nt)
 
     def test_crud_nt_ttdn(self):
-        nt_ttdn = self.make_nt("worker", "jtnn", 1024, 1024)
-        get_ttdn = self._get_body_nt("jtnn", "worker", 1024, 1024)
+        nt_ttdn = self.make_nt('worker', 'jt_nn', 1024, 1024)
+        get_ttdn = self._get_body_nt('jt_nn', 'worker', 1024, 1024)
         self._crud_object(nt_ttdn, get_ttdn, self.url_nt)
 
 

@@ -50,7 +50,7 @@ class ValidationTestCase(unittest.TestCase):
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = keystone.tenant_id
         self.token = keystone.auth_token
-        self.flavor_id = 'm1.medium'
+        self.flavor_id = 'm1.small'
         self.image_id = SAVANNA_IMAGE_ID
         self.url_nt = '/v0.2/%s/node-templates' % self.tenant
         self.url_nt_wj = '/v0.2/%s/node-templates/' % self.tenant
@@ -62,38 +62,38 @@ class ValidationTestCase(unittest.TestCase):
     def post(self, url, body):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
-            "x-auth-token": self.token, "Content-Type": "application/json"})
+            'x-auth-token': self.token, 'Content-Type': 'application/json'})
         data = json.loads(resp.content) if resp.status_code == 202 \
             else resp.content
-        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+        print('URL = %s\ndata = %s\nresponse = %s\ndata = %s\n'
               % (URL, body, resp.status_code, data))
         return resp
 
     def put(self, url, body):
         URL = self.baseurl + url
         resp = requests.put(URL, data=body, headers={
-            "x-auth-token": self.token, "Content-Type": "application/json"})
+            'x-auth-token': self.token, 'Content-Type': 'application/json'})
         data = json.loads(resp.content)
-        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+        print('URL = %s\ndata = %s\nresponse = %s\ndata = %s\n'
               % (URL, body, resp.status_code, data))
         return resp
 
     def get(self, url):
         URL = self.baseurl + url
-        resp = requests.get(URL, headers={"x-auth-token": self.token})
-        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        resp = requests.get(URL, headers={'x-auth-token': self.token})
+        print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
         if resp.status_code != 200:
             data = json.loads(resp.content)
-            print("data= %s\n") % data
+            print('data= %s\n') % data
         return resp
 
     def delete(self, url):
         URL = self.baseurl + url
-        resp = requests.delete(URL, headers={"x-auth-token": self.token})
-        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        resp = requests.delete(URL, headers={'x-auth-token': self.token})
+        print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
         if resp.status_code != 204:
             data = json.loads(resp.content)
-            print("data= %s\n") % data
+            print('data= %s\n') % data
         return resp
 
     def _post_object(self, url, body, code):
@@ -123,23 +123,23 @@ class ValidationTestCase(unittest.TestCase):
 #----------------------other_commands------------------------------------------
 
     def _get_body_nt(self, name, type, hs1, hs2):
-        node = 'name' if type == "master" else 'data'
-        tracker = 'job' if type == "master" else 'task'
-        processes_name = 'JT+NN' if type == "master" else 'TT+DN'
+        node = 'name' if type == 'master' else 'data'
+        tracker = 'job' if type == 'master' else 'task'
+        processes_name = 'JT+NN' if type == 'master' else 'TT+DN'
         return {
             u'name': u'%s' % name,
-            u'%s_node' % node: {u'heap_size': u'%s' % hs1},
-            u'%s_tracker' % tracker: {u'heap_size': u'%s' % hs2},
+            u'%s_node' % node: {u'heap_size': u'%d' % hs1},
+            u'%s_tracker' % tracker: {u'heap_size': u'%d' % hs2},
             u'node_type': {
                 u'processes': [u'%s_tracker' % tracker,
-                               u'%s_node'] % node,
+                               u'%s_node' % node],
                 u'name': u'%s' % processes_name},
             u'flavor_id': u'%s' % self.flavor_id
         }
 
     def _get_body_cluster(self, name, master_name, worker_name, node_number):
         return {
-            u'status': u'Active',
+            u'status': u'Starting',
             u'service_urls': {},
             u'name': u'%s' % name,
             u'base_image_id': u'%s' % self.image_id,
@@ -201,18 +201,18 @@ class ValidationTestCase(unittest.TestCase):
         get_url = None
         object_id = None
         try:
-            obj = "node_template" if url == self.url_nt else "cluster"
+            obj = 'node_template' if url == self.url_nt else 'cluster'
             get_url = self.url_nt_wj if url == self.url_nt else self.url_cl_wj
-            data = data["%s" % obj]
+            data = data['%s' % obj]
             object_id = data.pop(u'id')
             self.assertEquals(data, get_body)
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['%s' % obj]
             del get_data[u'id']
-            if obj == "cluster":
+            if obj == 'cluster':
                 self._response_cluster(get_body, get_data, get_url, object_id)
         except Exception as e:
-            print("failure:" + str(e))
+            self.fail('failure:' + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
@@ -225,7 +225,7 @@ class ValidationTestCase(unittest.TestCase):
         while get_data[u'status'] != u'Active':
             if i > 60:
                 print(self.fail(
-                    "cluster not Starting -> Active, remaining 10 minutes"))
+                    'cluster not Starting -> Active, remaining 10 minutes'))
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']

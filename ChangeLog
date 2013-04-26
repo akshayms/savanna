@@ -1,3 +1,9 @@
+commit c19ee4dd75101c24b5e794c1883e32a90eff85e9
+Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
+Date:   Thu Apr 25 16:35:55 2013 +0400
+
+    add new methods for tests of hadoop
+
 commit e1b034f825027f0475081fb9240ab484cd98d6f8
 Author: vadim <vadim@vrovachev.(none)>
 Date:   Wed Apr 24 13:53:50 2013 +0400

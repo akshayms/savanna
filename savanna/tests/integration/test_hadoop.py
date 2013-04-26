@@ -57,13 +57,13 @@ class TestForHadoop(ValidationTestCase):
         super(TestForHadoop, self).setUp()
         Telnet(self.host, self.port)
 
-    def setUp_hadoop_testing(self, cluster_name, nt_name_master,
-                             nt_name_worker, number_workers):
+    def hadoop_testing(self, cluster_name, nt_name_master,
+                       nt_name_worker, number_workers):
         cluster_body = self.make_cluster_body(
             cluster_name, nt_name_master, nt_name_worker, number_workers)
         data = self._post_object(self.url_cluster, cluster_body, 202)
         try:
-            data = data["cluster"]
+            data = data['cluster']
             object_id = data.pop(u'id')
             get_data = self._get_object(self.url_cl_wj,
                                         object_id, 200)
@@ -82,13 +82,13 @@ class TestForHadoop(ValidationTestCase):
                 ip, '%s/script.sh' % this_dir, '/script.sh')
             try:
                 self.assertEquals(
-                    _execute_command_on_node(ip, "cd .. && ./script.sh"), 0)
+                    _execute_command_on_node(ip, 'cd .. && ./script.sh'), 0)
             except Exception:
                 _execute_transfer_from_node(
                     ip, '/outputTestMapReduce/log.txt', '%s' % this_dir)
-                self.fail("run script is failure")
+                self.fail('run script is failure')
         except Exception as e:
-            print("failure:" + str(e))
+            print('failure:' + str(e))
         finally:
             self._del_object(self.url_cl_wj, id, 204)
 
@@ -97,11 +97,10 @@ class TestForHadoop(ValidationTestCase):
             self.url_nt, self.make_nt('master', 'master_node.medium',
                                       1234, 2345), 202)
         data_nt_worker = self._post_object(
-            self.url_nt, self.make_nt('worker', 'worker_node.medium', 1234,
-                                      2345), 202)
-
+            self.url_nt, self.make_nt('worker', 'worker_node.medium',
+                                      1234, 2345), 202)
         try:
-            self.setUp_hadoop_testing(
+            self.hadoop_testing(
                 'QA_cluster', 'master_node.medium', 'worker_node.medium', 2)
         finally:
             self.delete_node_template(data_nt_master)
