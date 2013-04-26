@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import copy
 import eventlet
 import json
 from keystoneclient.v2_0 import Client as keystone_client
@@ -59,43 +58,43 @@ class ValidationTestCase(unittest.TestCase):
         self.url_cluster = '/v0.2/%s/clusters' % self.tenant
         self.url_cl_wj = '/v0.2/%s/clusters/' % self.tenant
 
-#----------------------CRUD_comands---------------------------------------------
+#----------------------CRUD_comands--------------------------------------------
 
     def post(self, url, body):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
-            "x-auth-token": self.token, "Content-Type": "application/json"})
+            'x-auth-token': self.token, 'Content-Type': 'application/json'})
         data = json.loads(resp.content) if resp.status_code == 202 \
             else resp.content
-        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+        print('URL = %s\ndata = %s\nresponse = %s\ndata = %s\n'
               % (URL, body, resp.status_code, data))
         return resp
 
     def put(self, url, body):
         URL = self.baseurl + url
         resp = requests.put(URL, data=body, headers={
-            "x-auth-token": self.token, "Content-Type": "application/json"})
+            'x-auth-token': self.token, 'Content-Type': 'application/json'})
         data = json.loads(resp.content)
-        print("URL = %s\ndata = %s\nresponse = %s\ndata = %s\n"
+        print('URL = %s\ndata = %s\nresponse = %s\ndata = %s\n'
               % (URL, body, resp.status_code, data))
         return resp
 
     def get(self, url):
         URL = self.baseurl + url
-        resp = requests.get(URL, headers={"x-auth-token": self.token})
-        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        resp = requests.get(URL, headers={'x-auth-token': self.token})
+        print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
         if resp.status_code != 200:
             data = json.loads(resp.content)
-            print("data= %s\n") % data
+            print('data= %s\n') % data
         return resp
 
     def delete(self, url):
         URL = self.baseurl + url
-        resp = requests.delete(URL, headers={"x-auth-token": self.token})
-        print("URL = %s\nresponse = %s\n" % (URL, resp.status_code))
+        resp = requests.delete(URL, headers={'x-auth-token': self.token})
+        print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
         if resp.status_code != 204:
             data = json.loads(resp.content)
-            print("data= %s\n") % data
+            print('data= %s\n') % data
         return resp
 
     def _post_object(self, url, body, code):
@@ -122,12 +121,12 @@ class ValidationTestCase(unittest.TestCase):
                 eventlet.sleep(1)
                 code = self.delete(url + obj_id).status_code
 
-#----------------------other_commands-------------------------------------------
+#----------------------other_commands------------------------------------------
 
     def _get_body_nt(self, name, nt_type, hs1, hs2):
-        node = 'name' if nt_type == "master" else 'data'
-        tracker = 'job' if nt_type == "master" else 'task'
-        processes_name = 'JT+NN' if nt_type == "master" else 'TT+DN'
+        node = 'name' if nt_type == 'master' else 'data'
+        tracker = 'job' if nt_type == 'master' else 'task'
+        processes_name = 'JT+NN' if nt_type == 'master' else 'TT+DN'
         return {
             u'name': u'%s' % name,
             u'%s_node' % node: {u'heap_size': u'%d' % hs1},
@@ -207,18 +206,18 @@ class ValidationTestCase(unittest.TestCase):
         get_url = None
         object_id = None
         try:
-            obj = "node_template" if url == self.url_nt else "cluster"
+            obj = 'node_template' if url == self.url_nt else 'cluster'
             get_url = self.url_nt_wj if url == self.url_nt else self.url_cl_wj
-            data = data["%s" % obj]
+            data = data['%s' % obj]
             object_id = data.pop(u'id')
             self.assertEquals(data, get_body)
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['%s' % obj]
             del get_data[u'id']
-            if obj == "cluster":
+            if obj == 'cluster':
                 self._response_cluster(get_body, get_data, get_url, object_id)
         except Exception as e:
-            self.fail("failure:" + str(e))
+            self.fail('failure:' + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id

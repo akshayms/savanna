@@ -32,9 +32,9 @@ class TestValidationApiForClusters(ValidationTestCase):
         data_nt_worker = self._post_object(self.url_nt, nt_body, 202)
 
         cluster_body = self.make_cluster_body(
-            'QA-cluster', 'master_node.medium', 'worker_node.medium', 2)
+            'QA-cluster', 'master_node.small', 'worker_node.small', 1)
         get_cluster_body = self._get_body_cluster(
-            'QA-cluster', 'master_node.medium', 'worker_node.medium', 2)
+            'QA-cluster', 'master_node.small', 'worker_node.small', 1)
         self._crud_object(cluster_body, get_cluster_body,
                           self.url_cluster)
 
