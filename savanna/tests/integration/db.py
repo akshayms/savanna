@@ -35,22 +35,23 @@ SAVANNA_HOST = _get_conf("SAVANNA_HOST", "192.168.1.1")
 SAVANNA_PORT = _get_conf("SAVANNA_PORT", "8080")
 SAVANNA_IMAGE_ID = _get_conf("SAVANNA_IMAGE_ID", "42")
 
-keystone = keystone_client(
-    username=OS_USERNAME,
-    password=OS_PASSWORD,
-    tenant_name=OS_TENANT_NAME,
-    auth_url=OS_AUTH_URL
-)
-
 
 class ValidationTestCase(unittest.TestCase):
+
+    keystone = keystone_client(
+        username=OS_USERNAME,
+        password=OS_PASSWORD,
+        tenant_name=OS_TENANT_NAME,
+        auth_url=OS_AUTH_URL
+    )
+
     def setUp(self):
         self.host = SAVANNA_HOST
         self.maxDiff = None
         self.port = SAVANNA_PORT
         self.baseurl = 'http://' + self.host + ':' + self.port
-        self.tenant = keystone.tenant_id
-        self.token = keystone.auth_token
+        self.tenant = self.keystone.tenant_id
+        self.token = self.keystone.auth_token
         self.flavor_id = 'm1.medium'
         self.image_id = SAVANNA_IMAGE_ID
         self.url_nt = '/v0.2/%s/node-templates' % self.tenant
@@ -123,24 +124,24 @@ class ValidationTestCase(unittest.TestCase):
 
 #----------------------other_commands-------------------------------------------
 
-    def _get_body_nt(self, name, type, hs1, hs2):
-        node = 'name' if type == "master" else 'data'
-        tracker = 'job' if type == "master" else 'task'
-        processes_name = 'JT+NN' if type == "master" else 'TT+DN'
+    def _get_body_nt(self, name, nt_type, hs1, hs2):
+        node = 'name' if nt_type == "master" else 'data'
+        tracker = 'job' if nt_type == "master" else 'task'
+        processes_name = 'JT+NN' if nt_type == "master" else 'TT+DN'
         return {
             u'name': u'%s' % name,
-            u'%s_node' % node: {u'heap_size': u'%s' % hs1},
-            u'%s_tracker' % tracker: {u'heap_size': u'%s' % hs2},
+            u'%s_node' % node: {u'heap_size': u'%d' % hs1},
+            u'%s_tracker' % tracker: {u'heap_size': u'%d' % hs2},
             u'node_type': {
                 u'processes': [u'%s_tracker' % tracker,
-                               u'%s_node'] % node,
+                               u'%s_node' % node],
                 u'name': u'%s' % processes_name},
             u'flavor_id': u'%s' % self.flavor_id
         }
 
     def _get_body_cluster(self, name, master_name, worker_name, node_number):
         return {
-            u'status': u'Active',
+            u'status': u'Starting',
             u'service_urls': {},
             u'name': u'%s' % name,
             u'base_image_id': u'%s' % self.image_id,
@@ -171,13 +172,17 @@ class ValidationTestCase(unittest.TestCase):
                     'heap_size': '%d' % node2_size
                 }
             ))
-        if node_type == 'master':
+        if node_type == 'JT+NN':
             return nt
-        elif node_type == 'worker':
+        elif node_type == 'TT+DN':
             nt['node_template']['node_type'] = 'TT+DN'
             nt = self.change_field_nt(nt, 'job_tracker', 'task_tracker')
             nt = self.change_field_nt(nt, 'name_node', 'data_node')
-            return nt
+        elif node_type == 'NN':
+            del nt['node_template']['job_tracker']
+        elif node_type == 'JT':
+            del nt['node_template']['name_node']
+        return nt
 
     def make_cluster_body(self, cluster_name, name_master_node,
                           name_worker_node, number_workers):
@@ -213,7 +218,7 @@ class ValidationTestCase(unittest.TestCase):
             if obj == "cluster":
                 self._response_cluster(get_body, get_data, get_url, object_id)
         except Exception as e:
-            print("failure:" + str(e))
+            self.fail("failure:" + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
@@ -225,8 +230,8 @@ class ValidationTestCase(unittest.TestCase):
         i = 1
         while get_data[u'status'] != u'Active':
             if i > 60:
-                print(self.fail(
-                    "cluster not Starting -> Active, remaining 10 minutes"))
+                self.fail(
+                    "cluster not Starting -> Active, remaining 10 minutes")
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']
