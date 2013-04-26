@@ -30,6 +30,7 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
     def test_crud_nt_ttdn(self):
         nt_ttdn = self.make_nt('TT+DN', 'ttdn', 1024, 1024)
         get_ttdn = self._get_body_nt('ttdn', 'worker', 1024, 1024)
+        self._crud_object(nt_ttdn, get_ttdn, self.url_nt)
 
 
     # def test_crud_nt_nn(self):
