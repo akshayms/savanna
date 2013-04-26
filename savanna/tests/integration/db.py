@@ -124,10 +124,10 @@ class ValidationTestCase(unittest.TestCase):
 #----------------------other_commands------------------------------------------
 
     def _get_body_nt(self, name, nt_type, hs1, hs2):
-        node = 'name' if nt_type == 'master' else 'data'
-        tracker = 'job' if nt_type == 'master' else 'task'
-        processes_name = 'JT+NN' if nt_type == 'master' else 'TT+DN'
-        return {
+        node = 'name' if nt_type in ['JT+NN', 'NN'] else 'data'
+        tracker = 'job' if nt_type in ['JT+NN', 'JT'] else 'task'
+        processes_name = nt_type
+        nt = {
             u'name': u'%s' % name,
             u'%s_node' % node: {u'heap_size': u'%d' % hs1},
             u'%s_tracker' % tracker: {u'heap_size': u'%d' % hs2},
@@ -137,6 +137,14 @@ class ValidationTestCase(unittest.TestCase):
                 u'name': u'%s' % processes_name},
             u'flavor_id': u'%s' % self.flavor_id
         }
+        if nt_type == 'NN':
+            del nt[u'%s_tracker' % tracker]
+            nt[u'node_type'][u'processes'] = [u'%s_node' % node]
+        elif nt_type == 'JT':
+            del nt[u'%s_node' % node]
+            nt[u'node_type'][u'processes'] = [u'%s_tracker' % tracker]
+        print("GET_BODY!!!!!!!!!!!" + str(nt))
+        return nt
 
     def _get_body_cluster(self, name, master_name, worker_name, node_number):
         return {
@@ -158,7 +166,7 @@ class ValidationTestCase(unittest.TestCase):
         data['node_template'][new_field] = val
         return data
 
-    def make_nt(self, node_type, nt_name, node1_size, node2_size):
+    def make_nt(self, nt_name, node_type, node1_size, node2_size):
         nt = dict(
             node_template=dict(
                 name=nt_name,
@@ -178,8 +186,10 @@ class ValidationTestCase(unittest.TestCase):
             nt = self.change_field_nt(nt, 'job_tracker', 'task_tracker')
             nt = self.change_field_nt(nt, 'name_node', 'data_node')
         elif node_type == 'NN':
+            nt['node_template']['node_type'] = 'NN'
             del nt['node_template']['job_tracker']
         elif node_type == 'JT':
+            nt['node_template']['node_type'] = 'JT'
             del nt['node_template']['name_node']
         return nt
 

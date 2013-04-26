@@ -23,20 +23,21 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         Telnet(self.host, self.port)
 
     def test_crud_nt_jtnn(self):
-        nt_jtnn = self.make_nt('JT+NN', 'jtnn', 1024, 1024)
-        get_jtnn = self._get_body_nt('jtnn', 'master', 1024, 1024)
+        nt_jtnn = self.make_nt('jtnn', 'JT+NN', 1024, 1024)
+        get_jtnn = self._get_body_nt('jtnn', 'JT+NN', 1024, 1024)
         self._crud_object(nt_jtnn, get_jtnn, self.url_nt)
 
     def test_crud_nt_ttdn(self):
-        nt_ttdn = self.make_nt('TT+DN', 'ttdn', 1024, 1024)
-        get_ttdn = self._get_body_nt('ttdn', 'worker', 1024, 1024)
+        nt_ttdn = self.make_nt('ttdn', 'TT+DN', 1024, 1024)
+        get_ttdn = self._get_body_nt('ttdn', 'TT+DN', 1024, 1024)
         self._crud_object(nt_ttdn, get_ttdn, self.url_nt)
 
+    def test_crud_nt_nn(self):
+        nt_nn = self.make_nt('nn', 'NN', 1024, 1024)
+        get_nn = self._get_body_nt('nn', 'NN', 1024, 1024)
+        self._crud_object(nt_nn, get_nn, self.url_nt)
 
-    # def test_crud_nt_nn(self):
-    #     self._crud_object(self.nn, self.get_nn.copy(),
-    #                       self.url_nt)
-    #
-    # def test_crud_nt_jt(self):
-    #     self._crud_object(self.jt, self.get_jt.copy(),
-    #                       self.url_nt)
+    def test_crud_nt_jt(self):
+        nt_jt = self.make_nt('jt', 'JT', 1024, 1024)
+        get_jt = self._get_body_nt('jt', 'JT', 1024, 1024)
+        self._crud_object(nt_jt, get_jt, self.url_nt)
