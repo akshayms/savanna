@@ -32,12 +32,12 @@ class TestValidationApiForNodetemplates(ValidationTestCase):
         get_ttdn = self._get_body_nt('ttdn', 'TT+DN', 1024, 1024)
         self._crud_object(nt_ttdn, get_ttdn, self.url_nt)
 
-    def test_crud_nt_nn(self):
-        nt_nn = self.make_nt('nn', 'NN', 1024, 1024)
-        get_nn = self._get_body_nt('nn', 'NN', 1024, 1024)
-        self._crud_object(nt_nn, get_nn, self.url_nt)
-
-    def test_crud_nt_jt(self):
-        nt_jt = self.make_nt('jt', 'JT', 1024, 1024)
-        get_jt = self._get_body_nt('jt', 'JT', 1024, 1024)
-        self._crud_object(nt_jt, get_jt, self.url_nt)
+    # def test_crud_nt_nn(self):
+    #     nt_nn = self.make_nt('nn', 'NN', 1024, 1024)
+    #     get_nn = self._get_body_nt('nn', 'NN', 1024, 1024)
+    #     self._crud_object(nt_nn, get_nn, self.url_nt)
+    #
+    # def test_crud_nt_jt(self):
+    #     nt_jt = self.make_nt('jt', 'JT', 1024, 1024)
+    #     get_jt = self._get_body_nt('jt', 'JT', 1024, 1024)
+    #     self._crud_object(nt_jt, get_jt, self.url_nt)

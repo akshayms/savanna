@@ -1,3 +1,34 @@
+commit 348c52f1acc3849371cb4b6724fc112ca4dcae3a
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri Apr 26 14:46:05 2013 +0400
+
+    add changes for method get_body for node templates
+
+commit c3c76c6d6cdf138f9e97f66cc100bf5f8b2fbbca
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri Apr 26 13:08:56 2013 +0400
+
+    fix bug in nt_tests
+
+commit dab90f75e1e215ee44dd4ce67e162630567912cb
+Merge: 4a403df 632b149
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri Apr 26 13:06:09 2013 +0400
+
+    merge branch and local changes
+
+commit 4a403df5236edf4e7505dc7d74687b7c4245eb4b
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri Apr 26 12:56:50 2013 +0400
+
+    add new changes for db
+
+commit 632b1491fcaef60ecc301cd3fa93ec64cc5fd1aa
+Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
+Date:   Fri Apr 26 12:20:29 2013 +0400
+
+    add changes to tests for hadoop
+
 commit c19ee4dd75101c24b5e794c1883e32a90eff85e9
 Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
 Date:   Thu Apr 25 16:35:55 2013 +0400
