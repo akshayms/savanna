@@ -1,7 +1,7 @@
 #!/bin/bash
 #cd / && touch script.sh && chmod +x script.sh && vim script.sh
 dir=/outputTestMapReduce
-directoryBin=home/hadoop/apache/hadoop/bin
+directory=/usr/share/hadoop
 rm -r $dir
 mkdir $dir
 log=$dir/log.txt
@@ -16,10 +16,10 @@ echo "[------netstat------]">>$log
 echo `sudo netstat -plten | grep java` &>>$log
 echo "[------test for hdfs------]">>$log
 echo `dmesg > $dir/input` 2>>$log
-su -c "$directoryBin/hadoop dfs -ls /" hadoop  
-su -c "$directoryBin/hadoop dfs -mkdir /test" hadoop && 
-su -c "$directoryBin/hadoop dfs -copyFromLocal $dir/input /test/mydata" hadoop 2>>$log &&
+su -c "hadoop dfs -ls /" hadoop
+su -c "hadoop dfs -mkdir /test" hadoop &&
+su -c "hadoop dfs -copyFromLocal $dir/input /test/mydata" hadoop 2>>$log &&
 echo "[------start job------]">>$log &&
-su -c "cd /$directoryBin/.. && bin/hadoop jar hadoop-examples-1.0.4.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
-su -c "$directoryBin/hadoop dfs -copyToLocal /test/output/ $dir/out/" hadoop 2>>$log &&
-su -c "$directoryBin/hadoop dfs -rmr /test" hadoop 2>>$log
+su -c "cd $directory && hadoop jar hadoop-examples-1.1.1.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
+su -c "hadoop dfs -copyToLocal /test/output/ $dir/out/" hadoop 2>>$log &&
+su -c "hadoop dfs -rmr /test" hadoop 2>>$log

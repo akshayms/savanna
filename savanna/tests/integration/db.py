@@ -79,10 +79,11 @@ class ValidationTestCase(unittest.TestCase):
               % (URL, body, resp.status_code, data))
         return resp
 
-    def get(self, url):
+    def get(self, url, printing):
         URL = self.baseurl + url
         resp = requests.get(URL, headers={'x-auth-token': self.token})
-        print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
+        if printing:
+            print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
         if resp.status_code != 200:
             data = json.loads(resp.content)
             print('data= %s\n') % data
@@ -103,8 +104,8 @@ class ValidationTestCase(unittest.TestCase):
         data = json.loads(post.content)
         return data
 
-    def _get_object(self, url, obj_id, code):
-        rv = self.get(url + obj_id)
+    def _get_object(self, url, obj_id, code, printing=False):
+        rv = self.get(url + obj_id, printing)
         self.assertEquals(rv.status_code, code)
         data = json.loads(rv.content)
         return data
