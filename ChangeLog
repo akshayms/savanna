@@ -1,3 +1,15 @@
+commit 7baf66a06ff7f0672c1e73545e45859676b5b32f
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Apr 29 21:58:12 2013 +0400
+
+    add hadoop testing
+
+commit 1c25229e69906edc3987869d0fd1869ad38b7145
+Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
+Date:   Mon Apr 29 15:49:08 2013 +0400
+
+    added new changes to test of hadoop
+
 commit 348c52f1acc3849371cb4b6724fc112ca4dcae3a
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Fri Apr 26 14:46:05 2013 +0400
