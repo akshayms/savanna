@@ -1,0 +1,7 @@
+The :mod:`savanna.openstack.common.version` Module
+==================================================
+
+.. automodule:: savanna.openstack.common.version
+  :members:
+  :undoc-members:
+  :show-inheritance:

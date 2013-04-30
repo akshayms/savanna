@@ -132,9 +132,19 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">xmlrpclib</span>
 
 <span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">timeutils</span>
+
+
+<span class="n">_nasty_type_tests</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspect</span><span class="o">.</span><span class="n">ismodule</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">,</span>
+                     <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isgeneratorfunction</span><span class="p">,</span>
+                     <span class="n">inspect</span><span class="o">.</span><span class="n">isgenerator</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">istraceback</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isframe</span><span class="p">,</span>
+                     <span class="n">inspect</span><span class="o">.</span><span class="n">iscode</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isbuiltin</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">,</span>
+                     <span class="n">inspect</span><span class="o">.</span><span class="n">isabstract</span><span class="p">]</span>
+
+<span class="n">_simple_types</span> <span class="o">=</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">long</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="to_primitive"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.jsonutils.html#savanna.openstack.common.jsonutils.to_primitive">[docs]</a><span class="k">def</span> <span class="nf">to_primitive</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">convert_instances</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">convert_datetime</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -152,17 +162,30 @@
 <span class="sd">    Therefore, convert_instances=True is lossy ... be aware.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nasty</span> <span class="o">=</span> <span class="p">[</span><span class="n">inspect</span><span class="o">.</span><span class="n">ismodule</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">,</span>
-             <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isgeneratorfunction</span><span class="p">,</span>
-             <span class="n">inspect</span><span class="o">.</span><span class="n">isgenerator</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">istraceback</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isframe</span><span class="p">,</span>
-             <span class="n">inspect</span><span class="o">.</span><span class="n">iscode</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isbuiltin</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">,</span>
-             <span class="n">inspect</span><span class="o">.</span><span class="n">isabstract</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">nasty</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">test</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="c"># handle obvious types first - order of basic types determined by running</span>
+    <span class="c"># full tests on nova project, resulting in the following counts:</span>
+    <span class="c"># 572754 &lt;type &#39;NoneType&#39;&gt;</span>
+    <span class="c"># 460353 &lt;type &#39;int&#39;&gt;</span>
+    <span class="c"># 379632 &lt;type &#39;unicode&#39;&gt;</span>
+    <span class="c"># 274610 &lt;type &#39;str&#39;&gt;</span>
+    <span class="c"># 199918 &lt;type &#39;dict&#39;&gt;</span>
+    <span class="c"># 114200 &lt;type &#39;datetime.datetime&#39;&gt;</span>
+    <span class="c">#  51817 &lt;type &#39;bool&#39;&gt;</span>
+    <span class="c">#  26164 &lt;type &#39;list&#39;&gt;</span>
+    <span class="c">#   6491 &lt;type &#39;float&#39;&gt;</span>
+    <span class="c">#    283 &lt;type &#39;tuple&#39;&gt;</span>
+    <span class="c">#     19 &lt;type &#39;long&#39;&gt;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_simple_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
 
-    <span class="c"># value of itertools.count doesn&#39;t get caught by inspects</span>
-    <span class="c"># above and results in infinite loop when list(value) is called.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">convert_datetime</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">timeutils</span><span class="o">.</span><span class="n">strtime</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+    <span class="c"># value of itertools.count doesn&#39;t get caught by nasty_type_tests</span>
+    <span class="c"># and results in infinite loop when list(value) is called.</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -185,17 +208,18 @@
                                       <span class="n">convert_datetime</span><span class="o">=</span><span class="n">convert_datetime</span><span class="p">,</span>
                                       <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
                                       <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">recursive</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">recursive</span><span class="p">(</span><span class="n">lv</span><span class="p">)</span> <span class="k">for</span> <span class="n">lv</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+
         <span class="c"># It&#39;s not clear why xmlrpclib created their own DateTime type, but</span>
         <span class="c"># for our purposes, make it a datetime type which is explicitly</span>
         <span class="c"># handled</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">DateTime</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())[:</span><span class="mi">6</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">recursive</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">recursive</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
-        <span class="k">elif</span> <span class="n">convert_datetime</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">convert_datetime</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">timeutils</span><span class="o">.</span><span class="n">strtime</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&#39;iteritems&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">recursive</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()),</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -206,6 +230,8 @@
             <span class="c"># Ignore class member vars.</span>
             <span class="k">return</span> <span class="n">recursive</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">__dict__</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">test</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">_nasty_type_tests</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">value</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="c"># Class objects are tricky since they may define something like</span>
@@ -258,6 +284,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

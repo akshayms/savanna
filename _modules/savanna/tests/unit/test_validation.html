@@ -145,7 +145,7 @@
 </div>
 <div class="viewcode-block" id="TestValidation.tearDown"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">CONF</span><span class="o">.</span><span class="n">set_override</span><span class="p">(</span><span class="s">&#39;allow_cluster_ops&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">CONF</span><span class="o">.</span><span class="n">clear_override</span><span class="p">(</span><span class="s">&#39;allow_cluster_ops&#39;</span><span class="p">)</span>
 </div>
     <span class="nd">@patch</span><span class="p">(</span><span class="s">&quot;savanna.utils.api.bad_request&quot;</span><span class="p">)</span>
     <span class="nd">@patch</span><span class="p">(</span><span class="s">&quot;savanna.utils.api.request_data&quot;</span><span class="p">)</span>
@@ -288,7 +288,7 @@
         <span class="c"># request data to validate</span>
         <span class="n">request_data</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">data</span>
 
-        <span class="n">v</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span><span class="p">)(</span><span class="n">m_func</span><span class="p">)(</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;some-id&quot;</span><span class="p">)</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span><span class="p">)(</span><span class="n">m_func</span><span class="p">)()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">request_data</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -328,7 +328,7 @@
                        <span class="s">u&quot;&#39;node_templates&#39; is a required property&quot;</span><span class="p">)</span>
         <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TestValidation.test_cluster_create_v_name"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_cluster_create_v_name">[docs]</a>    <span class="k">def</span> <span class="nf">test_cluster_create_v_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestValidation.test_cluster_create_v_name_base"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_cluster_create_v_name_base">[docs]</a>    <span class="k">def</span> <span class="nf">test_cluster_create_v_name_base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_cluster_create</span>
 
         <span class="n">cluster</span> <span class="o">=</span> <span class="p">{</span>
@@ -352,6 +352,16 @@
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
                        <span class="s">u&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; is too long&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">51</span><span class="p">))</span>
         <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestValidation.test_cluster_create_v_name_pattern"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_cluster_create_v_name_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">test_cluster_create_v_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_cluster_create</span>
+
+        <span class="n">cluster</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;base_image_id&quot;</span><span class="p">:</span> <span class="s">&quot;some-image-id&quot;</span><span class="p">,</span>
+                <span class="s">&quot;node_templates&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
         <span class="k">def</span> <span class="nf">_assert_cluster_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
             <span class="n">cluster_schema</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">CLUSTER_CREATE_SCHEMA</span><span class="p">[</span><span class="s">&#39;properties&#39;</span><span class="p">][</span><span class="s">&#39;cluster&#39;</span><span class="p">]</span>
@@ -366,6 +376,16 @@
         <span class="n">_assert_cluster_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;asd_123&quot;</span><span class="p">)</span>
         <span class="n">_assert_cluster_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;123&quot;</span><span class="p">)</span>
         <span class="n">_assert_cluster_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;asd?&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestValidation.test_cluster_create_v_name_exists"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_cluster_create_v_name_exists">[docs]</a>    <span class="k">def</span> <span class="nf">test_cluster_create_v_name_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_cluster_create</span>
+
+        <span class="n">cluster</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;base_image_id&quot;</span><span class="p">:</span> <span class="s">&quot;some-image-id&quot;</span><span class="p">,</span>
+                <span class="s">&quot;node_templates&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="n">_cluster</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;some-cluster-1&quot;</span><span class="p">),</span>
@@ -503,7 +523,7 @@
                        <span class="s">u&quot;Required: [&#39;name_node&#39;, &#39;job_tracker&#39;]&quot;</span><span class="p">)</span>
         <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TestValidation.test_node_template_create_v_name"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_node_template_create_v_name">[docs]</a>    <span class="k">def</span> <span class="nf">test_node_template_create_v_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestValidation.test_node_template_create_v_name_base"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_node_template_create_v_name_base">[docs]</a>    <span class="k">def</span> <span class="nf">test_node_template_create_v_name_base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_node_template_create</span>
 
         <span class="n">template</span> <span class="o">=</span> <span class="p">{</span>
@@ -529,6 +549,18 @@
             <span class="n">bad_req_i</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span><span class="p">,</span>
                        <span class="s">u&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; is too long&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">241</span><span class="p">))</span>
         <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestValidation.test_node_template_create_v_name_pattern"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_node_template_create_v_name_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">test_node_template_create_v_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_node_template_create</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;node_type&quot;</span><span class="p">:</span> <span class="s">&quot;JT+NN&quot;</span><span class="p">,</span>
+                <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span><span class="p">,</span>
+                <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
         <span class="k">def</span> <span class="nf">_assert_template_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
             <span class="n">schema_props</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">TEMPLATE_CREATE_SCHEMA</span><span class="p">[</span><span class="s">&#39;properties&#39;</span><span class="p">]</span>
@@ -544,6 +576,18 @@
         <span class="n">_assert_template_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;asd;123&quot;</span><span class="p">)</span>
         <span class="n">_assert_template_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;123&quot;</span><span class="p">)</span>
         <span class="n">_assert_template_name_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;asd?&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestValidation.test_node_template_create_v_name_exists"><a class="viewcode-back" href="../../../../api/savanna.tests.unit.test_validation.html#savanna.tests.unit.test_validation.TestValidation.test_node_template_create_v_name_exists">[docs]</a>    <span class="k">def</span> <span class="nf">test_node_template_create_v_name_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_object_fun</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">validate_node_template_create</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;node_template&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;node_type&quot;</span><span class="p">:</span> <span class="s">&quot;JT+NN&quot;</span><span class="p">,</span>
+                <span class="s">&quot;flavor_id&quot;</span><span class="p">:</span> <span class="s">&quot;flavor-1&quot;</span><span class="p">,</span>
+                <span class="s">&quot;name_node&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&quot;job_tracker&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_create_object_validation</span><span class="p">(</span>
             <span class="n">_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;jt_nn.small&quot;</span><span class="p">),</span>
@@ -594,6 +638,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

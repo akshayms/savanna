@@ -153,6 +153,7 @@
 </div>
 <span class="nd">@rest.delete</span><span class="p">(</span><span class="s">&#39;/node-templates/&lt;template_id&gt;&#39;</span><span class="p">)</span>
 <span class="nd">@v.exists_by_id</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_node_template</span><span class="p">,</span> <span class="s">&#39;template_id&#39;</span><span class="p">)</span>
+<span class="nd">@v.validate</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">validate_node_template_terminate</span><span class="p">)</span>
 <div class="viewcode-block" id="templates_delete"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.templates_delete">[docs]</a><span class="k">def</span> <span class="nf">templates_delete</span><span class="p">(</span><span class="n">template_id</span><span class="p">):</span>
     <span class="n">api</span><span class="o">.</span><span class="n">terminate_node_template</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">template_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -160,8 +161,10 @@
 </div>
 <span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/clusters&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="clusters_list"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_list">[docs]</a><span class="k">def</span> <span class="nf">clusters_list</span><span class="p">():</span>
+    <span class="n">tenant_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;X-Tenant-Id&#39;</span><span class="p">]</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">clusters</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">dict</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">get_clusters</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">clusters</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">dict</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">get_clusters</span><span class="p">(</span><span class="n">tenant_id</span><span class="o">=</span><span class="n">tenant_id</span><span class="p">)])</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">internal_error</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&#39;Exception while listing Clusters&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
@@ -176,9 +179,10 @@
 
 </div>
 <span class="nd">@rest.get</span><span class="p">(</span><span class="s">&#39;/clusters/&lt;cluster_id&gt;&#39;</span><span class="p">)</span>
-<span class="nd">@v.exists_by_id</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">,</span> <span class="s">&#39;cluster_id&#39;</span><span class="p">)</span>
+<span class="nd">@v.exists_by_id</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">,</span> <span class="s">&#39;cluster_id&#39;</span><span class="p">,</span> <span class="n">tenant_specific</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <div class="viewcode-block" id="clusters_get"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_get">[docs]</a><span class="k">def</span> <span class="nf">clusters_get</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">)</span>
+    <span class="n">tenant_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;X-Tenant-Id&#39;</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="o">=</span><span class="n">tenant_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">wrapped_dict</span><span class="p">)</span>
 
 </div>
@@ -190,10 +194,11 @@
 
 </div>
 <span class="nd">@rest.delete</span><span class="p">(</span><span class="s">&#39;/clusters/&lt;cluster_id&gt;&#39;</span><span class="p">)</span>
-<span class="nd">@v.exists_by_id</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">,</span> <span class="s">&#39;cluster_id&#39;</span><span class="p">)</span>
+<span class="nd">@v.exists_by_id</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_cluster</span><span class="p">,</span> <span class="s">&#39;cluster_id&#39;</span><span class="p">,</span> <span class="n">tenant_specific</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <div class="viewcode-block" id="clusters_delete"><a class="viewcode-back" href="../../../api/savanna.api.v02.html#savanna.api.v02.clusters_delete">[docs]</a><span class="k">def</span> <span class="nf">clusters_delete</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">):</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span>
-    <span class="n">api</span><span class="o">.</span><span class="n">terminate_cluster</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">)</span>
+    <span class="n">tenant_id</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="s">&#39;X-Tenant-Id&#39;</span><span class="p">]</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">terminate_cluster</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">cluster_id</span><span class="p">,</span> <span class="n">tenant_id</span><span class="o">=</span><span class="n">tenant_id</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
 </pre></div>
@@ -221,6 +226,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

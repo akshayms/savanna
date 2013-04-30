@@ -100,6 +100,18 @@
 <p>Usual usage in an openstack.common module:</p>
 <blockquote>
 <div>from savanna.openstack.common.gettextutils import _</div></blockquote>
+<dl class="function">
+<dt id="savanna.openstack.common.gettextutils.install">
+<tt class="descclassname">savanna.openstack.common.gettextutils.</tt><tt class="descname">install</tt><big>(</big><em>domain</em><big>)</big><a class="reference internal" href="../_modules/savanna/openstack/common/gettextutils.html#install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#savanna.openstack.common.gettextutils.install" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install a _() function using the given translation domain.</p>
+<p>Given a translation domain, install a _() function using gettext&#8217;s
+install() function.</p>
+<p>The main difference from gettext.install() is that we allow
+overriding the default localedir (e.g. /usr/share/locale) using
+a translation-domain-specific environment variable (e.g.
+NOVA_LOCALEDIR).</p>
+</dd></dl>
+
 </div>
 
 
@@ -125,6 +137,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

@@ -21,6 +21,7 @@
    savanna.openstack.common.setup.rst
    savanna.openstack.common.timeutils.rst
    savanna.openstack.common.uuidutils.rst
+   savanna.openstack.common.version.rst
    savanna.openstack.common.wsgi.rst
    savanna.openstack.common.xmlutils.rst
    savanna.openstack.commons.rst
@@ -31,6 +32,9 @@
    savanna.storage.defaults.rst
    savanna.storage.models.rst
    savanna.storage.storage.rst
+   savanna.tests.integration.db.rst
+   savanna.tests.integration.test_clusters.rst
+   savanna.tests.integration.test_node_templates.rst
    savanna.tests.unit.base.rst
    savanna.tests.unit.test_api_v02.rst
    savanna.tests.unit.test_service.rst
@@ -39,3 +43,4 @@
    savanna.utils.openstack.base.rst
    savanna.utils.openstack.nova.rst
    savanna.utils.scheduler.rst
+   savanna.version.rst

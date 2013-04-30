@@ -154,8 +154,7 @@
 
 </div>
 <span class="k">def</span> <span class="nf">_generate_templates</span><span class="p">(</span><span class="n">nt_jt_nn</span><span class="p">,</span> <span class="n">nt_jt</span><span class="p">,</span> <span class="n">nt_nn</span><span class="p">,</span> <span class="n">nt_tt_dn</span><span class="p">):</span>
-    <span class="n">jt_nn_small</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;jt_nn.small&#39;</span><span class="p">,</span> <span class="n">nt_jt_nn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s">&#39;tenant-01&#39;</span><span class="p">,</span>
-                                       <span class="s">&#39;m1.small&#39;</span><span class="p">,</span>
+    <span class="n">jt_nn_small</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;jt_nn.small&#39;</span><span class="p">,</span> <span class="n">nt_jt_nn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s">&#39;m1.small&#39;</span><span class="p">,</span>
                                        <span class="p">{</span>
                                            <span class="s">&#39;job_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
                                                <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;896&#39;</span>
@@ -165,7 +164,7 @@
                                            <span class="p">}</span>
                                        <span class="p">})</span>
     <span class="n">jt_nn_medium</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;jt_nn.medium&#39;</span><span class="p">,</span> <span class="n">nt_jt_nn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                        <span class="s">&#39;tenant-01&#39;</span><span class="p">,</span> <span class="s">&#39;m1.medium&#39;</span><span class="p">,</span>
+                                        <span class="s">&#39;m1.medium&#39;</span><span class="p">,</span>
                                         <span class="p">{</span>
                                             <span class="s">&#39;job_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
                                                 <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;1792&#39;</span>
@@ -174,8 +173,7 @@
                                                 <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;1792&#39;</span>
                                             <span class="p">}</span>
                                         <span class="p">})</span>
-    <span class="n">tt_dn_small</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;tt_dn.small&#39;</span><span class="p">,</span> <span class="n">nt_tt_dn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s">&#39;tenant-01&#39;</span><span class="p">,</span>
-                                       <span class="s">&#39;m1.small&#39;</span><span class="p">,</span>
+    <span class="n">tt_dn_small</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;tt_dn.small&#39;</span><span class="p">,</span> <span class="n">nt_tt_dn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s">&#39;m1.small&#39;</span><span class="p">,</span>
                                        <span class="p">{</span>
                                            <span class="s">&#39;task_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
                                                <span class="s">&#39;heap_size&#39;</span><span class="p">:</span> <span class="s">&#39;896&#39;</span>
@@ -185,7 +183,6 @@
                                            <span class="p">}</span>
                                        <span class="p">})</span>
     <span class="n">tt_dn_medium</span> <span class="o">=</span> <span class="n">create_node_template</span><span class="p">(</span><span class="s">&#39;tt_dn.medium&#39;</span><span class="p">,</span> <span class="n">nt_tt_dn</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                        <span class="s">&#39;tenant-01&#39;</span><span class="p">,</span>
                                         <span class="s">&#39;m1.medium&#39;</span><span class="p">,</span>
                                         <span class="p">{</span>
                                             <span class="s">&#39;task_tracker&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -223,6 +220,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39488690-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>savanna.openstack.common.version &mdash; savanna latest documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/tweaks.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     'latest',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.tweet.js"></script>
+    <link rel="top" title="savanna latest documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+    <script type='text/javascript'>
+        /*$(document).ready(function(){
+            $("#twitter_feed").tweet({
+                username: "openstack",
+                query: "from:openstack",
+                avatar_size: 32,
+                count: 4,
+                loading_text: "loading tweets..."
+            });
+        });*/
+    </script>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">savanna latest documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for savanna.openstack.common.version</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2012 OpenStack Foundation</span>
+<span class="c">#    Copyright 2012-2013 Hewlett-Packard Development Company, L.P.</span>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for consuming the version from pkg_resources.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+
+
+<span class="k">class</span> <span class="nc">VersionInfo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="VersionInfo"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.version.html#savanna.openstack.common.version.VersionInfo">[docs]</a>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Object that understands versioning for a package</span>
+<span class="sd">        :param package: name of the python package, such as glance, or</span>
+<span class="sd">                        python-glanceclient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package</span> <span class="o">=</span> <span class="n">package</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">release</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_version</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make the VersionInfo object behave like a string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_string</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Include the name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;VersionInfo(</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_string</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_get_version_from_pkg_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the version of the package from the pkg_resources record</span>
+<span class="sd">        associated with the package.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requirement</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">Requirement</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">)</span>
+            <span class="n">provider</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">requirement</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">version</span>
+        <span class="k">except</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">DistributionNotFound</span><span class="p">:</span>
+            <span class="c"># The most likely cause for this is running tests in a tree</span>
+            <span class="c"># produced from a tarball where the package itself has not been</span>
+            <span class="c"># installed into anything. Revert to setup-time logic.</span>
+            <span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">setup</span>
+            <span class="k">return</span> <span class="n">setup</span><span class="o">.</span><span class="n">get_version</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">release_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VersionInfo.release_string"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.version.html#savanna.openstack.common.version.VersionInfo.release_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return the full version of the package including suffixes indicating</span>
+<span class="sd">        VCS status.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">release</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">release</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_version_from_pkg_resources</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">release</span>
+
+    <span class="k">def</span> <span class="nf">version_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+<div class="viewcode-block" id="VersionInfo.version_string"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.version.html#savanna.openstack.common.version.VersionInfo.version_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Return the short version minus any alpha/beta tags.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_string</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">part</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+
+    <span class="c"># Compatibility functions</span>
+    <span class="n">canonical_version_string</span> <span class="o">=</span> <span class="n">version_string</span></div>
+    <span class="n">version_string_with_vcs</span> <span class="o">=</span> <span class="n">release_string</span>
+
+    <span class="k">def</span> <span class="nf">cached_version_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="VersionInfo.cached_version_string"><a class="viewcode-back" href="../../../../api/savanna.openstack.common.version.html#savanna.openstack.common.version.VersionInfo.cached_version_string">[docs]</a>        <span class="sd">&quot;&quot;&quot;Generate an object which will expand in a string context to</span>
+<span class="sd">        the results of version_string(). We do this so that don&#39;t</span>
+<span class="sd">        call into pkg_resources every time we start up a program when</span>
+<span class="sd">        passing version information into the CONF constructor, but</span>
+<span class="sd">        rather only do the calculation when and if a version is requested</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_version</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cached_version</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">version_string</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_version</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">savanna latest documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

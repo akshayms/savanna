@@ -107,12 +107,13 @@
 <span class="c"># See the License for the specific language governing permissions and</span>
 <span class="c"># limitations under the License.</span>
 
-<span class="kn">import</span> <span class="nn">time</span>
-
+<span class="kn">import</span> <span class="nn">eventlet</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">PackageLoader</span>
 <span class="kn">from</span> <span class="nn">oslo.config</span> <span class="kn">import</span> <span class="n">cfg</span>
 <span class="kn">import</span> <span class="nn">paramiko</span>
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_filename</span>
+<span class="kn">import</span> <span class="nn">xml.dom.minidom</span> <span class="kn">as</span> <span class="nn">xml</span>
 
 <span class="kn">from</span> <span class="nn">savanna.openstack.common</span> <span class="kn">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">logging</span>
 <span class="kn">from</span> <span class="nn">savanna.storage.db</span> <span class="kn">import</span> <span class="n">DB</span>
@@ -263,7 +264,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;is_up&#39;</span><span class="p">]:</span>
                 <span class="n">all_set</span> <span class="o">=</span> <span class="bp">False</span>
 
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">eventlet</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;All nodes of cluster &#39;</span><span class="si">%s</span><span class="s">&#39; are up: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
               <span class="n">cluster</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">all_set</span><span class="p">)</span>
@@ -367,6 +368,73 @@
 <span class="p">}</span>
 
 
+<span class="k">def</span> <span class="nf">_load_xml_default_configs</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resource_filename</span><span class="p">(</span><span class="s">&quot;savanna&quot;</span><span class="p">,</span> <span class="s">&#39;resources/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">file_name</span><span class="p">))</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">prop</span><span class="o">.</span><span class="n">childNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
+
+<span class="n">CORE_CONF</span> <span class="o">=</span> <span class="n">_load_xml_default_configs</span><span class="p">(</span><span class="s">&#39;core-default.xml&#39;</span><span class="p">)</span>
+<span class="n">MAPRED_CONF</span> <span class="o">=</span> <span class="n">_load_xml_default_configs</span><span class="p">(</span><span class="s">&#39;mapred-default.xml&#39;</span><span class="p">)</span>
+<span class="n">HDFS_CONF</span> <span class="o">=</span> <span class="n">_load_xml_default_configs</span><span class="p">(</span><span class="s">&#39;hdfs-default.xml&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_generate_xml_configs</span><span class="p">(</span><span class="n">clmap</span><span class="p">):</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;fs.default.name&#39;</span><span class="p">:</span> <span class="s">&#39;hdfs://</span><span class="si">%s</span><span class="s">:8020&#39;</span> <span class="o">%</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">],</span>
+        <span class="s">&#39;mapred.job.tracker&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:8021&#39;</span> <span class="o">%</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">],</span>
+        <span class="s">&#39;dfs.name.dir&#39;</span><span class="p">:</span> <span class="s">&#39;/mnt/lib/hadoop/hdfs/namenode&#39;</span><span class="p">,</span>
+        <span class="s">&#39;dfs.data.dir&#39;</span><span class="p">:</span> <span class="s">&#39;/mnt/lib/hadoop/hdfs/datanode&#39;</span><span class="p">,</span>
+        <span class="s">&#39;mapred.system.dir&#39;</span><span class="p">:</span> <span class="s">&#39;/mnt/mapred/mapredsystem&#39;</span><span class="p">,</span>
+        <span class="s">&#39;mapred.local.dir&#39;</span><span class="p">:</span> <span class="s">&#39;/mnt/lib/hadoop/mapred&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">xml_configs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;core-site&#39;</span><span class="p">:</span> <span class="n">_create_xml</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">CORE_CONF</span><span class="p">),</span>
+        <span class="s">&#39;mapred-site&#39;</span><span class="p">:</span> <span class="n">_create_xml</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">MAPRED_CONF</span><span class="p">),</span>
+        <span class="s">&#39;hdfs-site&#39;</span><span class="p">:</span> <span class="n">_create_xml</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">HDFS_CONF</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">xml_configs</span>
+
+
+<span class="k">def</span> <span class="nf">_create_xml</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">global_conf</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">Document</span><span class="p">()</span>
+
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createProcessingInstruction</span><span class="p">(</span><span class="s">&#39;xml-stylesheet&#39;</span><span class="p">,</span>
+                                         <span class="s">&#39;type=&quot;text/xsl&quot; &#39;</span>
+                                         <span class="s">&#39;href=&quot;configuration.xsl&quot;&#39;</span><span class="p">)</span>
+    <span class="n">doc</span><span class="o">.</span><span class="n">insertBefore</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">firstChild</span><span class="p">)</span>
+
+    <span class="c"># Create the &lt;configuration&gt; base element</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">&quot;configuration&quot;</span><span class="p">)</span>
+    <span class="n">doc</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_value</span> <span class="ow">in</span> <span class="n">configs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="n">global_conf</span><span class="p">:</span>
+            <span class="c"># Create the &lt;property&gt; element</span>
+            <span class="nb">property</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">&quot;property&quot;</span><span class="p">)</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="nb">property</span><span class="p">)</span>
+
+            <span class="c"># Create a &lt;name&gt; element in &lt;property&gt;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+            <span class="nb">property</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c"># Give the &lt;name&gt; element some hadoop config name</span>
+            <span class="n">name_text</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createTextNode</span><span class="p">(</span><span class="n">prop_name</span><span class="p">)</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">name_text</span><span class="p">)</span>
+
+            <span class="c"># Create a &lt;value&gt; element in &lt;property&gt;</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">)</span>
+            <span class="nb">property</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="c"># Give the &lt;value&gt; element some hadoop config value</span>
+            <span class="n">value_text</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">createTextNode</span><span class="p">(</span><span class="n">prop_value</span><span class="p">)</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">value_text</span><span class="p">)</span>
+
+    <span class="c"># Return newly created XML</span>
+    <span class="k">return</span> <span class="n">doc</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&quot;  &quot;</span><span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">_keys_exist</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">key1</span> <span class="ow">in</span> <span class="nb">map</span> <span class="ow">and</span> <span class="n">key2</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">[</span><span class="n">key1</span><span class="p">]</span>
 
@@ -434,12 +502,6 @@
     <span class="n">_analyze_templates</span><span class="p">(</span><span class="n">clmap</span><span class="p">)</span>
     <span class="n">_generate_hosts</span><span class="p">(</span><span class="n">clmap</span><span class="p">)</span>
 
-    <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s">&#39;</span><span class="si">%%%hd</span><span class="s">fs_namenode_url</span><span class="si">%%</span><span class="s">%&#39;</span><span class="p">,</span> <span class="s">&#39;hdfs:</span><span class="se">\\</span><span class="s">/</span><span class="se">\\</span><span class="s">/</span><span class="si">%s</span><span class="s">:8020&#39;</span>
-                                    <span class="o">%</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">]),</span>
-        <span class="p">(</span><span class="s">&#39;</span><span class="si">%%</span><span class="s">%mapred_jobtracker_url</span><span class="si">%%</span><span class="s">%&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">:8021&#39;</span> <span class="o">%</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">])</span>
-    <span class="p">]</span>
-
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;nodes&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;is_master&#39;</span><span class="p">]:</span>
             <span class="n">script_file</span> <span class="o">=</span> <span class="s">&#39;setup-master.sh&#39;</span>
@@ -447,20 +509,13 @@
             <span class="n">script_file</span> <span class="o">=</span> <span class="s">&#39;setup-general.sh&#39;</span>
 
         <span class="n">templ_args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;configfiles&#39;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s">&#39;/etc/hadoop/core-site.xml&#39;</span><span class="p">,</span>
-                <span class="s">&#39;/etc/hadoop/mapred-site.xml&#39;</span>
-            <span class="p">],</span>
-            <span class="s">&#39;configs&#39;</span><span class="p">:</span> <span class="n">configs</span><span class="p">,</span>
             <span class="s">&#39;slaves&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;slaves&#39;</span><span class="p">],</span>
             <span class="s">&#39;master_hostname&#39;</span><span class="p">:</span> <span class="n">clmap</span><span class="p">[</span><span class="s">&#39;master_hostname&#39;</span><span class="p">],</span>
             <span class="s">&#39;env_configs&#39;</span><span class="p">:</span> <span class="n">_extract_environment_confs</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;configs&#39;</span><span class="p">])</span>
         <span class="p">}</span>
 
         <span class="n">node</span><span class="p">[</span><span class="s">&#39;setup_script&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="n">script_file</span><span class="p">,</span> <span class="o">**</span><span class="n">templ_args</span><span class="p">)</span>
-
-        <span class="n">xsl_args</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;props&#39;</span><span class="p">:</span> <span class="n">_extract_xml_confs</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;configs&#39;</span><span class="p">])}</span>
-        <span class="n">node</span><span class="p">[</span><span class="s">&#39;xsl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_template</span><span class="p">(</span><span class="s">&#39;config-transform.xsl&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">xsl_args</span><span class="p">)</span>
+        <span class="n">node</span><span class="p">[</span><span class="s">&#39;xml&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_generate_xml_configs</span><span class="p">(</span><span class="n">clmap</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_setup_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">clmap</span><span class="p">):</span>
@@ -473,8 +528,16 @@
         <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">clmap</span><span class="p">[</span><span class="s">&#39;hosts&#39;</span><span class="p">])</span>
         <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-cfg.xsl&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xsl&#39;</span><span class="p">])</span>
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/etc/hadoop/core-site.xml&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xml&#39;</span><span class="p">][</span><span class="s">&#39;core-site&#39;</span><span class="p">])</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/etc/hadoop/hdfs-site.xml&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xml&#39;</span><span class="p">][</span><span class="s">&#39;hdfs-site&#39;</span><span class="p">])</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/etc/hadoop/mapred-site.xml&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;xml&#39;</span><span class="p">][</span><span class="s">&#39;mapred-site&#39;</span><span class="p">])</span>
         <span class="n">fl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">fl</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s">&#39;/tmp/savanna-hadoop-init.sh&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
@@ -551,6 +614,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

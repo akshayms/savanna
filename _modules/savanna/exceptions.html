@@ -208,6 +208,13 @@
                        <span class="s">&quot;specified&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;REQUIRED_PARAM_MISSED&quot;</span>
 
+</div>
+<div class="viewcode-block" id="AssociatedNodeTemplateTerminationException"><a class="viewcode-back" href="../../api/savanna.exceptions.html#savanna.exceptions.AssociatedNodeTemplateTerminationException">[docs]</a><span class="k">class</span> <span class="nc">AssociatedNodeTemplateTerminationException</span><span class="p">(</span><span class="n">SavannaException</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;The are active nodes created using NodeTemplate &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span>
+                        <span class="s">&quot; you trying to terminate&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;ASSOCIATED_NODE_TEMPLATE_TERMINATION&quot;</span>
+
 
 <span class="c">## NodeTypes operations exceptions</span>
 </div>
@@ -241,6 +248,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

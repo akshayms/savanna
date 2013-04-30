@@ -197,7 +197,7 @@
         <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">validate_func</span><span class="p">(</span><span class="n">api_u</span><span class="o">.</span><span class="n">request_data</span><span class="p">())</span>
+                <span class="n">validate_func</span><span class="p">(</span><span class="n">api_u</span><span class="o">.</span><span class="n">request_data</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">jsonschema</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">e</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="s">&quot;VALIDATION_ERROR&quot;</span>
                 <span class="k">return</span> <span class="n">api_u</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
@@ -217,12 +217,16 @@
     <span class="k">return</span> <span class="n">decorator</span>
 
 </div>
-<div class="viewcode-block" id="exists_by_id"><a class="viewcode-back" href="../../../api/savanna.service.validation.html#savanna.service.validation.exists_by_id">[docs]</a><span class="k">def</span> <span class="nf">exists_by_id</span><span class="p">(</span><span class="n">service_func</span><span class="p">,</span> <span class="n">id_prop</span><span class="p">):</span>
+<div class="viewcode-block" id="exists_by_id"><a class="viewcode-back" href="../../../api/savanna.service.validation.html#savanna.service.validation.exists_by_id">[docs]</a><span class="k">def</span> <span class="nf">exists_by_id</span><span class="p">(</span><span class="n">service_func</span><span class="p">,</span> <span class="n">id_prop</span><span class="p">,</span> <span class="n">tenant_specific</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">service_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="n">id_prop</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">tenant_specific</span><span class="p">:</span>
+                    <span class="n">tenant</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;X-Tenant-Id&#39;</span><span class="p">]</span>
+                    <span class="n">service_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="n">id_prop</span><span class="p">],</span> <span class="n">tenant_id</span><span class="o">=</span><span class="n">tenant</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">service_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="n">id_prop</span><span class="p">])</span>
                 <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ex</span><span class="o">.</span><span class="n">NotFoundException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">e</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">id_prop</span><span class="p">])</span>
@@ -372,6 +376,12 @@
     <span class="k">if</span> <span class="n">need_inst</span> <span class="o">&gt;</span> <span class="n">all_inst</span> <span class="ow">or</span> <span class="n">need_vcpus</span> <span class="o">&gt;</span> <span class="n">all_vcpus</span> <span class="ow">or</span> <span class="n">need_ram</span> <span class="o">&gt;</span> <span class="n">all_ram</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ex</span><span class="o">.</span><span class="n">NotEnoughResourcesException</span><span class="p">([</span><span class="n">all_inst</span><span class="p">,</span> <span class="n">all_vcpus</span><span class="p">,</span> <span class="n">all_ram</span><span class="p">,</span>
                                               <span class="n">need_inst</span><span class="p">,</span> <span class="n">need_vcpus</span><span class="p">,</span> <span class="n">need_ram</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="validate_node_template_terminate"><a class="viewcode-back" href="../../../api/savanna.service.validation.html#savanna.service.validation.validate_node_template_terminate">[docs]</a><span class="k">def</span> <span class="nf">validate_node_template_terminate</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">template_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">api</span><span class="o">.</span><span class="n">get_node_template_nodes_count</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">template_id</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_node_template</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">template_id</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">raise</span> <span class="n">ex</span><span class="o">.</span><span class="n">AssociatedNodeTemplateTerminationException</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -397,6 +407,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2013, Mirantis Inc..
+      Last updated on Tue Apr 30 02:58:54 2013, commit 1744656.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
