@@ -1,7 +1,0 @@
-The :mod:`savanna.version` Module
-=================================
-
-.. automodule:: savanna.version
-  :members:
-  :undoc-members:
-  :show-inheritance:
