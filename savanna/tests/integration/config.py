@@ -1,6 +1,6 @@
-OS_USERNAME = "admin"
+OS_USERNAME = "qa-user"
 OS_PASSWORD = "swordfish"
-OS_TENANT_NAME = "admin"
+OS_TENANT_NAME = "qa"
 OS_AUTH_URL = "http://172.18.79.139:35357/v2.0/"
 SAVANNA_HOST = '172.18.79.226'
 SAVANNA_PORT = '8080'

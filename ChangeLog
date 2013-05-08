@@ -1,3 +1,9 @@
+commit 3848ef69620d9f7c1c3939a57f419c8f97d1af85
+Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
+Date:   Tue Apr 30 21:50:15 2013 +0400
+
+    run_fast_checks
+
 commit 7baf66a06ff7f0672c1e73545e45859676b5b32f
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Mon Apr 29 21:58:12 2013 +0400
