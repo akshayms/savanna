@@ -33,9 +33,9 @@ class TestValidationApiForClusters(ValidationTestCase):
 
         try:
             cluster_body = self.make_cluster_body(
-                'QA-ylobankov', 'master_node.medium', 'worker_node.medium', 3)
+                'QA-cluster', 'master_node.medium', 'worker_node.medium', 3)
             get_cluster_body = self._get_body_cluster(
-                'QA-ylobankov', 'master_node.medium', 'worker_node.medium', 3)
+                'QA-cluster', 'master_node.medium', 'worker_node.medium', 3)
 
             self._crud_object(cluster_body, get_cluster_body, self.url_cluster)
 

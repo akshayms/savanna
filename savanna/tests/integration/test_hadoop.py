@@ -86,13 +86,14 @@ class TestForHadoop(ValidationTestCase):
             object_id = data.pop(u'id')
             get_body = self._get_body_cluster(
                 cluster_name, nt_name_master, nt_name_worker, number_workers)
-            get_data = self._get_object(self.url_cl_wj, object_id, 200)
+            get_data = self._get_object(self.url_cl_slash, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']
             self._response_cluster(
-                get_body, get_data, self.url_cl_wj, object_id)
+                get_body, get_data, self.url_cl_slash, object_id)
 
-            get_data = self._get_object(self.url_cl_wj, object_id, 200, True)
+            get_data = self._get_object(
+                self.url_cl_slash, object_id, 200, True)
             get_data = get_data['cluster']
             namenode = get_data[u'service_urls'][u'namenode']
             jobtracker = get_data[u'service_urls'][u'jobtracker']
@@ -129,7 +130,7 @@ class TestForHadoop(ValidationTestCase):
             self.fail("failure:" + e.message)
 
         finally:
-            self._del_object(self.url_cl_wj, object_id, 204)
+            self._del_object(self.url_cl_slash, object_id, 204)
 
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(

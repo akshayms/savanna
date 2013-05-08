@@ -51,13 +51,12 @@ class ValidationTestCase(unittest.TestCase):
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = self.keystone.tenant_id
         self.token = self.keystone.auth_token
-        self.flavor_id = 'm1.small'
-        #'m1.medium'
+        self.flavor_id = 'm1.medium'
         self.image_id = SAVANNA_IMAGE_ID
         self.url_nt = '/v0.2/%s/node-templates' % self.tenant
-        self.url_nt_wj = '/v0.2/%s/node-templates/' % self.tenant
+        self.url_nt_slash = '/v0.2/%s/node-templates/' % self.tenant
         self.url_cluster = '/v0.2/%s/clusters' % self.tenant
-        self.url_cl_wj = '/v0.2/%s/clusters/' % self.tenant
+        self.url_cl_slash = '/v0.2/%s/clusters/' % self.tenant
 
 #----------------------CRUD_comands--------------------------------------------
 
@@ -211,7 +210,7 @@ class ValidationTestCase(unittest.TestCase):
     def delete_node_template(self, data):
         data = data['node_template']
         object_id = data.pop(u'id')
-        self._del_object(self.url_nt_wj, object_id, 204)
+        self._del_object(self.url_nt_slash, object_id, 204)
 
     def _crud_object(self, body, get_body, url):
         data = self._post_object(url, body, 202)
@@ -219,7 +218,8 @@ class ValidationTestCase(unittest.TestCase):
         object_id = None
         try:
             obj = 'node_template' if url == self.url_nt else 'cluster'
-            get_url = self.url_nt_wj if url == self.url_nt else self.url_cl_wj
+            get_url = self.url_nt_slash if url == self.url_nt \
+                else self.url_cl_slash
             data = data['%s' % obj]
             object_id = data.pop(u'id')
             self.assertEquals(data, get_body)
