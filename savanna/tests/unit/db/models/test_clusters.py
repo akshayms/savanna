@@ -13,27 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import savanna.openstack.common.exception as ex
+from savanna.context import ctx
+import savanna.db.models as m
+from savanna.tests.unit.db.models.base import ModelTestCase
 
 
-class SavannaException(ex.ApiError):
-    """Base Exception for the project
+class ClusterModelTest(ModelTestCase):
+    def testCreateCluster(self):
+        session = ctx().session
+        with session.begin():
+            c = m.Cluster('c-1', 't-1', 'p-1', 'hv-1', 's')
+            session.add(c)
 
-    To correctly use this class, inherit from it and define
-    a 'message' and 'code' properties.
-    """
-    message = "An unknown exception occurred"
-    code = "UNKNOWN_EXCEPTION"
+        with session.begin():
+            res = session.query(m.Cluster).filter_by().first()
 
-    def __str__(self):
-        return self.message
-
-
-class NotFoundException(SavannaException):
-
-    # It could be a various property of object which was not found
-    value = None
-
-    def __init__(self, value):
-        self.code = "NOT_FOUND"
-        self.value = value
+            self.assertIsValidModelObject(res)
