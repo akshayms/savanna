@@ -17,29 +17,36 @@ from os import getcwd
 import paramiko
 from re import search
 from savanna.tests.integration.db import ValidationTestCase
+from savanna.service.cluster_ops import _setup_ssh_connection
 from telnetlib import Telnet
+import json
+from novaclient import client as nc
 
 
-def _setup_ssh_connection(host, ssh):
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(
-        host,
-        username='root',
-        password='swordfish'
-    )
+# def _setup_ssh_connection(host, ssh):
+#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#     ssh.connect(
+#         host,
+#         username='root',
+#         password='swordfish'
+#     )
 
 
-def _open_channel_and_execute(ssh, cmd):
+def _open_channel_and_execute(ssh, cmd, print_output):
     chan = ssh.get_transport().open_session()
     chan.exec_command(cmd)
+    stdout = chan.makefile('rb', -1)
+    chan.set_combine_stderr(True)
+    if print_output:
+        return stdout.read()
     return chan.recv_exit_status()
 
 
-def _execute_command_on_node(host, cmd):
+def _execute_command_on_node(host, cmd, print_output=False):
     ssh = paramiko.SSHClient()
     try:
         _setup_ssh_connection(host, ssh)
-        return _open_channel_and_execute(ssh, cmd)
+        return _open_channel_and_execute(ssh, cmd, print_output)
     finally:
         ssh.close()
 
@@ -50,7 +57,6 @@ def _execute_transfer_on_node(host, locfile, nodefile):
         transport.connect(username='root', password='swordfish')
         sftp = paramiko.SFTPClient.from_transport(transport)
         sftp.put(locfile, nodefile)
-
     finally:
         sftp.close()
         transport.close()
@@ -62,7 +68,6 @@ def _execute_transfer_from_node(host, nodefile, localfile):
         transport.connect(username='root', password='swordfish')
         sftp = paramiko.SFTPClient.from_transport(transport)
         sftp.get(nodefile, localfile)
-
     finally:
         sftp.close()
         transport.close()
@@ -97,7 +102,23 @@ class TestForHadoop(ValidationTestCase):
             get_data = get_data['cluster']
             namenode = get_data[u'service_urls'][u'namenode']
             jobtracker = get_data[u'service_urls'][u'jobtracker']
-
+            nodes = get_data[u'nodes']
+            worker_ips = []
+            nova = nc.Client(version="2",
+                             username='admin',
+                             api_key="swordfish",
+                             auth_url="http://172.18.79.139:35357/v2.0/",
+                             project_id="admin"
+            )
+            for node in nodes:
+                if node[u'node_template'][u'name'] == nt_name_worker:
+                    v = nova.servers.get("%s" % node[u'vm_id'])
+                    for network, address in v.addresses.items():
+                        instance_ips = json.dumps(address)
+                        instance_ips = json.loads(instance_ips)
+                    for instance_ip in instance_ips:
+                        if instance_ip[u'addr'][0:3] == "172":
+                            worker_ips.append(instance_ip[u'addr'])
             p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
             m = search(p, namenode)
             t = search(p, jobtracker)
@@ -110,24 +131,59 @@ class TestForHadoop(ValidationTestCase):
             Telnet(str(jobtracker_ip), str(jobtracker_port))
 
             this_dir = getcwd()
-            _execute_transfer_on_node(
-                str(namenode_ip), '%s/integration/script.sh' % this_dir,
-                '/script.sh')
+            try:
+                _execute_transfer_on_node(
+                    str(namenode_ip), '%s/integration/script.sh' % this_dir,
+                    'script.sh')
+                _execute_command_on_node(
+                    namenode_ip, "chmod 777 script.sh")
+            except Exception as e:
+                self.fail("failure in transfer script" + e.message)
+            try:
+                self.assertEquals(
+                    _execute_command_on_node(
+                        namenode_ip, "./script.sh pi -nc %s" % number_workers),
+                    0)
+            except Exception as e:
+                _execute_transfer_from_node(
+                    namenode_ip,
+                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
+                self.fail("run pi script is failure" + e.message)
+            try:
+                self.assertEqual(int(_execute_command_on_node(
+                        namenode_ip, "./script.sh lt", True)), number_workers)
+                job_name = _execute_command_on_node(
+                    namenode_ip, "./script.sh gn", True)
+            except Exception as e:
+                self.fail(
+                    "compare number active trackers or get job name is failure"
+                    + e.message)
+            try:
+                for worker_ip in worker_ips:
+                    _execute_transfer_on_node(
+                        str(worker_ip),
+                        '%s/integration/script.sh' % this_dir, 'script.sh')
+                    _execute_command_on_node(worker_ip, "chmod 777 script.sh")
+                    self.assertEquals(
+                        _execute_command_on_node(
+                            worker_ip,
+                            "./script.sh ed -jn %s" % job_name), 0)
+            except Exception as e:
+                self.fail("get run in active trackers is failure" + e.message)
 
             try:
                 self.assertEquals(
                     _execute_command_on_node(
-                        namenode_ip,
-                        "cd .. && chmod 777 script.sh && ./script.sh"), 0)
-
+                        namenode_ip, "./script.sh mr"),
+                    0)
             except Exception as e:
                 _execute_transfer_from_node(
-                    namenode_ip, '/outputTestMapReduce/log.txt',
-                    '%s' % this_dir)
-                self.fail("run script is failure" + e.message)
+                    namenode_ip,
+                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
+                self.fail("run hdfs script is failure" + e.message)
 
         except Exception as e:
-            self.fail("failure:" + e.message)
+            self.fail(e.message)
 
         finally:
             self._del_object(self.url_cl_slash, object_id, 204)
@@ -142,11 +198,11 @@ class TestForHadoop(ValidationTestCase):
 
         try:
             self._hadoop_testing(
-                'QA-hadoop', 'master_node.medium', 'worker_node.medium', 2)
+                'QA-hadoop', 'master_node.medium', 'worker_node.medium', 3)
 
         except Exception as e:
-            self.fail("failure:" + str(e))
+            self.fail(e.message)
 
         finally:
-            self.delete_node_template(data_nt_master)
-            self.delete_node_template(data_nt_worker)
+           self.delete_node_template(data_nt_master)
+           self.delete_node_template(data_nt_worker)

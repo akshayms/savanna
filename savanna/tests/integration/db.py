@@ -51,7 +51,7 @@ class ValidationTestCase(unittest.TestCase):
         self.baseurl = 'http://' + self.host + ':' + self.port
         self.tenant = self.keystone.tenant_id
         self.token = self.keystone.auth_token
-        self.flavor_id = 'm1.medium'
+        self.flavor_id = 'm1.small'
         self.image_id = SAVANNA_IMAGE_ID
         self.url_nt = '/v0.2/%s/node-templates' % self.tenant
         self.url_nt_slash = '/v0.2/%s/node-templates/' % self.tenant
