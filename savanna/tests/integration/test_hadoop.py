@@ -153,6 +153,7 @@ class TestHadoop(ITestCase):
             try:
                 self.assertEqual(int(_execute_command_on_node(
                     namenode_ip, "./script.sh lt", True)), number_workers)
+                #TODO vrovachev: delete sleep from script after fix bug 1183387
 
             except Exception as e:
                 self.fail(

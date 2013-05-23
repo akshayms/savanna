@@ -93,6 +93,7 @@ su -c "cd $directory && hadoop job -list all | tail -n1" hadoop | awk '{print $1
 }
 
 get_list_active_trackers() {
+sleep 30 &&
 su -c "cd $directory && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
 }
 
