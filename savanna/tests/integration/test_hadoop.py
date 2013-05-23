@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+from novaclient import client as nc
 from os import getcwd
 import paramiko
 from re import search
+from savanna.service.cluster_ops import _setup_ssh_connection
 from savanna.tests.integration.db import ITestCase
 import savanna.tests.integration.parameters as param
-from savanna.service.cluster_ops import _setup_ssh_connection
 from telnetlib import Telnet
-import json
-from novaclient import client as nc
 
 
 def _open_transport_chanel(transport):
@@ -123,42 +123,54 @@ class TestHadoop(ITestCase):
                         before_ip = "172" if param.ALLOW_CLUSTER_OPS else "10."
                         if instance_ip[u'addr'][0:3] == before_ip:
                             worker_ips.append(instance_ip[u'addr'])
+
             p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
             m = search(p, namenode)
             t = search(p, jobtracker)
+
             namenode_ip = m.group('host')
             namenode_port = m.group('port')
             jobtracker_ip = t.group('host')
             jobtracker_port = t.group('port')
+
             try:
                 Telnet(str(namenode_ip), str(namenode_port))
                 Telnet(str(jobtracker_ip), str(jobtracker_port))
+
             except Exception as e:
                 self.fail("telnet nn or jt is failure" + e.message)
+
             this_dir = getcwd()
+
             try:
                 _transfer_script_to_node(namenode_ip, this_dir)
                 for worker_ip in worker_ips:
                     _transfer_script_to_node(worker_ip, this_dir)
+
             except Exception as e:
                 self.fail("failure in transfer script" + e.message)
+
             try:
                 self.assertEqual(int(_execute_command_on_node(
-                        namenode_ip, "./script.sh lt", True)), number_workers)
+                    namenode_ip, "./script.sh lt", True)), number_workers)
+
             except Exception as e:
                 self.fail(
                     "compare number active trackers is failure"
                     + e.message)
+
             try:
                 self.assertEquals(
                     _execute_command_on_node(
                         namenode_ip, "./script.sh pi -nc %s" % number_workers),
                     0)
+
             except Exception as e:
                 _execute_transfer_from_node(
                     namenode_ip,
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
                 self.fail("run pi script is failure" + e.message)
+
             try:
                 job_name = _execute_command_on_node(
                     namenode_ip, "./script.sh gn", True)
@@ -167,14 +179,15 @@ class TestHadoop(ITestCase):
                         _execute_command_on_node(
                             worker_ip,
                             "./script.sh ed -jn %s" % job_name), 0)
+
             except Exception as e:
                 self.fail("get run in active trackers is failure" + e.message)
 
             try:
                 self.assertEquals(
                     _execute_command_on_node(
-                        namenode_ip, "./script.sh mr"),
-                    0)
+                        namenode_ip, "./script.sh mr"), 0)
+
             except Exception as e:
                 _execute_transfer_from_node(
                     namenode_ip,
@@ -203,5 +216,5 @@ class TestHadoop(ITestCase):
             self.fail(e.message)
 
         finally:
-           self.delete_node_template(data_nt_master)
-           self.delete_node_template(data_nt_worker)
+            self.delete_node_template(data_nt_master)
+            self.delete_node_template(data_nt_worker)

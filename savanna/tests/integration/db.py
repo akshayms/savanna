@@ -232,7 +232,8 @@ class ITestCase(unittest.TestCase):
         while get_data[u'status'] != u'Active':
             if i > int(param.TIMEOUT) * 6:
                 self.fail(
-                    'cluster not Starting -> Active, passed 10 minutes')
+                    'cluster not Starting -> Active, passed %d minutes'
+                    % param.TIMEOUT)
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']

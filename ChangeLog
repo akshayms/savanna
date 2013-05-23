@@ -1,3 +1,21 @@
+commit b3d665789699c8bc5d5dc7a74dfc0fb35ffbcb69
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu May 23 16:54:55 2013 +0400
+
+    add allow_cl_ops in parametrs
+
+commit cc27514f73e7d7c4152e4b4ad97eef9cd73b01d8
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu May 23 15:42:18 2013 +0400
+
+    add new changes in integration tests
+
+commit 5e896de078e62fc5b201b8f7915e9acbdf04763d
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Wed May 22 18:50:44 2013 +0400
+
+    add new i tests
+
 commit dddc244e567ba1766efc23ded3080bccf9d12507
 Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
 Date:   Wed May 8 14:57:01 2013 +0400
