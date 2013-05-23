@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.tests.integration.db import ValidationTestCase
+from savanna.tests.integration.db import ITestCase
 from telnetlib import Telnet
 
 
-class TestValidationApiForNodetemplates(ValidationTestCase):
+class ITestNodeTemplateApi(ITestCase):
 
     def setUp(self):
-        super(TestValidationApiForNodetemplates, self).setUp()
+        super(ITestNodeTemplateApi, self).setUp()
         Telnet(self.host, self.port)
 
     def test_crud_nt_jtnn(self):

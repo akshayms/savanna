@@ -17,46 +17,37 @@ import eventlet
 import json
 from keystoneclient.v2_0 import Client as keystone_client
 import requests
-import savanna.openstack.common.importutils as importutils
+import savanna.tests.integration.parameters as param
 import unittest
 
-_CONF = importutils.try_import("savanna.tests.integration.config")
 
-
-def _get_conf(key, default):
-    return getattr(_CONF, key) if _CONF and hasattr(_CONF, key) else default
-
-OS_USERNAME = _get_conf("OS_USERNAME", "admin")
-OS_PASSWORD = _get_conf("OS_PASSWORD", "nova")
-OS_TENANT_NAME = _get_conf("OS_TENANT_NAME", "admin")
-OS_AUTH_URL = _get_conf("OS_AUTH_URL", "http://localhost:35357/v2.0/")
-SAVANNA_HOST = _get_conf("SAVANNA_HOST", "192.168.1.1")
-SAVANNA_PORT = _get_conf("SAVANNA_PORT", "8080")
-SAVANNA_IMAGE_ID = _get_conf("SAVANNA_IMAGE_ID", "42")
-
-
-class ValidationTestCase(unittest.TestCase):
-
-    keystone = keystone_client(
-        username=OS_USERNAME,
-        password=OS_PASSWORD,
-        tenant_name=OS_TENANT_NAME,
-        auth_url=OS_AUTH_URL
-    )
+class ITestCase(unittest.TestCase):
 
     def setUp(self):
-        self.host = SAVANNA_HOST
+        self.port = param.SAVANNA_PORT
+        self.host = param.SAVANNA_HOST
+
         self.maxDiff = None
-        self.port = SAVANNA_PORT
+
         self.baseurl = 'http://' + self.host + ':' + self.port
+
+        self.keystone = keystone_client(
+            username=param.OS_USERNAME,
+            password=param.OS_PASSWORD,
+            tenant_name=param.OS_TENANT_NAME,
+            auth_url=param.OS_AUTH_URL
+        )
+
         self.tenant = self.keystone.tenant_id
         self.token = self.keystone.auth_token
-        self.flavor_id = 'm1.small'
-        self.image_id = SAVANNA_IMAGE_ID
+
+        self.flavor_id = param.FLAVOR_ID
+        self.image_id = param.IMAGE_ID
+
         self.url_nt = '/v0.2/%s/node-templates' % self.tenant
-        self.url_nt_slash = '/v0.2/%s/node-templates/' % self.tenant
+        self.url_nt_with_slash = '/v0.2/%s/node-templates/' % self.tenant
         self.url_cluster = '/v0.2/%s/clusters' % self.tenant
-        self.url_cl_slash = '/v0.2/%s/clusters/' % self.tenant
+        self.url_cl_with_slash = '/v0.2/%s/clusters/' % self.tenant
 
 #----------------------CRUD_comands--------------------------------------------
 
@@ -129,7 +120,7 @@ class ValidationTestCase(unittest.TestCase):
         tracker = 'job' if nt_type in ['JT+NN', 'JT'] else 'task'
         processes_name = nt_type
         nt = {
-            u'name': u'%s' % name,
+            u'name': u'%s.%s' % (name, param.FLAVOR_ID),
             u'%s_node' % node: {u'heap_size': u'%d' % hs1},
             u'%s_tracker' % tracker: {u'heap_size': u'%d' % hs2},
             u'node_type': {
@@ -144,7 +135,6 @@ class ValidationTestCase(unittest.TestCase):
         elif nt_type == 'JT':
             del nt[u'%s_node' % node]
             nt[u'node_type'][u'processes'] = [u'%s_tracker' % tracker]
-        print("GET_BODY!!!!!!!!!!!" + str(nt))
         return nt
 
     def _get_body_cluster(self, name, master_name, worker_name, node_number):
@@ -155,8 +145,8 @@ class ValidationTestCase(unittest.TestCase):
             u'base_image_id': u'%s' % self.image_id,
             u'node_templates':
             {
-                u'%s' % master_name: 1,
-                u'%s' % worker_name: node_number
+                u'%s.%s' % (master_name, param.FLAVOR_ID): 1,
+                u'%s.%s' % (worker_name, param.FLAVOR_ID): node_number
             },
             u'nodes': []
         }
@@ -167,22 +157,20 @@ class ValidationTestCase(unittest.TestCase):
         data['node_template'][new_field] = val
         return data
 
-    def make_nt(self, nt_name, node_type, node1_size, node2_size):
+    def make_nt(self, nt_name, node_type, jt_heap_size, nn_heap_size):
         nt = dict(
             node_template=dict(
-                name=nt_name,
+                name='%s.%s' % (nt_name, param.FLAVOR_ID),
                 node_type='JT+NN',
                 flavor_id=self.flavor_id,
                 job_tracker={
-                    'heap_size': '%d' % node1_size
+                    'heap_size': '%d' % jt_heap_size
                 },
                 name_node={
-                    'heap_size': '%d' % node2_size
+                    'heap_size': '%d' % nn_heap_size
                 }
             ))
-        if node_type == 'JT+NN':
-            return nt
-        elif node_type == 'TT+DN':
+        if node_type == 'TT+DN':
             nt['node_template']['node_type'] = 'TT+DN'
             nt = self.change_field_nt(nt, 'job_tracker', 'task_tracker')
             nt = self.change_field_nt(nt, 'name_node', 'data_node')
@@ -201,8 +189,9 @@ class ValidationTestCase(unittest.TestCase):
                 name=cluster_name,
                 base_image_id=self.image_id,
                 node_templates={
-                    '%s' % name_master_node: 1,
-                    '%s' % name_worker_node: number_workers
+                    '%s.%s' % (name_master_node, param.FLAVOR_ID): 1,
+                    '%s.%s' %
+                    (name_worker_node, param.FLAVOR_ID): number_workers
                 }
             ))
         return body
@@ -210,7 +199,7 @@ class ValidationTestCase(unittest.TestCase):
     def delete_node_template(self, data):
         data = data['node_template']
         object_id = data.pop(u'id')
-        self._del_object(self.url_nt_slash, object_id, 204)
+        self._del_object(self.url_nt_with_slash, object_id, 204)
 
     def _crud_object(self, body, get_body, url):
         data = self._post_object(url, body, 202)
@@ -218,8 +207,8 @@ class ValidationTestCase(unittest.TestCase):
         object_id = None
         try:
             obj = 'node_template' if url == self.url_nt else 'cluster'
-            get_url = self.url_nt_slash if url == self.url_nt \
-                else self.url_cl_slash
+            get_url = self.url_nt_with_slash if url == self.url_nt \
+                else self.url_cl_with_slash
             data = data['%s' % obj]
             object_id = data.pop(u'id')
             self.assertEquals(data, get_body)
@@ -227,22 +216,23 @@ class ValidationTestCase(unittest.TestCase):
             get_data = get_data['%s' % obj]
             del get_data[u'id']
             if obj == 'cluster':
-                self._response_cluster(get_body, get_data, get_url, object_id)
+                self._await_cluster_active(
+                    get_body, get_data, get_url, object_id)
         except Exception as e:
             self.fail('failure:' + str(e))
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
 
-    def _response_cluster(self, get_body, get_data, get_url, object_id):
+    def _await_cluster_active(self, get_body, get_data, get_url, object_id):
         get_body[u'status'] = u'Active'
         del get_body[u'service_urls']
         del get_body[u'nodes']
         i = 1
         while get_data[u'status'] != u'Active':
-            if i > 60:
+            if i > int(param.TIMEOUT) * 6:
                 self.fail(
-                    "cluster not Starting -> Active, remaining 10 minutes")
+                    'cluster not Starting -> Active, passed 10 minutes')
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']

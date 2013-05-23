@@ -13,48 +13,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#import eventlet
-from savanna.tests.integration.db import ValidationTestCase
+from savanna.tests.integration.db import ITestCase
+import savanna.tests.integration.parameters as param
 from telnetlib import Telnet
 
 
-class TestValidationApiForClusters(ValidationTestCase):
+class ITestClusterApi(ITestCase):
 
     def setUp(self):
-        super(TestValidationApiForClusters, self).setUp()
+        super(ITestClusterApi, self).setUp()
         Telnet(self.host, self.port)
 
-    # def test_crud_operation_for_cluster(self):
-    #     nt_body = self.make_nt('master_node.medium', 'JT+NN', 1234, 2345)
-    #     data_nt_master = self._post_object(self.url_nt, nt_body, 202)
-    #
-    #     nt_body = self.make_nt('worker_node.medium', 'TT+DN', 1234, 2345)
-    #     data_nt_worker = self._post_object(self.url_nt, nt_body, 202)
-    #
-    #     try:
-    #         cluster_body = self.make_cluster_body(
-    #             'QA-cluster', 'master_node.medium', 'worker_node.medium', 3)
-    #         get_cluster_body = self._get_body_cluster(
-    #             'QA-cluster', 'master_node.medium', 'worker_node.medium', 3)
-    #
-    #         self._crud_object(cluster_body, get_cluster_body, self.url_cluster)
-    #
-    #     finally:
-    #         self.delete_node_template(data_nt_master)
-    #         self.delete_node_template(data_nt_worker)
+    def test_cluster_crud_operations(self):
+        nt_body = self.make_nt('master-node', 'JT+NN', 1234, 2345)
+        data_nt_master = self._post_object(self.url_nt, nt_body, 202)
 
-        # nt_body = self.make_nt('master_node.medium', 'JT+NN', 1234, 2345)
-        # data_nt_master = self._post_object(self.url_nt, nt_body, 202)
-        #
-        # nt_body = self.make_nt('worker_node.medium', 'TT+DN', 1234, 2345)
-        # data_nt_worker = self._post_object(self.url_nt, nt_body, 202)
-        #
-        # cluster_body = self.make_cluster_body(
-        #     'QA-ylobankov', 'master_node.medium', 'worker_node.medium', 2)
-        #
-        # self._post_object(self.url_cluster, cluster_body, 202)
-        #
-        # # eventlet.sleep(300)
-        #
-        # self.delete_node_template(data_nt_master)
-        # self.delete_node_template(data_nt_worker)
+        nt_body = self.make_nt('worker-node', 'TT+DN', 1234, 2345)
+        data_nt_worker = self._post_object(self.url_nt, nt_body, 202)
+
+        try:
+            cluster_body = self.make_cluster_body(
+                param.CLUSTER_NAME_CRUD, 'master-node',
+                'worker-node', 2)
+            get_cluster_body = self._get_body_cluster(
+                param.CLUSTER_NAME_CRUD, 'master-node',
+                'worker-node', 2)
+
+            self._crud_object(cluster_body, get_cluster_body, self.url_cluster)
+
+        finally:
+            self.delete_node_template(data_nt_master)
+            self.delete_node_template(data_nt_worker)

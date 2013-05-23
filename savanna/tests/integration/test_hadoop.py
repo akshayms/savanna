@@ -16,20 +16,40 @@
 from os import getcwd
 import paramiko
 from re import search
-from savanna.tests.integration.db import ValidationTestCase
+from savanna.tests.integration.db import ITestCase
+import savanna.tests.integration.parameters as param
 from savanna.service.cluster_ops import _setup_ssh_connection
 from telnetlib import Telnet
 import json
 from novaclient import client as nc
 
 
-# def _setup_ssh_connection(host, ssh):
-#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-#     ssh.connect(
-#         host,
-#         username='root',
-#         password='swordfish'
-#     )
+def _open_transport_chanel(transport):
+    transport.connect(
+        username=param.NODE_USERNAME, password=param.NODE_PASSWORD)
+    return paramiko.SFTPClient.from_transport(transport)
+
+
+def _execute_transfer_to_node(host, locfile, nodefile):
+    try:
+        transport = paramiko.Transport(host)
+        sftp = _open_transport_chanel(transport)
+        sftp.put(locfile, nodefile)
+
+    finally:
+        sftp.close()
+        transport.close()
+
+
+def _execute_transfer_from_node(host, nodefile, localfile):
+    try:
+        transport = paramiko.Transport(host)
+        sftp = _open_transport_chanel(transport)
+        sftp.get(nodefile, localfile)
+
+    finally:
+        sftp.close()
+        transport.close()
 
 
 def _open_channel_and_execute(ssh, cmd, print_output):
@@ -51,32 +71,16 @@ def _execute_command_on_node(host, cmd, print_output=False):
         ssh.close()
 
 
-def _execute_transfer_on_node(host, locfile, nodefile):
-    try:
-        transport = paramiko.Transport(host)
-        transport.connect(username='root', password='swordfish')
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        sftp.put(locfile, nodefile)
-    finally:
-        sftp.close()
-        transport.close()
+def _transfer_script_to_node(host, directory):
+    _execute_transfer_to_node(
+        str(host), '%s/integration/script.sh' % directory, 'script.sh')
+    _execute_command_on_node(str(host), "chmod 777 script.sh")
 
 
-def _execute_transfer_from_node(host, nodefile, localfile):
-    try:
-        transport = paramiko.Transport(host)
-        transport.connect(username='root', password='swordfish')
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        sftp.get(nodefile, localfile)
-    finally:
-        sftp.close()
-        transport.close()
-
-
-class TestForHadoop(ValidationTestCase):
+class TestHadoop(ITestCase):
 
     def setUp(self):
-        super(TestForHadoop, self).setUp()
+        super(TestHadoop, self).setUp()
         Telnet(self.host, self.port)
 
     def _hadoop_testing(self, cluster_name, nt_name_master,
@@ -91,25 +95,24 @@ class TestForHadoop(ValidationTestCase):
             object_id = data.pop(u'id')
             get_body = self._get_body_cluster(
                 cluster_name, nt_name_master, nt_name_worker, number_workers)
-            get_data = self._get_object(self.url_cl_slash, object_id, 200)
+            get_data = self._get_object(self.url_cl_with_slash, object_id, 200)
             get_data = get_data['cluster']
             del get_data[u'id']
-            self._response_cluster(
-                get_body, get_data, self.url_cl_slash, object_id)
+            self._await_cluster_active(
+                get_body, get_data, self.url_cl_with_slash, object_id)
 
             get_data = self._get_object(
-                self.url_cl_slash, object_id, 200, True)
+                self.url_cl_with_slash, object_id, 200, True)
             get_data = get_data['cluster']
             namenode = get_data[u'service_urls'][u'namenode']
             jobtracker = get_data[u'service_urls'][u'jobtracker']
             nodes = get_data[u'nodes']
             worker_ips = []
             nova = nc.Client(version="2",
-                             username='admin',
-                             api_key="swordfish",
-                             auth_url="http://172.18.79.139:35357/v2.0/",
-                             project_id="admin"
-            )
+                             username=param.OS_USERNAME,
+                             api_key=param.OS_PASSWORD,
+                             auth_url=param.OS_AUTH_URL,
+                             project_id=param.OS_TENANT_NAME)
             for node in nodes:
                 if node[u'node_template'][u'name'] == nt_name_worker:
                     v = nova.servers.get("%s" % node[u'vm_id'])
@@ -126,19 +129,25 @@ class TestForHadoop(ValidationTestCase):
             namenode_port = m.group('port')
             jobtracker_ip = t.group('host')
             jobtracker_port = t.group('port')
-
-            Telnet(str(namenode_ip), str(namenode_port))
-            Telnet(str(jobtracker_ip), str(jobtracker_port))
-
+            try:
+                Telnet(str(namenode_ip), str(namenode_port))
+                Telnet(str(jobtracker_ip), str(jobtracker_port))
+            except Exception as e:
+                self.fail("telnet nn or jt is failure" + e.message)
             this_dir = getcwd()
             try:
-                _execute_transfer_on_node(
-                    str(namenode_ip), '%s/integration/script.sh' % this_dir,
-                    'script.sh')
-                _execute_command_on_node(
-                    namenode_ip, "chmod 777 script.sh")
+                _transfer_script_to_node(namenode_ip, this_dir)
+                for worker_ip in worker_ips:
+                    _transfer_script_to_node(worker_ip, this_dir)
             except Exception as e:
                 self.fail("failure in transfer script" + e.message)
+            try:
+                self.assertEqual(int(_execute_command_on_node(
+                        namenode_ip, "./script.sh lt", True)), number_workers)
+            except Exception as e:
+                self.fail(
+                    "compare number active trackers is failure"
+                    + e.message)
             try:
                 self.assertEquals(
                     _execute_command_on_node(
@@ -150,20 +159,9 @@ class TestForHadoop(ValidationTestCase):
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
                 self.fail("run pi script is failure" + e.message)
             try:
-                self.assertEqual(int(_execute_command_on_node(
-                        namenode_ip, "./script.sh lt", True)), number_workers)
                 job_name = _execute_command_on_node(
                     namenode_ip, "./script.sh gn", True)
-            except Exception as e:
-                self.fail(
-                    "compare number active trackers or get job name is failure"
-                    + e.message)
-            try:
                 for worker_ip in worker_ips:
-                    _execute_transfer_on_node(
-                        str(worker_ip),
-                        '%s/integration/script.sh' % this_dir, 'script.sh')
-                    _execute_command_on_node(worker_ip, "chmod 777 script.sh")
                     self.assertEquals(
                         _execute_command_on_node(
                             worker_ip,
@@ -186,7 +184,7 @@ class TestForHadoop(ValidationTestCase):
             self.fail(e.message)
 
         finally:
-            self._del_object(self.url_cl_slash, object_id, 204)
+            self._del_object(self.url_cl_with_slash, object_id, 204)
 
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(
