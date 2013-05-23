@@ -22,5 +22,6 @@ NODE_PASSWORD = _get_conf('NODE_PASSWORD', 'password')
 
 CLUSTER_NAME_CRUD = _get_conf('CLUSTER_NAME_CRUD', 'cluster-crud')
 CLUSTER_NAME_HADOOP = _get_conf('CLUSTER_NAME_HADOOP', 'cluster-hadoop')
+ALLOW_CLUSTER_OPS = _get_conf('ALLOW_CLUSTER_OPS', False)
 
 TIMEOUT = _get_conf('TIMEOUT', '15')

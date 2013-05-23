@@ -8,6 +8,7 @@ SAVANNA_PORT = '8080' # port for Savanna API
 
 IMAGE_ID = '42' # ID for instance image
 FLAVOR_ID = 'abc'
+ALLOW_CLUSTER_OPS = True
 
 NODE_USERNAME = "username" # username for master node
 NODE_PASSWORD = "password" # password for master node

@@ -120,7 +120,8 @@ class TestHadoop(ITestCase):
                         instance_ips = json.dumps(address)
                         instance_ips = json.loads(instance_ips)
                     for instance_ip in instance_ips:
-                        if instance_ip[u'addr'][0:3] == "172":
+                        before_ip = "172" if param.ALLOW_CLUSTER_OPS else "10."
+                        if instance_ip[u'addr'][0:3] == before_ip:
                             worker_ips.append(instance_ip[u'addr'])
             p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
             m = search(p, namenode)
@@ -188,15 +189,15 @@ class TestHadoop(ITestCase):
 
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(
-            self.url_nt, self.make_nt('master_node.medium', 'JT+NN',
+            self.url_nt, self.make_nt('master_node', 'JT+NN',
                                       1234, 2345), 202)
         data_nt_worker = self._post_object(
-            self.url_nt, self.make_nt('worker_node.medium', 'TT+DN',
+            self.url_nt, self.make_nt('worker_node', 'TT+DN',
                                       1234, 2345), 202)
 
         try:
             self._hadoop_testing(
-                'QA-hadoop', 'master_node.medium', 'worker_node.medium', 3)
+                param.CLUSTER_NAME_HADOOP, 'master_node', 'worker_node', 3)
 
         except Exception as e:
             self.fail(e.message)
