@@ -161,18 +161,8 @@ class TestHadoop(ITestCase):
                     + e.message)
 
             try:
-                self.assertEquals(
-                    _execute_command_on_node(
-                        namenode_ip, "./script.sh pi -nc %s" % number_workers),
-                    0)
-
-            except Exception as e:
-                _execute_transfer_from_node(
-                    namenode_ip,
-                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail("run pi script is failure" + e.message)
-
-            try:
+                _execute_command_on_node(
+                        namenode_ip, "./script.sh pi -nc %s" % number_workers)
                 job_name = _execute_command_on_node(
                     namenode_ip, "./script.sh gn", True)
                 for worker_ip in worker_ips:
@@ -180,9 +170,13 @@ class TestHadoop(ITestCase):
                         _execute_command_on_node(
                             worker_ip,
                             "./script.sh ed -jn %s" % job_name), 0)
-
             except Exception as e:
-                self.fail("get run in active trackers is failure" + e.message)
+                _execute_transfer_from_node(
+                    namenode_ip,
+                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
+                self.fail(
+                    "run pi script or get run in active trackers is failure"
+                    + e.message)
 
             try:
                 self.assertEquals(
@@ -198,8 +192,8 @@ class TestHadoop(ITestCase):
         except Exception as e:
             self.fail(e.message)
 
-        finally:
-            self._del_object(self.url_cl_with_slash, object_id, 204)
+        #finally:
+            #self._del_object(self.url_cl_with_slash, object_id, 204)
 
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(
@@ -216,6 +210,6 @@ class TestHadoop(ITestCase):
         except Exception as e:
             self.fail(e.message)
 
-        finally:
-            self.delete_node_template(data_nt_master)
-            self.delete_node_template(data_nt_worker)
+        #finally:
+            #self.delete_node_template(data_nt_master)
+            #self.delete_node_template(data_nt_worker)
