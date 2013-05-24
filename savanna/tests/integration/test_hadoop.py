@@ -138,7 +138,7 @@ class TestHadoop(ITestCase):
                 Telnet(str(jobtracker_ip), str(jobtracker_port))
 
             except Exception as e:
-                self.fail("telnet nn or jt is failure" + e.message)
+                self.fail("telnet nn or jt is failure: " + e.message)
 
             this_dir = getcwd()
 
@@ -148,7 +148,7 @@ class TestHadoop(ITestCase):
                     _transfer_script_to_node(worker_ip, this_dir)
 
             except Exception as e:
-                self.fail("failure in transfer script" + e.message)
+                self.fail("failure in transfer script: " + e.message)
 
             try:
                 self.assertEqual(int(_execute_command_on_node(
@@ -157,7 +157,7 @@ class TestHadoop(ITestCase):
 
             except Exception as e:
                 self.fail(
-                    "compare number active trackers is failure"
+                    "compare number active trackers is failure: "
                     + e.message)
 
             try:
@@ -170,6 +170,7 @@ class TestHadoop(ITestCase):
                         _execute_command_on_node(
                             worker_ip,
                             "./script.sh ed -jn %s" % job_name), 0)
+
             except Exception as e:
                 _execute_transfer_from_node(
                     namenode_ip,
@@ -187,13 +188,13 @@ class TestHadoop(ITestCase):
                 _execute_transfer_from_node(
                     namenode_ip,
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail("run hdfs script is failure" + e.message)
+                self.fail("run hdfs script is failure: " + e.message)
 
         except Exception as e:
             self.fail(e.message)
 
-        #finally:
-            #self._del_object(self.url_cl_with_slash, object_id, 204)
+        finally:
+            self._del_object(self.url_cl_with_slash, object_id, 204)
 
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(
@@ -210,6 +211,6 @@ class TestHadoop(ITestCase):
         except Exception as e:
             self.fail(e.message)
 
-        #finally:
-            #self.delete_node_template(data_nt_master)
-            #self.delete_node_template(data_nt_worker)
+        finally:
+            self.delete_node_template(data_nt_master)
+            self.delete_node_template(data_nt_worker)
