@@ -1,0 +1,16 @@
+[------ dpkg------]
+hadoop install
+[------jps------]
+
+[------netstat------]
+tcp 0 0 0.0.0.0:50090 0.0.0.0:* LISTEN 1000 10930 1913/java tcp 0 0 0.0.0.0:50030 0.0.0.0:* LISTEN 1000 10947 1993/java tcp 0 0 10.155.0.38:8020 0.0.0.0:* LISTEN 1000 10781 1710/java tcp 0 0 10.155.0.38:8021 0.0.0.0:* LISTEN 1000 10935 1993/java tcp 0 0 0.0.0.0:50070 0.0.0.0:* LISTEN 1000 10843 1710/java
+[------test for hdfs------]
+[------start job------]
+Exception in thread "main" java.io.IOException: Error opening job jar: hadoop-examples-1.1.1.jar
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:90)
+Caused by: java.util.zip.ZipException: error in opening zip file
+	at java.util.zip.ZipFile.open(Native Method)
+	at java.util.zip.ZipFile.<init>(ZipFile.java:127)
+	at java.util.jar.JarFile.<init>(JarFile.java:136)
+	at java.util.jar.JarFile.<init>(JarFile.java:73)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:88)

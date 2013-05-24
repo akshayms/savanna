@@ -1,3 +1,34 @@
+commit a9322d73e12f6755449a924eefb7c6cedba7970d
+Merge: ec0d1cc e4c4654
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri May 24 13:24:21 2013 +0400
+
+    merge branch
+
+commit ec0d1cced9d4a4694fd8e4e078061df033dfd3c4
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Fri May 24 13:19:32 2013 +0400
+
+    add new changes in hadoop testing
+
+commit e4c46548ae52d63cdc6f1146213a3a9df72c835b
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Fri May 24 13:15:55 2013 +0400
+
+    cosmetic change
+
+commit 6e58f2a85755c03ba39d0e7e39f32f9e08e3cc2a
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu May 23 18:39:24 2013 +0400
+
+    add sleep in script for integration tests
+
+commit fc2cb226774978d315f85edddf985e4e98d54a58
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Thu May 23 17:22:01 2013 +0400
+
+    cosmetic change
+
 commit b3d665789699c8bc5d5dc7a74dfc0fb35ffbcb69
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Thu May 23 16:54:55 2013 +0400

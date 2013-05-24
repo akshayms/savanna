@@ -162,9 +162,11 @@ class TestHadoop(ITestCase):
 
             try:
                 _execute_command_on_node(
-                        namenode_ip, "./script.sh pi -nc %s" % number_workers)
+                    namenode_ip, "./script.sh pi -nc %s" % number_workers)
                 job_name = _execute_command_on_node(
                     namenode_ip, "./script.sh gn", True)
+                if job_name == "":
+                    self.fail("pi job is failure")
                 for worker_ip in worker_ips:
                     self.assertEquals(
                         _execute_command_on_node(
@@ -199,14 +201,14 @@ class TestHadoop(ITestCase):
     def test_hadoop_single_master(self):
         data_nt_master = self._post_object(
             self.url_nt, self.make_nt('master_node', 'JT+NN',
-                                      1234, 2345), 202)
+                                      1234, 1234), 202)
         data_nt_worker = self._post_object(
             self.url_nt, self.make_nt('worker_node', 'TT+DN',
-                                      1234, 2345), 202)
+                                      1234, 1234), 202)
 
         try:
             self._hadoop_testing(
-                param.CLUSTER_NAME_HADOOP, 'master_node', 'worker_node', 3)
+                param.CLUSTER_NAME_HADOOP, 'master_node', 'worker_node', 2)
 
         except Exception as e:
             self.fail(e.message)

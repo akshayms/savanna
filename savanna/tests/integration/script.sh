@@ -4,10 +4,6 @@
 dir=/outputTestMapReduce
 directory=/usr/share/hadoop
 log=$dir/log.txt
-rm -r $dir 2>/dev/null
-mkdir $dir
-chmod -R 777 $dir
-touch $log
 
 case $1 in
         mr)
@@ -65,7 +61,15 @@ f_var_check() {
         esac
 }
 
+f_create_log_dir() {
+rm -r $dir 2>/dev/null
+mkdir $dir
+chmod -R 777 $dir
+touch $log
+}
+
 map_reduce() {
+f_create_log_dir
 echo "[------ dpkg------]">>$log
 echo `dpkg --get-selections | grep hadoop` >>$log
 echo "[------jps------]">>$log
@@ -85,6 +89,7 @@ su -c "hadoop dfs -rmr /test" hadoop 2>>$log
 
 run_pi_job() {
 f_var_check v_node_count
+f_create_log_dir
 su -c "cd $directory && hadoop jar hadoop-examples-1.1.1.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
 }
 
@@ -93,6 +98,7 @@ su -c "cd $directory && hadoop job -list all | tail -n1" hadoop | awk '{print $1
 }
 
 get_list_active_trackers() {
+f_create_log_dir
 sleep 30 &&
 su -c "cd $directory && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
 }
