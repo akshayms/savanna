@@ -138,7 +138,7 @@ class TestHadoop(ITestCase):
                 Telnet(str(jobtracker_ip), str(jobtracker_port))
 
             except Exception as e:
-                self.fail("telnet nn or jt is failure" + e.message)
+                self.fail("telnet nn or jt is failure: " + e.message)
 
             this_dir = getcwd()
 
@@ -148,7 +148,7 @@ class TestHadoop(ITestCase):
                     _transfer_script_to_node(worker_ip, this_dir)
 
             except Exception as e:
-                self.fail("failure in transfer script" + e.message)
+                self.fail("failure in transfer script: " + e.message)
 
             try:
                 self.assertEqual(int(_execute_command_on_node(
@@ -157,7 +157,7 @@ class TestHadoop(ITestCase):
 
             except Exception as e:
                 self.fail(
-                    "compare number active trackers is failure"
+                    "compare number active trackers is failure: "
                     + e.message)
 
             try:
@@ -170,7 +170,7 @@ class TestHadoop(ITestCase):
                 _execute_transfer_from_node(
                     namenode_ip,
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail("run pi script is failure" + e.message)
+                self.fail("run pi script is failure: " + e.message)
 
             try:
                 job_name = _execute_command_on_node(
@@ -182,7 +182,7 @@ class TestHadoop(ITestCase):
                             "./script.sh ed -jn %s" % job_name), 0)
 
             except Exception as e:
-                self.fail("get run in active trackers is failure" + e.message)
+                self.fail("get run in active trackers is failure: " + e.message)
 
             try:
                 self.assertEquals(
@@ -193,7 +193,7 @@ class TestHadoop(ITestCase):
                 _execute_transfer_from_node(
                     namenode_ip,
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail("run hdfs script is failure" + e.message)
+                self.fail("run hdfs script is failure: " + e.message)
 
         except Exception as e:
             self.fail(e.message)
