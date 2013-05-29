@@ -59,6 +59,7 @@ def templates_update(template_id):
 
 @rest.delete('/node-templates/<template_id>')
 @v.exists_by_id(api.get_node_template, 'template_id')
+@v.validate(v.validate_node_template_terminate)
 def templates_delete(template_id):
     api.terminate_node_template(id=template_id)
     return api_u.render()
@@ -66,8 +67,10 @@ def templates_delete(template_id):
 
 @rest.get('/clusters')
 def clusters_list():
+    tenant_id = request.headers['X-Tenant-Id']
     try:
-        return api_u.render(clusters=[c.dict for c in api.get_clusters()])
+        return api_u.render(
+            clusters=[c.dict for c in api.get_clusters(tenant_id=tenant_id)])
     except Exception, e:
         return api_u.internal_error(500, 'Exception while listing Clusters', e)
 
@@ -82,9 +85,10 @@ def clusters_create():
 
 
 @rest.get('/clusters/<cluster_id>')
-@v.exists_by_id(api.get_cluster, 'cluster_id')
+@v.exists_by_id(api.get_cluster, 'cluster_id', tenant_specific=True)
 def clusters_get(cluster_id):
-    c = api.get_cluster(id=cluster_id)
+    tenant_id = request.headers['X-Tenant-Id']
+    c = api.get_cluster(id=cluster_id, tenant_id=tenant_id)
     return api_u.render(c.wrapped_dict)
 
 
@@ -96,9 +100,10 @@ def clusters_update(cluster_id):
 
 
 @rest.delete('/clusters/<cluster_id>')
-@v.exists_by_id(api.get_cluster, 'cluster_id')
+@v.exists_by_id(api.get_cluster, 'cluster_id', tenant_specific=True)
 def clusters_delete(cluster_id):
     headers = request.headers
-    api.terminate_cluster(headers, id=cluster_id)
+    tenant_id = headers['X-Tenant-Id']
+    api.terminate_cluster(headers, id=cluster_id, tenant_id=tenant_id)
 
     return api_u.render()

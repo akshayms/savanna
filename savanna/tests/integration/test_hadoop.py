@@ -74,7 +74,7 @@ def _execute_command_on_node(host, cmd, print_output=False):
 def _transfer_script_to_node(host, directory):
     _execute_transfer_to_node(
         str(host), '%s/integration/script.sh' % directory, 'script.sh')
-    _execute_command_on_node(str(host), "chmod 777 script.sh")
+    _execute_command_on_node(str(host), 'chmod 777 script.sh')
 
 
 class TestHadoop(ITestCase):
@@ -108,20 +108,21 @@ class TestHadoop(ITestCase):
             jobtracker = get_data[u'service_urls'][u'jobtracker']
             nodes = get_data[u'nodes']
             worker_ips = []
-            nova = nc.Client(version="2",
+            nova = nc.Client(version='2',
                              username=param.OS_USERNAME,
                              api_key=param.OS_PASSWORD,
                              auth_url=param.OS_AUTH_URL,
                              project_id=param.OS_TENANT_NAME)
             for node in nodes:
-                if node[u'node_template'][u'name'] == nt_name_worker:
-                    v = nova.servers.get("%s" % node[u'vm_id'])
+                if node[u'node_template'][u'name'] == '%s.%s'\
+                        % (nt_name_worker, param.FLAVOR_ID):
+                    v = nova.servers.get('%s' % node[u'vm_id'])
                     for network, address in v.addresses.items():
                         instance_ips = json.dumps(address)
                         instance_ips = json.loads(instance_ips)
                     for instance_ip in instance_ips:
-                        before_ip = "172" if param.ALLOW_CLUSTER_OPS else "10."
-                        if instance_ip[u'addr'][0:3] == before_ip:
+                        if instance_ip[u'addr'][:len(param.IP_PREFIX)]\
+                                == param.IP_PREFIX:
                             worker_ips.append(instance_ip[u'addr'])
 
             p = '(?:http.*://)?(?P<host>[^:/ ]+).?(?P<port>[0-9]*).*'
@@ -136,9 +137,8 @@ class TestHadoop(ITestCase):
             try:
                 Telnet(str(namenode_ip), str(namenode_port))
                 Telnet(str(jobtracker_ip), str(jobtracker_port))
-
             except Exception as e:
-                self.fail("telnet nn or jt is failure: " + e.message)
+                self.fail('telnet nn or jt is failure: ' + e.message)
 
             this_dir = getcwd()
 
@@ -146,52 +146,70 @@ class TestHadoop(ITestCase):
                 _transfer_script_to_node(namenode_ip, this_dir)
                 for worker_ip in worker_ips:
                     _transfer_script_to_node(worker_ip, this_dir)
-
             except Exception as e:
-                self.fail("failure in transfer script: " + e.message)
+                self.fail('failure in transfer script: ' + e.message)
 
             try:
                 self.assertEqual(int(_execute_command_on_node(
-                    namenode_ip, "./script.sh lt", True)), number_workers)
-                #TODO vrovachev: delete sleep from script after fix bug 1183387
-
+                    namenode_ip, './script.sh lt -hd %s'
+                                 % param.HADOOP_DIRECTORY, True)),
+                                 number_workers)
+                #TODO(vrovachev) delete sleep from script after fix bug 1183387
             except Exception as e:
-                self.fail(
-                    "compare number active trackers is failure: "
-                    + e.message)
+                self.fail('compare number active trackers is failure: '
+                          + e.message)
+
+            try:
+                self.assertEqual(int(_execute_command_on_node(
+                    namenode_ip, './script.sh ld -hd %s'
+                                 % param.HADOOP_DIRECTORY, True)),
+                                 number_workers)
+            except Exception as e:
+                self.fail('compare number active datanodes is failure: '
+                          + e.message)
 
             try:
                 _execute_command_on_node(
-                    namenode_ip, "./script.sh pi -nc %s" % number_workers)
+                    namenode_ip, './script.sh pi -nc %s -hv %s -hd %s'
+                                 % (number_workers, param.HADOOP_VERSION,
+                                    param.HADOOP_DIRECTORY))
+            except Exception as e:
+                _execute_transfer_from_node(
+                    namenode_ip,
+                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
+                self.fail(
+                    'run pi script or get run in active trackers is failure: '
+                    + e.message)
+
+            try:
                 job_name = _execute_command_on_node(
-                    namenode_ip, "./script.sh gn", True)
-                if job_name == "":
-                    self.fail("pi job is failure")
+                    namenode_ip, './script.sh gn -hd %s'
+                                 % param.HADOOP_DIRECTORY, True)
+            except Exception as e:
+                self.fail('fail in get job name: ' + e.message)
+
+            try:
                 for worker_ip in worker_ips:
                     self.assertEquals(
                         _execute_command_on_node(
                             worker_ip,
-                            "./script.sh ed -jn %s" % job_name), 0)
-
+                            './script.sh ed -jn %s -hld %s'
+                            % (job_name[:-1], param.HADOOP_LOG_DIRECTORY)), 0)
             except Exception as e:
-                _execute_transfer_from_node(
-                    namenode_ip,
-                    '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail(
-                    "run pi script or get run in active trackers is failure"
-                    + e.message)
+                self.fail('fail in check run job in worker nodes: '
+                          + e.message)
 
             try:
                 self.assertEquals(
                     _execute_command_on_node(
-                        namenode_ip, "./script.sh mr"), 0)
-
+                        namenode_ip, './script.sh mr -hv %s -hd %s'
+                                     % (param.HADOOP_VERSION,
+                                        param.HADOOP_DIRECTORY)), 0)
             except Exception as e:
                 _execute_transfer_from_node(
                     namenode_ip,
                     '/outputTestMapReduce/log.txt', '%s/errorLog' % this_dir)
-                self.fail("run hdfs script is failure: " + e.message)
-
+                self.fail('run hdfs script is failure: ' + e.message)
         except Exception as e:
             self.fail(e.message)
 
@@ -209,7 +227,6 @@ class TestHadoop(ITestCase):
         try:
             self._hadoop_testing(
                 param.CLUSTER_NAME_HADOOP, 'master_node', 'worker_node', 2)
-
         except Exception as e:
             self.fail(e.message)
 

@@ -13,22 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from oslo.config import cfg
+from savanna.openstack.common import version as common_version
 
-cli_opts = [
-    cfg.StrOpt('host', default='',
-               help='set host'),
-    cfg.IntOpt('port', default=8080,
-               help='set port'),
-    cfg.BoolOpt('allow-cluster-ops', default=True,
-                help='without that option'
-                     ' the application operates in dry run mode and does not '
-                     ' send any requests to the OpenStack cluster')
-]
-
-CONF = cfg.CONF
-CONF.register_cli_opts(cli_opts)
-
-
-def parse_args(argv, conf_files):
-    CONF(argv, project='savanna', default_config_files=conf_files)
+version_info = common_version.VersionInfo('savanna')

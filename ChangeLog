@@ -1,344 +1,1162 @@
-commit a9322d73e12f6755449a924eefb7c6cedba7970d
-Merge: ec0d1cc e4c4654
+commit f9ddb9084e51d35d56495888b11033a3454ec718
 Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri May 24 13:24:21 2013 +0400
+Date:   Mon May 27 21:19:56 2013 +0400
 
-    merge branch
+    New hadoop tests were added
+    
+    A Validation that a job was successfully run on all nodes was added
+    
+    Change-Id: Ib2ae34d04be2abb183abe131d114181776ef8948
 
-commit ec0d1cced9d4a4694fd8e4e078061df033dfd3c4
+commit f5a3a61fd51be5327eaa7a187ee570e28bfb2067
+Merge: 1f745dc bdd96e2
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon May 27 09:04:09 2013 +0000
+
+    Merge "Integration tests improvements and fixes."
+
+commit 1f745dccb6623fbc6ab0f6b0965f90d622f33cdf
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun May 26 11:28:32 2013 +0400
+
+    Small docs improvements.
+    
+    * 'sphinxcontrib-httpdomain' added to test-requires
+    * info about how to add Savanna endpoints to Keystone added
+    
+    Change-Id: I782096ca3471cbdabcc048c79a7198cb630a6c64
+
+commit bdd96e24b137e682b0cf310797cd3aca542c7ed8
 Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri May 24 13:19:32 2013 +0400
+Date:   Thu May 23 15:01:29 2013 +0400
 
-    add new changes in hadoop testing
+    Integration tests improvements and fixes.
+    
+    cluster creation timeout has been increased;
+    node templates' flavors has been decreased.
+    
+    Change-Id: I57dc8cfe631e49cd7120c986a2eacc4aa399433b
 
-commit e4c46548ae52d63cdc6f1146213a3a9df72c835b
+commit d5c7d88d83bf94a9ebbef5d6a684e614c1f70fa7
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>
-Date:   Fri May 24 13:15:55 2013 +0400
+Date:   Fri May 17 13:13:32 2013 +0400
 
-    cosmetic change
+    Integration tests for hadoop were added.
+    
+    HDFS commands of hadoop were verified.
+    Launch and successful completion of mapreduce job were verified.
+    
+    Change-Id: I285ca653827ec6544367e44b875299e58bd070cb
 
-commit 6e58f2a85755c03ba39d0e7e39f32f9e08e3cc2a
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Thu May 23 18:39:24 2013 +0400
+commit 2a4c7be9a51700694646ede66de91f0039c4a642
+Merge: fa7ce6d 1badfe1
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed May 22 11:45:28 2013 +0000
 
-    add sleep in script for integration tests
+    Merge "Updated project documentation."
 
-commit fc2cb226774978d315f85edddf985e4e98d54a58
+commit fa7ce6d4b94091e90e481f95b2ac14c6f410d26c
+Merge: a0a3ca3 efe4d14
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue May 21 16:15:55 2013 +0000
+
+    Merge "Removed unused paramter '-force' when formatting NameNode"
+
+commit efe4d140f31dfa158fa13ede0f93a36d0062c27b
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Tue May 21 08:36:23 2013 -0700
+
+    Removed unused paramter '-force' when formatting NameNode
+    
+    Change-Id: I6f188ba7cd18835617f9e2bfcacb259295d49767
+
+commit 1badfe193850cf50854ff130ef343f76d0fb585b
+Author: Ruslan Kamaldinov <rkamaldinov@mirantis.com>
+Date:   Mon May 20 00:54:23 2013 +0400
+
+    Updated project documentation.
+    
+    - Added developer guide
+    - Added installation guide
+    - Removed screenshots of Horizon pages
+    
+    Change-Id: I827e9dad490099b7825ed812452d89fc7d4d0e83
+
+commit a0a3ca3f583dde04d4572e4a253525dc8ab4da2c
+Merge: d898f92 6a8e586
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon May 20 20:44:56 2013 +0000
+
+    Merge ".gitignore updated"
+
+commit d898f9265d852418211b24c34f3a2d112f61cf0f
+Merge: 9b9b693 3549818
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon May 20 20:44:03 2013 +0000
+
+    Merge "Requires updated due to the openstack/requirements"
+
+commit 6a8e586f66478d3915fc9d1f833c1ab89bd22584
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 21 00:23:56 2013 +0400
+
+    .gitignore updated
+    
+    Change-Id: I916932d1f8be40852139723b215957bfc2a24be7
+
+commit 35498183a3521a70b16323488edbc5743a106af7
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 21 00:23:20 2013 +0400
+
+    Requires updated due to the openstack/requirements
+    
+    * jsonschema is now >= 1.0.0
+    * flake8 and hacking is now limited by some versions
+    
+    Change-Id: I1a8f060e3653d29936ec9835e720a020b48c4f5a
+
+commit 9b9b693098687b38717a36d22fcb78353e4ee6e6
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>
-Date:   Thu May 23 17:22:01 2013 +0400
+Date:   Mon May 20 13:53:27 2013 +0400
 
-    cosmetic change
+    Some improvements to documentation were added
+    
+    Inconsistencies in documentation (Savanna quickstart guide and Full installation guide) were corrected
+    
+    Change-Id: I234484e0b52cbff0d1b894c4fc7b72bdea5eed1b
+    (cherry picked from commit e677fcc77787ee3f5109bfbda9a966ca9fddef7c)
 
-commit b3d665789699c8bc5d5dc7a74dfc0fb35ffbcb69
+commit c4e414e1b97628b9a2683c2b4b7d38ea6e0d0b5e
 Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Thu May 23 16:54:55 2013 +0400
+Date:   Fri May 17 14:23:09 2013 +0400
 
-    add allow_cl_ops in parametrs
+    Add changes in horizon docs
+    
+    DocImpact
+    
+    Directories in items 2.2 2.4 2.8 are corrected
+    Items 2.2 and 2.3 are swapped
+    Typos in items 2.7 2.8 3.2 are corrected
+    
+    Change-Id: I666fc5ef445c787d4ea889c2eae576225778b10d
 
-commit cc27514f73e7d7c4152e4b4ad97eef9cd73b01d8
+commit bf7a737c93391d340c067f183ccbe3ea66d740b2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed May 15 13:36:42 2013 +0000
+
+    Revert "Integration tests for hadoop were added."
+    
+    This reverts commit ff07ad8d653c53020cffec37e343df65f741c750
+
+commit ff07ad8d653c53020cffec37e343df65f741c750
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Wed May 15 15:02:15 2013 +0400
+
+    Integration tests for hadoop were added.
+    
+    HDFS commands of hadoop were verified.
+    Launch and successful completion of mapreduce job were verified.
+    
+    Change-Id: Ia50f074f3095fef85d145de954461ee7070e0c38
+
+commit f6b6221ece5e71f526cec235005620d4dd25c522
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed May 15 15:51:26 2013 +0400
+
+    cscope.out has been added to .gitignore
+    
+    Change-Id: I8149f5689186bf9a947ecf97a8da1efa19bd5e7e
+
+commit e24d98183e63869c3201e61381531a3dbc898f90
+Merge: b36b088 c73b829
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed May 15 07:21:26 2013 +0000
+
+    Merge "Change allow-cluster-ops default from False to True"
+
+commit c73b82916f195fbf63f932fd74b19c7be8063579
+Author: Matthew Farrellee <matt@redhat.com>
+Date:   Tue May 14 20:53:03 2013 -0400
+
+    Change allow-cluster-ops default from False to True
+    
+    Change-Id: I3ea356293e15deed671b329e3a2bdda49fb67c28
+    Fixes: bug #1180151
+
+commit b36b088f78f3efcf6e9d13406bac635855827121
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 14 22:58:47 2013 +0400
+
+    bump version to 0.1.2
+    
+    Change-Id: Ib79b436f26fffa532ec5d0e5f9a0fecda8ccc812
+
+commit bb4086b3af0fa4ab5fc8067b539a9134894429f6
+Merge: d52b634 cf79471
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed May 8 12:22:47 2013 +0000
+
+    Merge "Cluster status fix when error during vms starting"
+
+commit d52b634462ebba1b558d30ac68f14bade455e697
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed May 8 12:41:56 2013 +0400
+
+    Pre-release 0.1.1 docs fixes
+    
+    * Update links to the project site:
+      http://savanna.mirantis.com -> https://savanna.readthedocs.org/en/latest/
+    * fix quickstart
+    
+    Change-Id: I00af8d282c97d5a7e131a9fae83edb85261852d8
+
+commit cf7947171701054de81f524cbe92e2a37491ec21
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 7 10:38:37 2013 +0400
+
+    Cluster status fix when error during vms starting
+    
+    Change-Id: Ida6b9f63660a37449977bb8176a19ad18fd5a8a7
+    Fixes: bug #1174828
+
+commit 8ae8592a73ee5d824c86091db1dce54339a8ebfb
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 7 18:18:45 2013 +0400
+
+    Unnecessary whitespace has been removed
+    
+    Change-Id: Id273d6a4ba3ab4201ee04f3791117f2e71c3cf5f
+
+commit f834170c84ed7cc61520e9a76c4de51e82b345dd
+Merge: 6fae81c 3d1cea3
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon May 6 20:56:13 2013 +0000
+
+    Merge "Patch for minidom's writexml has been added"
+
+commit 3d1cea3424a91d5ee25fc173dd6fd34bb6b7421c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon May 6 14:01:12 2013 +0400
+
+    Patch for minidom's writexml has been added
+    
+    * patch applied only for python < 2.7.3
+    * unit tests added for patch and xml conf generator
+    * it has been tested at python 2.6.7, 2.7.2-2.7.4
+    
+    Fixes: bug #1174841
+    
+    Change-Id: I6db89a06a4fa86b62a582d0188d0b7f1a508dcd2
+
+commit 6fae81c41ee3d24f0d7e6d65c7f423f365cb4614
+Merge: aec3ce3 dc50d01
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Apr 30 16:49:07 2013 +0000
+
+    Merge "The is_node_template_associated function added."
+
+commit aec3ce3135c79076805e70cb512ab97a1a5bfc20
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 30 20:30:21 2013 +0400
+
+    Positive test for validation has been readded.
+    
+    Change-Id: I61163380bee7806e23e1f15c4260dbd5728e9ab6
+
+commit dc50d0122696ca1a4d29789064d7422eb01bc58e
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 30 20:10:02 2013 +0400
+
+    The is_node_template_associated function added.
+    
+    It provides an ability to take an information about node template usages. It's needed for node template termination validation.
+    
+    Change-Id: I49eeadf24417d2a6636804a71f6208e8577431d9
+    Fixes: bug #1174780
+
+commit 879b9cdb594c7a5735c7f297c0a0d1ccd489f6a3
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Tue Apr 30 07:37:45 2013 -0700
+
+    Added default values for JT, NN, TT, DN processes
+    
+     * Basic xml configs were added for provisioning cluster with different parameters
+     * Added validation that user cannot create NodeTemplate with not allowed configs
+    
+    Fixes bug: #1169211
+    
+    Change-Id: I12e9c3ba20849b77dc0b502958aa2a8622ed7ce0
+
+commit 17446567fe4b7abecf713e9dad9b2a76d4704a0e
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 30 10:58:54 2013 +0400
+
+    NodeTemplate usage check moved to validation.
+    
+    * new exception added - AssociatedNodeTemplateTerminationException;
+    * helper added to service.api to query number of nodes created using specific NodeTemplate;
+    * now all kwargs are passed to the validation function.
+    
+    Change-Id: I2556cb2c18906e1c96c3bda041ba1ea8ea26c4e1
+    Fixes: bug #1174614
+
+commit 9c1317ddf5c379d0b8420b45fd29cab3c3077ad6
+Merge: 003485e 3fa5969
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon Apr 29 09:40:28 2013 +0000
+
+    Merge "Adds xml hadoop config generating"
+
+commit 003485eb87a5ba5d9d5b431e25b631068f0ada16
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 27 16:42:37 2013 +0400
+
+    "Last updated" info has been added to generated Sphinx pages
+    
+    Change-Id: Ie86c426f02b4dd1e00cc779e331ab0939bc4531c
+
+commit b8b6f40fb39324098630ce8db750acf44bf73fa1
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 27 16:36:24 2013 +0400
+
+    Common version is now used in Sphinx docs
+    
+    * oslo version added
+    * doc/source/conf.py updated
+    
+    Change-Id: I6f2943ebe3a0bd12503ed61bc6bed629d9e23d2f
+
+commit 63a3aa2536173a225d848698c2c21fab03d325b2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 27 16:30:43 2013 +0400
+
+    Keystone client creation moved to the setUp() function.
+    
+    Change-Id: I44705f04b277b6babfe8912f158414ed46ea555d
+    Fixes: bug #1173076
+
+commit 1220af461b432507db1c2aae68a265e353527b6d
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 27 16:17:10 2013 +0400
+
+    oslo has been updated
+    
+    * context.py
+    * exception.py
+    * log.py
+    
+    Change-Id: If52abd9ef609417c86618b8f6a29e04df74ddc8a
+
+commit 3fa5969ffe752f711c171b1d4383120cb8b37dfd
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Fri Apr 26 10:15:21 2013 -0700
+
+    Adds xml hadoop config generating
+    
+     * Xml config provisioning is done for core, hdfs, mapred xmls
+     * Removed xslt transformations from data nodes
+     * At now Savanna contains default configs for Hadoop in resources/
+     * This version of default configs is applied for Hadoop 1.1.1
+     * No needs to distribute new cloud image
+    
+    Change-Id: Ia13e9231d75bbac3cff6291d477b72d727e21c71
+    Fixes: bug #1169900
+
+commit 758037cf63bfb8eb22a0f4c9b709f6b9093eeed2
+Merge: 3fe32d1 89d2a84
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Fri Apr 26 11:56:50 2013 +0000
+
+    Merge "time.sleep replaced with eventlet.sleep"
+
+commit 3fe32d16c9e3db0d1fde2259af3e0666cf44af1f
 Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Thu May 23 15:42:18 2013 +0400
+Date:   Fri Apr 26 13:14:15 2013 +0400
 
-    add new changes in integration tests
+    Keystone removed from the global variables and added it to the class
+    
+    Change-Id: Id220c98a33579e4f7c3ab50f53bf14f57bdd492c
+    Fixes: bug #1173076
 
-commit 5e896de078e62fc5b201b8f7915e9acbdf04763d
+commit 89d2a84f72c0b8b4735eea6beaf39d19de489a02
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 25 19:32:37 2013 +0400
+
+    time.sleep replaced with eventlet.sleep
+    
+    Change-Id: Ib0757605fc3ae7f5dea34f291e0bfd5107beca9c
+
+commit ece2f78a28e2af74dfba60e720336f763ab2fec0
+Merge: af58173 2ad7827
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Apr 23 08:22:34 2013 +0000
+
+    Merge "Deps cleaned by openstack/requirements."
+
+commit 2ad7827f1a7cfbd3a5608d95e4932be31d468b4b
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 23 12:13:10 2013 +0400
+
+    Deps cleaned by openstack/requirements.
+    
+    Change-Id: Ib9ff7768f316d9771b5c30c2464cebb9b108a4ad
+
+commit af58173a4ce7ef439c6e9b50af485b8758079542
+Merge: 02ce954 db7b8df
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon Apr 22 12:46:51 2013 +0000
+
+    Merge "Tenants support implemented for clusters."
+
+commit db7b8df57a879286f6a7ec1b90594ac0f196148b
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 22 11:46:51 2013 +0400
+
+    Tenants support implemented for clusters.
+    
+    Clusters are now tenant-specific.
+    NodeTemplates are accessible from any tenant.
+    
+    Change-Id: Idca961b813bf3ff62dd6f9d722b6524d0b79f2c2
+    Fixes: bug #1171207
+
+commit 02ce95447dd6afeb96846076b57ed831e2dd25ef
+Merge: 6fc8f71 296de89
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sun Apr 21 06:27:24 2013 +0000
+
+    Merge "OpenStack Common has been updated to the latest version"
+
+commit 6fc8f71f8dcff3434981fbcba9bd219ce8c2cfc0
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Apr 21 09:55:01 2013 +0400
+
+    Using clear_override in tearDown.
+    
+    Change-Id: If4ae1ba9dd70c69cbf162ca1c418bee6967e12f9
+
+commit e7c4f1abaf0e58d22e870065939809c00c84ef4d
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 20 00:33:16 2013 +0400
+
+    docs fixed, tool renamed
+    
+    Change-Id: I6ded43854476044c40c805b60b458bcbf0517d27
+
+commit 94c9c36202d3dd16fe6219935a9c59e248ee28ac
 Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Wed May 22 18:50:44 2013 +0400
-
-    add new i tests
-
-commit dddc244e567ba1766efc23ded3080bccf9d12507
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Wed May 8 14:57:01 2013 +0400
-
-    changed name for url of cluster and nt
-
-commit 6e0299d2e96bf03ad86b0e1fde199dbbc6c65552
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Wed May 8 12:55:52 2013 +0400
-
-    changed flavor
-
-commit 3848ef69620d9f7c1c3939a57f419c8f97d1af85
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Tue Apr 30 21:50:15 2013 +0400
-
-    run_fast_checks
-
-commit 7baf66a06ff7f0672c1e73545e45859676b5b32f
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Mon Apr 29 21:58:12 2013 +0400
-
-    add hadoop testing
-
-commit 1c25229e69906edc3987869d0fd1869ad38b7145
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Mon Apr 29 15:49:08 2013 +0400
-
-    added new changes to test of hadoop
-
-commit 348c52f1acc3849371cb4b6724fc112ca4dcae3a
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 26 14:46:05 2013 +0400
-
-    add changes for method get_body for node templates
-
-commit c3c76c6d6cdf138f9e97f66cc100bf5f8b2fbbca
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 26 13:08:56 2013 +0400
-
-    fix bug in nt_tests
-
-commit dab90f75e1e215ee44dd4ce67e162630567912cb
-Merge: 4a403df 632b149
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 26 13:06:09 2013 +0400
-
-    merge branch and local changes
-
-commit 4a403df5236edf4e7505dc7d74687b7c4245eb4b
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 26 12:56:50 2013 +0400
-
-    add new changes for db
-
-commit 632b1491fcaef60ecc301cd3fa93ec64cc5fd1aa
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Fri Apr 26 12:20:29 2013 +0400
-
-    add changes to tests for hadoop
-
-commit c19ee4dd75101c24b5e794c1883e32a90eff85e9
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Thu Apr 25 16:35:55 2013 +0400
-
-    add new methods for tests of hadoop
-
-commit e1b034f825027f0475081fb9240ab484cd98d6f8
-Author: vadim <vadim@vrovachev.(none)>
-Date:   Wed Apr 24 13:53:50 2013 +0400
-
-    add changes in integration db for make body and add hadoop test
-
-commit 372a3b3c99b8a81424ae5b8f9e0a88435882af55
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Mon Apr 22 16:02:48 2013 +0400
-
-    added new changes
-
-commit 0c4d8542f90995feb17112c77d679c945b14f234
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Mon Apr 22 15:49:15 2013 +0400
-
-    new changes
-
-commit c9f9c76894f17ba868fba2729e10f7868e6f5f3e
-Author: Vadim Rovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 19 18:12:04 2013 +0400
-
-    add changes
-
-commit 45d6eb7db02315e441931892e3f2173989a28621
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 19 14:09:47 2013 +0400
-
-    add new changes
-
-commit 5935ed7b638da10a48ab2e1fce6ff9dda5001986
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Apr 19 14:04:08 2013 +0400
-
-    add new changes
-
-commit cc5cd7e119067c1532de4be60a394523f475d94f
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Mon Apr 1 14:16:19 2013 +0400
-
-    add changes in stackforge repo
-
-commit 610bd284e62a86829cd1b8d368334601ffafc175
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 29 16:07:24 2013 +0400
-
-    change branch for last built in stackforge
-
-commit 0c068d5ff1aacbf44be28fc8094a3a6b26330b2e
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 29 15:57:48 2013 +0400
-
-    refactoring testcode
-
-commit 093b5d9e653c0194cdae877239c6da90379db201
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Fri Mar 29 15:55:47 2013 +0400
-
-    add tests for cluster deletion and get cluster
-
-commit 6330f7a3260d1fd8fbe01c6a0bfe3ab523bde561
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Thu Mar 28 20:53:05 2013 +0400
-
-    add negative tests for cluster
-
-commit b678bee75ba444b375a77556814bc3238cdbab9b
-Merge: f2e9c6e 3852ebb
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 28 20:37:22 2013 +0400
-
-    Merge branch 'QA' of https://github.com/Mirantis/savanna into QA
-
-commit f2e9c6ef0510ab77caa63d7b3d260c72cca404b4
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 28 20:37:13 2013 +0400
-
-    add unit tests
-
-commit 3852ebb484e956cd613b41ecd18f6ec76f6298cc
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Thu Mar 28 18:36:32 2013 +0400
-
-    add new negative tests for cluster
-
-commit 0956efa19a716a750b4e77c542226d9e5c9556f2
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 28 18:34:07 2013 +0400
-
-    add new changes in stackforge and add unit tests for nt
-
-commit e3fea9bddbf675aaf4ecb5707f143701a1639c4e
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Wed Mar 27 20:27:12 2013 +0400
-
-    add changes from last version in stackrorge
-
-commit 0baa0343de51c90afaec705a5f361cb9351dac3c
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Wed Mar 27 20:19:04 2013 +0400
-
-    add unit tests for nt
-
-commit 3a589a8a1ff73c5e4b22caf2e42082e64460889a
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Wed Mar 27 19:26:06 2013 +0400
-
-    add unit tests for nt
-
-commit 8ed9033be2c670dffa742756682b6f06a462dcef
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Wed Mar 27 19:23:32 2013 +0400
-
-    add negative and positive tests for cluster
-
-commit d59971a894b1c53359bb319a57c938d177f2ddde
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Wed Mar 27 19:14:47 2013 +0400
-
-    add negative and positive tests for cluster
-
-commit 9f396c17af88ebcf9483c95515bb9d9c30024344
-Merge: b002cdc 75ef01d
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Wed Mar 27 18:02:12 2013 +0400
-
-    Merge branch 'QA' of https://github.com/Mirantis/savanna into QA
-
-commit b002cdcef5c4ddbf3ffef889935b7a4af9a90cc3
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Wed Mar 27 18:02:04 2013 +0400
-
-    add a unit tests for node_templates
-
-commit 75ef01defb8120a038aed2824ff73b7eae9f0531
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Wed Mar 27 16:14:57 2013 +0400
-
-    add positive unit-tests
-
-commit b0909c868e81c987d28757804244ea3d62c7e592
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Tue Mar 26 19:21:54 2013 +0400
-
-    delete files
-
-commit 499644b1d12b4072b99f819abad7027e5857e24a
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Tue Mar 26 19:13:30 2013 +0400
-
-    add new changes and begining write unit tests
-
-commit f28dc2836e7260a9a07225d47cf686b9f0f52136
-Merge: afc2cd2 52ccb3d
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Tue Mar 26 14:11:53 2013 +0400
-
-    merge a branch
-
-commit afc2cd2e0c908625edf283a2b9161d0da512c8d7
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Tue Mar 26 14:00:52 2013 +0400
-
-    add positive tests for cluster
-
-commit 52ccb3d828649a1e46a3ca8ee48db7af945c10d2
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Tue Mar 26 13:56:49 2013 +0400
-
-    add scenarios for node_templates
-
-commit 7bb05051bf189e8b8ecbcb3e023af146d7de1440
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 22 21:46:04 2013 +0400
-
-    changes tests for behave
-
-commit 9d5f1c21161639ebe83a23363620030d4d4a1c53
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 22 21:29:01 2013 +0400
-
-    add changes for behave tests
-
-commit 717e1e99d26c5721b940375e87fd82523922c9a0
-Merge: 8f24a24 b554e35
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 22 20:43:35 2013 +0400
-
-    merge changes
-
-commit 8f24a2401c9842d96c70a80450d50a60e33f4edb
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Fri Mar 22 20:38:43 2013 +0400
-
-    add positive and negative tests for node_template in behave, fix problem for list IDs for object in behave
-
-commit b554e35df4e72084a3d04a52dab2227e5562f1df
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Fri Mar 22 20:21:32 2013 +0400
-
-    add steps (negative tests) for get clusters and cluster deletion
-
-commit b7f917420761612cc22fe70989ae0e0d1d85728a
-Author: LobankovYV <lobankovyy@lobankovyy-desktop.(none)>
-Date:   Fri Mar 22 15:25:07 2013 +0400
-
-    add steps (negative tests) for create cluster
-
-commit ecd8ae9373458b70bbf84c84fedd9fa9e7ebd240
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 21 20:04:01 2013 +0400
-
-    create all positive rests for this time(without put method)
-
-commit c3735e508705ab55cb9b9b271deae569cc7acd0c
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 21 19:20:23 2013 +0400
-
-    refactiring behave code for pep8
-
-commit 8c0e35467e35f939d7a12b0f660b030dc3bb5664
-Author: vrovachev <vrovachev@mirantis.com>
-Date:   Thu Mar 21 18:16:05 2013 +0400
-
-    add behabe tests in new git repository
+Date:   Thu Apr 18 21:28:53 2013 +0400
+
+    Implements integration tests
+    
+    * Added basic integration tests for cluster and node_templates Savanna API actions
+    
+    Change-Id: I1b5e080a75690c37d89a9c9697cd78883a59045d
+    Fixes: bug #1170426
+
+commit 296de8968d73f1562ffcaf53eed7ba244d4b49b5
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Apr 19 17:50:56 2013 +0400
+
+    OpenStack Common has been updated to the latest version
+    
+    Change-Id: I798514ca6f02d208bce02d51867777cc4271ae04
+
+commit 07b7b32fe5643e237ede34c0b3688f6e98446400
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 18 15:27:37 2013 +0400
+
+    Some large (and slow) validation tests has been splitted to several cases.
+    
+    Change-Id: I3aabaa7432c9f0487329a62088b4e5e0bb393523
+
+commit 1ea4cecdb0febc6784050d8ce0ad090b26428a0c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 18 14:44:41 2013 +0400
+
+    tools/install_venv fixed
+    
+    Change-Id: I1b6dd5f7951f6209b99c877551007af4ddd1ca59
+
+commit 9965fda0e0507dde4fa6be4a783caf5700e3eb0a
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 18 13:13:05 2013 +0400
+
+    Index page updated.
+    
+    DocBuild
+    
+    Change-Id: Ifbed8143c433d46aa8030beec4eba43919649f19
+
+commit a35389c6097087404ae388565e452f28aad3a921
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 17 14:38:35 2013 +0400
+
+    Validation for required process props added
+    
+    Change-Id: I9a8c5d19fcccffa7831a30a47cecb3a1c654387e
+    Fixes: bug #1165008
+
+commit cf9d9b034ce814ba45bbad78cfb8b566886376b7
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 16 13:01:27 2013 +0400
+
+    /etc/hosts generator implemented
+    
+    * small refactoring of cluster_ops.py;
+    * /etc/hosts is now generated for each node with all cluster nodes in it.
+    
+    Change-Id: Ic30f5897f39f6782cc6edf13beb64783ed12e427
+    Fixes: bug #1168102
+
+commit 9144cb4692bfc8e337f9e4ace99bb4978cbb7c09
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 15 23:37:26 2013 +0400
+
+    Additional info files added to repo
+    
+    Change-Id: Icc3e9d7820beb999347f7c6721c33a2df693740b
+    DocBuild
+
+commit deba1ae94685b015765c5be38cfda41681ff927f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 15 22:58:43 2013 +0400
+
+    Re-add setuptools-git to setup.py
+    
+    In 02f59a0768a56c084fa72ac9c1e47f1a819baadc we removed:
+    
+      setup_requires=['setuptools-git>=0.4'],
+    
+    from setup.py file and it broke tarball generation in that some files
+    are now missing.
+    
+    Change-Id: I53997b68a4a36cae63d191d63bc19ef459c228c4
+    Fixes: bug #1169295
+
+commit 85f7d3a6f2888f6319b9e9bb0aa5af5904f30000
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 15 16:21:18 2013 +0400
+
+    quickstart has been updated
+    
+    Change-Id: Iec93cd8b9394fc47a045edd8b3d26a251cd555f8
+    DocBuild
+
+commit 964aefcaea491dda6502ba289de68fd827ef8cdb
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 15 13:15:05 2013 +0400
+
+    All tools modev to tox.
+    
+    * pep8 + copy-pasted hacking.py + pyflakes are replaced with flake8 + hacking;
+    * pylint and docs envs are added to tox;
+    * all tools are now links to tox.
+    
+    Change-Id: I142a1d3f9c80dab4bf145890bb066c86b7a9c376
+    Fixed: bug #1169032
+
+commit e0e77a12247fd48e78db42dce49bb7fb31e51082
+Merge: b6736de f3417be
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Apr 13 03:35:56 2013 +0000
+
+    Merge "OS Summit session nnouncement has been added"
+
+commit b6736de1d4040e8e302a2c090faa437268ffdec8
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 13 07:21:23 2013 +0400
+
+    Validation tests fixed (jsonschema update)
+    
+    Change-Id: I0fc38ce077482366189a0529b372175829bcae8e
+    Fixed: bug #1168599
+
+commit f3417be96624cf7ccd41c4d14b2f66a63214b563
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Apr 13 07:13:12 2013 +0400
+
+    OS Summit session nnouncement has been added
+    
+    DocImpact
+    
+    Change-Id: I77230861269f594e5756b62b6a2940a3f61cb98f
+
+commit 359c87d110db74a7b60625a6451817387bf4f01f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Apr 12 12:32:59 2013 +0400
+
+    Limit cluster name to 50 characters
+    
+    Change-Id: Iab3e282b8e5dcdc844dd583120c683b0877088c8
+    Fixed: bug #1168107
+
+commit 1689b165ec4d949bbf46745b25670ad68d69bd2a
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 11 23:27:29 2013 +0400
+
+    bump version to 0.1.1
+    
+    Change-Id: I6e4d131cea282f01b86bd37840e60467bb6d997e
+
+commit f64fb4ca033e48b7a978bb1062b14e5b8c22a65a
+Merge: 336bfa4 2209663
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Apr 10 20:34:17 2013 +0000
+
+    Merge "info about pypi has been added"
+
+commit 220966300c1acb9104c37255dee1badf6a75ddb6
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 10 23:46:03 2013 +0400
+
+    info about pypi has been added
+    
+    DocImpact
+    
+    Change-Id: I9764b7c7c1cc6b5aa0bea23bf5c58456f9e1123d
+
+commit 336bfa47f24c01c8033c88d4dc60cfb3f117b7dd
+Author: Jeremy Stanley <fungi@yuggoth.org>
+Date:   Wed Apr 10 15:48:32 2013 +0000
+
+    Remove an invalid trove classifier.
+    
+    * setup.py(setuptools.setup): Remove "Intended Audience :: BigDate"
+    since it's not in pypi's list of valid trove classifiers and
+    prevents successful upload of the package when present.
+    
+    Change-Id: Iee487d1737a12158bb181d21ae841d07e0820e10
+
+commit 62375875b04141d849d3e154811aa7f99e095f2a
+Merge: dddd061 acf16fd
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Apr 10 15:48:14 2013 +0000
+
+    Merge "Horizon howto page updated and published"
+
+commit acf16fdcd227e1720e4429192fbaab3e0059905b
+Author: Konovalov-Nik <nkonovalov@mirantis.com>
+Date:   Wed Apr 10 17:28:01 2013 +0400
+
+    Horizon howto page updated and published
+    
+    DocImpact
+    
+    Change-Id: Ibc4014e817fedde8e12ba722654648737652bc22
+
+commit dddd06179d066e5a14060cad241a7e13b9ec6d90
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 19:22:41 2013 +0400
+
+    setup.py has been improved
+    
+    Change-Id: I3c161fb8146d063c08c3e6a904cd141680a3a005
+
+commit a4c718dd196f05c4745a5dd5fcda6d5c6dc2030f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 19:10:24 2013 +0400
+
+    Some useful links added to README
+    
+    Change-Id: I566920be6360b16bf9f7cc96d44303e1a8a5cde9
+
+commit fef52261fe0c0500046c74951c49d80219411b29
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 19:01:39 2013 +0400
+
+    Note about use_floating_ips has been added.
+    
+    DocImpact
+    
+    Change-Id: If1f0b66d3884492bf73f6e071f8ae42a9752ef76
+
+commit 47fee5122a528b9dabea1b7d57935cb86a1a0746
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 18:49:17 2013 +0400
+
+    Simple quickstart fix
+    
+    Change-Id: Iddbd3b724c731514dc0e2f037df52abe378355bd
+
+commit 02f59a0768a56c084fa72ac9c1e47f1a819baadc
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 13:00:30 2013 +0400
+
+    setuptools-get has been removed from deps
+    
+    Change-Id: I88b390503beaabeb655ba905e5246e9103471672
+
+commit 4e34edd90b406b1d29b5164280e3d84f44d98401
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Apr 9 12:40:09 2013 +0400
+
+    AUTHORS and ChangeLog has been added to .gitignore
+    
+    Change-Id: Ia72dc79936e7b109bf72f551396dd90ff3b50bfb
+
+commit fb82d1aa9cd8c4fa6665078c2225453db8393523
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 8 23:47:35 2013 +0400
+
+    VM Image link has been fixed
+    
+    Change-Id: I64994bb3ca94bfb5b8c14ae276dc03c72a551e08
+
+commit df6c969f2d525981ac05a2994d03e9a97df55fcb
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 8 16:37:06 2013 +0400
+
+    Small index page improvement
+    
+    Change-Id: I465d5382afd0f2feb71fb8e66b2ab8eb6f704872
+    DocImpact: index page improved
+
+commit 53532fee6ade2f05323f87ce6ef553431333a3e2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 8 14:20:56 2013 +0400
+
+    Links to bugs and blueprints has been added.
+    
+    Change-Id: Ie75c7c9bdf63f9b2e6376c008ef0fe1e3da1b756
+
+commit 0e88aa7a2c58b4d292220eb4e99e5d9cf26ec4ca
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 3 13:15:38 2013 +0400
+
+    simple tests for cluster validation has been added
+    
+    Change-Id: Icd7d51bff32887d362b05935d74b9352901ba5fd
+
+commit 25be8d49ad974e299b4616b1aeb2d6665d953f71
+Merge: e88b024 bc5c724
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Thu Apr 4 12:34:27 2013 +0000
+
+    Merge "Added instruction how to get Savanna from tarball"
+
+commit e88b024d974fa3fb4c0dfd0fc17c77862d29b0be
+Merge: 70b21fc 8fdeefd
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Thu Apr 4 12:30:36 2013 +0000
+
+    Merge "sample-conf has been removed from savanna-manage"
+
+commit bc5c724df7f6eb0d00954a89db4e64128219e2a6
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Thu Apr 4 05:27:46 2013 -0700
+
+    Added instruction how to get Savanna from tarball
+    
+    Change-Id: Ie99446995fbb76b4538343ccf3dd7962453ee1d3
+
+commit 8fdeefdd10a772dd90231973b967a57955d0ecf0
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Apr 4 15:44:55 2013 +0400
+
+    sample-conf has been removed from savanna-manage
+    
+    Change-Id: I5ddce6ca626822fece246c6f22ecb44913937e4d
+
+commit 70b21fc650ce925107f1e103395c954921c59db2
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Wed Apr 3 07:41:00 2013 -0700
+
+    Added error codes to REST API docs
+    
+    Change-Id: Ifc094fe887b18424d5d63565be6096feb6878fe3
+
+commit 3b3bf5731ab60f93195dc2f36f2681b0032935f1
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 3 13:17:07 2013 +0400
+
+    Trailing whitespaces has been removed from the validation messages
+    
+    Change-Id: Ie20ca7ee8f24942e88d5abe4c3d9b0748621fc20
+
+commit 64be6bcdbcd173248b12d7854ed62f4198d3d978
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 3 13:16:40 2013 +0400
+
+    Side effect in SavannaTestCase has been fixed
+    
+    Change-Id: Id53dc68abcaaed99610d4a257e9488bbefb21776
+
+commit 363f8231f89ea0226b6dfecc58a2cd13660ce5d1
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 3 10:08:15 2013 +0400
+
+    oslo has been updated
+    
+    * uuidutils added;
+    * logging scheme updated.
+    
+    Change-Id: If1c278f8a067adf5af7408d2d25a2f37f7ad0be1
+
+commit 1e7905f32b83c003d81a811cacc0537742acb93c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Apr 3 00:27:32 2013 +0400
+
+    HowToParticipiate page updated
+    
+    Change-Id: Iac2897c49b1b52111b09ff09cadaadda7f308ae7
+
+commit cc828569b28982bf04ea248e12227e93b84f2553
+Merge: 75affe2 fe40adb
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Apr 2 14:52:19 2013 +0000
+
+    Merge "Fixed issue when json's responses contain null values"
+
+commit fe40adb5a078480bab1e6cff6103d5f5e18c6a04
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Tue Apr 2 07:35:09 2013 -0700
+
+    Fixed issue when json's responses contain null values
+    
+    * refactored clean_none method in service/api.py
+    
+    Fixed bug: #1163311
+    
+    Change-Id: I6d18c94c6a14121a7f84f10abcf0588af0595b61
+
+commit 75affe206e4c3f42197581533cbca42b16a40748
+Author: Dmitry Mescheryakov <dmescheryakov@mirantis.com>
+Date:   Tue Apr 2 16:35:02 2013 +0400
+
+    Introduced new networking option for cluster
+    
+    Now Savanna can provision cluster without floating IPs. Also removed 'apt-get install xsltproc' crutch from the setup script
+    
+    Change-Id: I9240fe7402a398f5642823d87edc2408129eec2d
+    Fixes: bug #1163226
+
+commit a742f0e67482deec9d2aed00df7ba61182c9095f
+Merge: 5aecd5e 36b6e34
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Apr 2 10:05:20 2013 +0000
+
+    Merge "Fixed validation errors and wrong response codes"
+
+commit 36b6e34c0b1c30a3fbc0748506f7a4bd2305797b
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Mon Apr 1 23:38:20 2013 -0700
+
+    Fixed validation errors and wrong response codes
+    
+    * Fixed bug with empty jsons requests during creating operations.
+    * Added proper error codes in api functions: 404 NOT_FOUND, 501 NOT_IMPLEMENTED
+    
+    Fixes bug: #1162746
+    
+    Change-Id: Ie0ca8c7b8e7077f089b7d3293689e1d87916d732
+
+commit 5aecd5ea8cc629586db1bd0514893cf4039f7037
+Merge: 37889bb 16e3516
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Mon Apr 1 18:03:23 2013 +0000
+
+    Merge "get_auth_token is now uses default configs"
+
+commit 16e351699dd572e5318505ed32aed6e38ce09a51
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Apr 1 21:52:03 2013 +0400
+
+    get_auth_token is now uses default configs
+    
+    Change-Id: Iacec4f96e40d7ebb49b8939338564de88bd6372b
+
+commit 37889bb3c3d606baa3eddfe3173bf3b4c6fefb25
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Sun Mar 31 06:28:44 2013 -0700
+
+    Added Nova resource checking in cluster creation operation
+    
+    Change-Id: Iab43f5e09c9e50f32775bb582dd86127c51b4204
+
+commit 705ee75281857e536a8b94ef1c04ec89c2233aa8
+Author: Dmitry Mescheryakov <dmescheryakov@mirantis.com>
+Date:   Fri Mar 29 23:35:49 2013 +0400
+
+    Implemented Hadoop config provisioning
+    
+    Change-Id: I90ab7397c0acfd2498f5de7654706479ef405c6f
+
+commit 355f1b92df7209ba5c43a3cbb1a6e499f428b612
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 29 19:09:42 2013 +0400
+
+    resources has been added to sdist tarball
+    
+    Change-Id: I4e5b2ecb5b78e6750b161e78632cf31660f613ed
+
+commit 65794e7f0ccd6217b237a330ba6df2fdb52e4bb6
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 29 14:25:43 2013 +0400
+
+    Exec permissions added to the savanna-manage command.
+    
+    Change-Id: I718073f250b0c4019bd9a43c721e7ff771790feb
+
+commit ec1ee358505f69059700cebdccf22cbd7b6465c0
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 29 13:59:53 2013 +0400
+
+    savanna-manage added to the scripts section of setup.py
+    
+    Change-Id: Ic9aa7baf2bf5a33697d6e297a6f15753912d44ed
+
+commit 2dd0af4b6cc882831bf7939f3349ed7350356e17
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 29 13:30:58 2013 +0400
+
+    sample-conf command added to savanna-manage
+    
+    Change-Id: Id72022c6a144feab82a0b68d79c42ff60fc6e15a
+
+commit 416a414bec138ad3120bde716c309ead34380c3c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 29 13:14:22 2013 +0400
+
+    Several fixes in tools and docs.
+    
+    run_pep8 is now works correctly with venvs;
+    docs updated to point to the stackforge repo.
+    
+    Change-Id: Ieddc29d3020e09a52b0b8fc5a7ad68086aaa8cee
+
+commit 4356068ed8385d069aeb7306f7ff03b97214e21b
+Author: Konovalov-Nik <nkonovalov@mirantis.com>
+Date:   Thu Mar 28 17:23:28 2013 +0400
+
+    Quickstart updated
+    
+    Change-Id: I3d9f1867e29c54d6b4d6a5dd8d15d6eb4ffaef2a
+
+commit 651cea9991f1e4287c93ef4b55097eb01b795864
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 28 17:13:55 2013 +0400
+
+    SavannaTestCase added
+    
+    Change-Id: I10c04487f2ea2fb5682d8dc383fd325ad6f828c8
+
+commit 48ea0781ee9303d1f6172f621e48900c1b0dc9b3
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Mar 27 16:36:12 2013 +0400
+
+    Some hacking.py fixes and fixes in validation and cluster_ops.
+    
+    All code has been cleaned to pass hacking checks;
+    only N301 (one import per line) has been disabled now;
+    VMs creation rollback has been implemented for vms creation errors.
+    
+    Change-Id: I8d973dfa0c01c8d595aff5fbaf47a9f81d55f74f
+
+commit 59a42394c13213dc0bbda00fd9add82fd0a6b9ac
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Mar 27 16:36:12 2013 +0400
+
+    hacking.py added
+    
+    Change-Id: Ie5908a2cc0a5acdc220e203828ebd8bc3b088d4d
+
+commit ae7660258631ecf01c97a3f4c386a75d13b75de1
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Mar 27 10:28:45 2013 +0400
+
+    Tools has been improved.
+    
+    openstack.nose_plugin is now used instead of test_lib
+    tox runs tools/run_XXX commands
+    commands unified to be used with tox or directly
+    
+    Change-Id: I7549408937ca43f4731ebbe7c52419c2577335be
+
+commit c4e3f6ba1bf404012853855f72cd8b8ddf603f76
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Mar 27 01:23:42 2013 +0400
+
+    Service layer validation added
+    
+    Change-Id: I96407bf3e384ef84260e0b7734641836b44b8490
+
+commit 7a62cf5a2ba0028f693e34b9e934e88d65ddfcc4
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 26 10:23:10 2013 +0400
+
+    Tenant id is now extracted from headers;
+    eq function added to api Resource class
+    
+    Change-Id: Ia28260a794c2e30fdcd57941421ea2cbbfc8f216
+
+commit 6a50d15340dbd0b1f9fde354165f8d4ba39754c6
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Mon Mar 25 09:00:13 2013 -0700
+
+    Added basic validation and error handling
+    
+    Change-Id: I1fa18ef7c74a68969e8a93b536628c4cd0cbcc71
+
+commit c67850ac635e293712a347bd144a939dd55eddb3
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 25 19:13:21 2013 +0400
+
+    small refactoring - service and storage (dao) layers has been created
+    
+    Change-Id: Ia3c106bfbe87a7e9c08659fd61308164b9afb2dc
+
+commit 097f7c44a2532d05a4282e02e62e9c3ee0814998
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Mar 24 22:39:01 2013 +0400
+
+    savanna-manage has been added;
+    reset-db/gen-templates moved to it
+    
+    Change-Id: I2034e65d4c8b61d8084729eb455c450370cfcc8b
+
+commit 6bcc3a82ef5f25ea4e15689133e62dfa2a447aa6
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Mar 24 22:03:21 2013 +0400
+
+    Author email has been fixed
+    
+    Change-Id: Iee22d924937c808f6d39b4e95537606298bf74c9
+
+commit f7ba6ad247d68f9a8f4603efe660044170eec4d5
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Mar 23 23:36:08 2013 +0400
+
+    dev-conf is now supported
+    
+    Change-Id: Ifef175f0c6e712ec66076189db4e1464c2333fa3
+
+commit 4f6ac6406ba0be6641f12f9f326f34c4c0c00fd5
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Mar 23 22:35:05 2013 +0400
+
+    some confs cleanup, pyflakes added to tox
+    
+    Change-Id: Ic83f7c05ce8a59a549b86b76d312019558c485e6
+
+commit 0be94a114925b39f8807a4dce522f7d0a50ec83e
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Mar 23 22:10:45 2013 +0400
+
+    versions added to api, small api improvements
+    
+    Change-Id: Ie5daa16bca490d8dfb5802217fc5bf17ee6af1a2
+
+commit 99fd88a5ad25aa814b533ffe5476a389f9f68134
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 22 23:27:00 2013 +0400
+
+    small cleanup
+    
+    Change-Id: I506093d202974157999a6769248a67cb4ab9ee95
+
+commit 11c12ab58ec67cf14695cf1d7f12cdca15c5f3fd
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 22 19:01:51 2013 +0400
+
+    quickstart has been updated
+
+commit bbb912fec8ceec98339cebde12343146e1df24d9
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 22 13:57:23 2013 +0400
+
+    docs has been updated
+
+commit 336c3780fb0738c924fb09f08b7e69d28666c88c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri Mar 22 00:11:01 2013 +0400
+
+    simple tox.ini has been added
+
+commit 569eb9f45a7e3cb7b862b4f686752f73fca1ec2e
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 23:04:24 2013 +0400
+
+    unused config item has been removed
+
+commit 56a7a33348b29815f7d01c7db993b0f2c6e3d74e
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 22:29:59 2013 +0400
+
+    oslo.config is now available in pypi
+
+commit 88f82f97b2ab7c0799f66f0da091c147c2f75eaf
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 19:32:12 2013 +0400
+
+    renaming rollbacked to prevent problems with the old image
+
+commit e09194638bd2b26f6c5cada9342de216385a44db
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 19:31:15 2013 +0400
+
+    conf files moved to the right place
+
+commit 4543a4c5a2280ca51517ff4e8e9a3929f1cbd1bf
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 19:27:54 2013 +0400
+
+    Add .gitreview file.
+
+commit 2ab39e152027d98fb5101f024ef37c36d76220d0
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Thu Mar 21 17:51:33 2013 +0400
+
+    mailing list address has been fixed
+
+commit 0372a12341d253a66175c87404ff7e448c028dab
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Wed Mar 20 09:10:38 2013 -0700
+
+    Changed pictures in docs according to Savanna name and replaced Horizon pages
+
+commit 679f1400b9b631ade0287b404b2d321b756d19c9
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Wed Mar 20 05:24:32 2013 -0700
+
+    Changed docs with replacement of EHO to Savanna
+
+commit e23d985387901054b65f49cc79817809d83d39bc
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Mar 20 11:19:46 2013 +0400
+
+    eho -> savanna
+
+commit c41c7e5ad4f1d55af3f3f3c21a137b533c5e0001
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 23:38:19 2013 +0400
+
+    .mailmap fixed
+
+commit 40b990db08d2c46e532cfc3e8dce0ef26ffc23a6
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 23:17:17 2013 +0400
+
+    .pylintrc improved
+
+commit 04becd1166efab36027acdf177d4150d14c96559
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 22:58:05 2013 +0400
+
+    oslo conf has been updated
+
+commit 4360d267beea792cae7065b728d9fc77a484ff7e
+Merge: bba5e66 ca4dba1
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 22:45:33 2013 +0400
+
+    Merge remote-tracking branch 'origin/master' into dev
+
+commit bba5e66fa1df56ccf9654403fb83233e8561d351
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 20:31:43 2013 +0400
+
+    Build docs is now implemented using setup.py
 
 commit ca4dba1d0e7ab24d748b746e115ca6dc2191997a
 Merge: 6b1d3f9 e0590f8
@@ -349,11 +1167,147 @@ Date:   Tue Mar 19 00:55:50 2013 -0700
     
     EHO-Horizon Setup instruction is added
 
+commit 20b6e455a6daa46a6c178b5c5262395bdd7231cc
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 00:27:43 2013 +0400
+
+    unused arg has been removed
+
+commit 946ebf3ee9b9e6c74ba1bd08e371b8d767107251
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Mar 19 00:11:27 2013 +0400
+
+    oslo upgraded
+
+commit b6717cf5267c9a23d5107038911a8ac824ac7611
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 23:52:01 2013 +0400
+
+    sample confs has been improved
+
+commit 8e35e335a50ae5c9ee89293dd42921851b80b610
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 23:51:41 2013 +0400
+
+    logging of defaults generator has been cleaned
+
+commit c1b14c5e976d5d1881380b33eeb929634eb71805
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 23:43:08 2013 +0400
+
+    plain py logging replaced with oslo log
+
+commit f391052801457d087535ceedff8e07af21381842
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 20:21:30 2013 +0400
+
+    conf-print has been removed
+
+commit d869ddd532a1244a21606813f9aaabbaea5aefef
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 20:05:57 2013 +0400
+
+    get_auth_token has been fixed
+
+commit 8c9b12672b94bdb2a545b0e638aa20b3ead926ff
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 18:47:56 2013 +0400
+
+    stollen files has been moved to openstack package
+
+commit adba1aeadc83b932d0031a419b26bdee85be05a7
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 18:44:45 2013 +0400
+
+    tests runner has been fixed
+
+commit 990255541637594cce33b313c5cc1ebad9f665ac
+Merge: c144541 64fe9bc
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 18:43:04 2013 +0400
+
+    Merge branch 'oslo_config' into dev
+
+commit 64fe9bc5c33fc1190f0e98519b36aaea822e1aec
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 18:41:25 2013 +0400
+
+    unused configs has been removed
+
+commit ba8aac20e96b6fb6611f08b9f66bd35b735f5b11
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 18:38:24 2013 +0400
+
+    refactoring: eho.server -> eho
+
+commit c1445412e5db0135ee45073a6047d222c817a4cc
+Merge: 47db68b 7df4d55
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 06:57:37 2013 -0700
+
+    Merge pull request #11 from Mirantis/oslo_config
+    
+    Switched from self-made config to oslo.config
+
+commit 7df4d55be44ec8deaf9ccd5cc58392a758b0d4ec
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 17:55:07 2013 +0400
+
+    unused option dev removed;
+    analyze_opts.py removed;
+    eho.conf.sample updated
+
+commit fa0fb2c0ee5fdfb0edd48dd5de7761e1d29cd2d4
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 17:25:28 2013 +0400
+
+    some cleanups, tests fixed
+
+commit c758ffe607155a28c111058d3ca847dbc277ff7e
+Merge: cb09dcf 47db68b
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 17:01:35 2013 +0400
+
+    Merge branch 'dev' into oslo_config
+
+commit 47db68b40ecae83bd20b6d3424cc0868bf66b9e3
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 16:59:33 2013 +0400
+
+    oslo context has been added
+
+commit cb09dcf23c1a080eec235197886bc9eae7186d9f
+Merge: 262d6f8 a08eaa2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 16:17:51 2013 +0400
+
+    Merge remote-tracking branch 'origin/oslo_config' into dev
+
+commit 262d6f8bc299d979d56a82d63bdfeef0521a0e1a
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Mar 18 16:16:48 2013 +0400
+
+    oslo-config has been upgraded to the latest version
+
 commit e0590f84da499fda91a9b58798c5d23b1137b35e
 Author: Alexander Ignatov <aignatov@mirantis.com>
 Date:   Mon Mar 18 04:45:46 2013 -0700
 
     EHO-Horizon Setup instruction is added
+
+commit a08eaa2beaba2d38e1987a70597326d8af233398
+Author: Dmitry Mescheryakov <dmescheryakov@mirantis.com>
+Date:   Mon Mar 18 02:05:48 2013 +0400
+
+    Switched from self-made config to oslo.config
+    
+    Something is already working, but it needs further testing and refactoring
+    Memo:
+    fix failing test
+    fix pep8 errors
+    think what to do with copyright in tools/conf/* files copied from nova
+    rename 'host' and 'port' to 'listen_address' and 'listen_port'
+    rephrase help strings for config options; right now they are pretty ugly
 
 commit 6b1d3f9be4c537ef3f2323ba1f7541633ac3083a
 Author: Sergey Lukjanov <slukjanov@mirantis.com>

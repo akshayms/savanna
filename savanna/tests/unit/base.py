@@ -52,6 +52,8 @@ def _stub_launch_cluster(headers, cluster):
         DB.session.add(Node(vm_id, cluster.id, elem))
         LOG.debug("VM '%s/%s/%s' created", ip, vm_id, elem)
 
+    return True
+
 
 def _stub_stop_cluster(headers, cluster):
     LOG.debug("stub stop_cluster called with %s, %s", headers, cluster)
@@ -115,6 +117,7 @@ class StubFlavor:
 
 def _stub_get_flavor(headers, **kwargs):
     return StubFlavor('test_flavor', 1, 512)
+
 
 CONF = cfg.CONF
 CONF.import_opt('debug', 'savanna.openstack.common.log')
@@ -181,8 +184,7 @@ class SavannaTestCase(unittest.TestCase):
         os.unlink(self.db_path)
 
         # place back default configs
-        CONF.set_override('debug', False)
-        CONF.set_override('allow_cluster_ops', False)
-        CONF.set_override('database_uri', 'sqlite:////tmp/savanna.db',
-                          group='sqlalchemy')
-        CONF.set_override('echo', False, group='sqlalchemy')
+        CONF.clear_override('debug')
+        CONF.clear_override('allow_cluster_ops')
+        CONF.clear_override('database_uri', group='sqlalchemy')
+        CONF.clear_override('echo', group='sqlalchemy')

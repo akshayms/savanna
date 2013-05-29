@@ -37,7 +37,6 @@ import logging
 import logging.config
 import logging.handlers
 import os
-import stat
 import sys
 import traceback
 
@@ -104,10 +103,7 @@ logging_cli_opts = [
 generic_log_opts = [
     cfg.BoolOpt('use_stderr',
                 default=True,
-                help='Log output to standard error'),
-    cfg.StrOpt('logfile_mode',
-               default='0644',
-               help='Default file mode used when creating log files'),
+                help='Log output to standard error')
 ]
 
 log_opts = [
@@ -340,7 +336,7 @@ class LogConfigError(Exception):
 def _load_log_config(log_config):
     try:
         logging.config.fileConfig(log_config)
-    except ConfigParser.Error, exc:
+    except ConfigParser.Error as exc:
         raise LogConfigError(log_config, str(exc))
 
 
@@ -399,11 +395,6 @@ def _setup_logging_from_conf():
         filelog = logging.handlers.WatchedFileHandler(logpath)
         log_root.addHandler(filelog)
 
-        mode = int(CONF.logfile_mode, 8)
-        st = os.stat(logpath)
-        if st.st_mode != (stat.S_IFREG | mode):
-            os.chmod(logpath, mode)
-
     if CONF.use_stderr:
         streamlog = ColorHandler()
         log_root.addHandler(streamlog)
@@ -432,14 +423,11 @@ def _setup_logging_from_conf():
     else:
         log_root.setLevel(logging.WARNING)
 
-    level = logging.NOTSET
     for pair in CONF.default_log_levels:
         mod, _sep, level_name = pair.partition('=')
         level = logging.getLevelName(level_name)
         logger = logging.getLogger(mod)
         logger.setLevel(level)
-        for handler in log_root.handlers:
-            logger.addHandler(handler)
 
 _loggers = {}
 

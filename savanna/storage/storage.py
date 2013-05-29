@@ -17,7 +17,6 @@ from savanna.storage.db import DB
 
 from savanna.storage.models import NodeTemplate, NodeProcess, Cluster, \
     ClusterNodeCount, NodeTemplateConfig, NodeType, NodeProcessProperty
-from savanna.utils.api import abort_and_log
 
 
 ## Node Template ops:
@@ -30,17 +29,21 @@ def get_node_templates(**args):
     return NodeTemplate.query.filter_by(**args).all()
 
 
-def create_node_template(name, node_type_id, tenant_id, flavor_id, configs):
+def is_node_template_associated(**args):
+    nt = get_node_template(**args)
+    return nt and (len(nt.nodes) or len(nt.cluster_node_counts))
+
+
+def create_node_template(name, node_type_id, flavor_id, configs):
     """Creates new node templates.
 
     :param name: template name
     :param node_type_id: node type
-    :param tenant_id: tenant
     :param flavor_id: flavor
     :param configs: dict of process->property->value
     :return: created node template
     """
-    node_template = NodeTemplate(name, node_type_id, tenant_id, flavor_id)
+    node_template = NodeTemplate(name, node_type_id, flavor_id)
     DB.session.add(node_template)
     for process_name in configs:
         process = NodeProcess.query.filter_by(name=process_name).first()
@@ -60,16 +63,10 @@ def create_node_template(name, node_type_id, tenant_id, flavor_id, configs):
 
 
 def terminate_node_template(**args):
-    template = NodeTemplate.query.filter_by(**args).first()
+    template = get_node_template(**args)
     if template:
-        if len(template.nodes):
-            abort_and_log(500, "There are active nodes created using "
-                               "template '%s' you trying to terminate"
-                               % args)
-        else:
-            DB.session.delete(template)
-            DB.session.commit()
-
+        DB.session.delete(template)
+        DB.session.commit()
         return True
     else:
         return False

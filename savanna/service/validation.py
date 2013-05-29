@@ -103,7 +103,7 @@ def validate(validate_func):
         @functools.wraps(func)
         def handler(*args, **kwargs):
             try:
-                validate_func(api_u.request_data())
+                validate_func(api_u.request_data(), **kwargs)
             except jsonschema.ValidationError, e:
                 e.code = "VALIDATION_ERROR"
                 return api_u.bad_request(e)
@@ -123,12 +123,16 @@ def validate(validate_func):
     return decorator
 
 
-def exists_by_id(service_func, id_prop):
+def exists_by_id(service_func, id_prop, tenant_specific=False):
     def decorator(func):
         @functools.wraps(func)
         def handler(*args, **kwargs):
             try:
-                service_func(*args, id=kwargs[id_prop])
+                if tenant_specific:
+                    tenant = request.headers['X-Tenant-Id']
+                    service_func(*args, id=kwargs[id_prop], tenant_id=tenant)
+                else:
+                    service_func(*args, id=kwargs[id_prop])
                 return func(*args, **kwargs)
             except ex.NotFoundException, e:
                 e.__init__(kwargs[id_prop])
@@ -239,6 +243,12 @@ def validate_node_template_create(nt_values):
             if param not in values[process] or not values[process][param]:
                 raise ex.RequiredParamMissedException(process, param)
 
+    all_params = api.get_node_type_all_params(name=values['node_type'])
+    for process in all_params:
+        for param in processes[process]:
+            if param not in all_params[process]:
+                raise ex.ParamNotAllowedException(param, process)
+
     if api.CONF.allow_cluster_ops:
         flavor = values['flavor_id']
         nova_flavors = nova.get_flavors(request.headers)
@@ -278,3 +288,9 @@ def _check_limits(limits, node_templates):
     if need_inst > all_inst or need_vcpus > all_vcpus or need_ram > all_ram:
         raise ex.NotEnoughResourcesException([all_inst, all_vcpus, all_ram,
                                               need_inst, need_vcpus, need_ram])
+
+
+def validate_node_template_terminate(_, template_id):
+    if api.is_node_template_associated(id=template_id):
+        name = api.get_node_template(id=template_id).name
+        raise ex.AssociatedNodeTemplateTerminationException(name)

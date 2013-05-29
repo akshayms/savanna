@@ -38,6 +38,10 @@ def get_node_templates(**args):
             in storage.get_node_templates(**args)]
 
 
+def is_node_template_associated(**args):
+    return storage.is_node_template_associated(**args)
+
+
 def create_node_template(values, headers):
     """Creates new node template from values dict.
 
@@ -48,11 +52,9 @@ def create_node_template(values, headers):
 
     name = values.pop('name')
     node_type_id = storage.get_node_type(name=values.pop('node_type')).id
-    tenant_id = headers['X-Tenant-Id']
     flavor_id = values.pop('flavor_id')
 
-    nt = storage.create_node_template(name, node_type_id, tenant_id,
-                                      flavor_id, values)
+    nt = storage.create_node_template(name, node_type_id, flavor_id, values)
 
     return get_node_template(id=nt.id)
 
@@ -95,12 +97,13 @@ def _cluster_creation_job(headers, cluster_id):
               _cluster(cluster).dict)
 
     if CONF.allow_cluster_ops:
-        cluster_ops.launch_cluster(headers, cluster)
+        launched = cluster_ops.launch_cluster(headers, cluster)
     else:
         LOG.info("Cluster ops are disabled, use --allow-cluster-ops flag")
+        launched = True
 
-    # update cluster status
-    storage.update_cluster_status('Active', id=cluster.id)
+    if launched:
+        storage.update_cluster_status('Active', id=cluster.id)
 
 
 def terminate_cluster(headers, **args):
@@ -140,6 +143,14 @@ def get_node_type_required_params(**args):
             if prop.required and not prop.default:
                 result[process.name] += [prop.name]
 
+    return result
+
+
+def get_node_type_all_params(**args):
+    result = {}
+    for process in storage.get_node_type(**args).processes:
+        result[process.name] = [prop.name
+                                for prop in process.node_process_properties]
     return result
 
 

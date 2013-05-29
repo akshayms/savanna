@@ -2,7 +2,6 @@
 #touch script.sh && chmod +x script.sh && vim script.sh
 
 dir=/outputTestMapReduce
-directory=/usr/share/hadoop
 log=$dir/log.txt
 
 case $1 in
@@ -17,6 +16,9 @@ case $1 in
         ;;
         lt)
                 FUNC="get_list_active_trackers"
+        ;;
+        ld)
+                FUNC="get_list_active_datanodes"
         ;;
         ed)
                 FUNC=" check_exist_directory"
@@ -39,6 +41,25 @@ do
                 shift
         fi
 
+        if [ "$1" = "-hv" ]
+        then
+                HADOOP_VERSION="$2"
+                shift
+        fi
+
+        if [ "$1" = "-hd" ]
+        then
+                HADOOP_DIRECTORY="$2"
+                shift
+        fi
+
+        if [ "$1" = "-hld" ]
+        then
+                HADOOP_LOG_DIRECTORY="$2"
+                shift
+        fi
+
+
         shift
 done
 
@@ -58,6 +79,27 @@ f_var_check() {
                                 exit 0
                         fi
                 ;;
+                v_hadoop_version)
+                        if [ -z "$HADOOP_VERSION" ]
+                        then
+                                echo "hadoop_version_not_specified"
+                                exit 0
+                        fi
+                ;;
+                v_hadoop_directory)
+                        if [ -z "$HADOOP_DIRECTORY" ]
+                        then
+                                echo "hadoop_directory_not_specified"
+                                exit 0
+                        fi
+                ;;
+                v_hadoop_log_directory)
+                        if [ -z "$HADOOP_LOG_DIRECTORY" ]
+                        then
+                                echo "hadoop_log_directory_not_specified"
+                                exit 0
+                        fi
+                ;;
         esac
 }
 
@@ -70,6 +112,8 @@ touch $log
 
 map_reduce() {
 f_create_log_dir
+f_var_check v_hadoop_version
+f_var_check v_hadoop_directory
 echo "[------ dpkg------]">>$log
 echo `dpkg --get-selections | grep hadoop` >>$log
 echo "[------jps------]">>$log
@@ -82,30 +126,43 @@ su -c "hadoop dfs -ls /" hadoop &&
 su -c "hadoop dfs -mkdir /test" hadoop &&
 su -c "hadoop dfs -copyFromLocal $dir/input /test/mydata" hadoop 2>>$log
 echo "[------start job------]">>$log &&
-su -c "cd $directory && hadoop jar hadoop-examples-1.1.1.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
+su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
 su -c "hadoop dfs -copyToLocal /test/output/ $dir/out/" hadoop 2>>$log &&
 su -c "hadoop dfs -rmr /test" hadoop 2>>$log
 }
 
 run_pi_job() {
 f_var_check v_node_count
+f_var_check v_hadoop_version
+f_var_check v_hadoop_directory
 f_create_log_dir
-su -c "cd $directory && hadoop jar hadoop-examples-1.1.1.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
+directory=/usr/share/hadoop
+logdir=/var/log/hadoop/hadoop/userlogs
+su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
 }
 
 get_job_name() {
-su -c "cd $directory && hadoop job -list all | tail -n1" hadoop | awk '{print $1}' 2>>$log
+f_var_check v_hadoop_directory
+su -c "cd $HADOOP_DIRECTORY && hadoop job -list all | tail -n1" hadoop | awk '{print $1}' 2>>$log
 }
 
 get_list_active_trackers() {
 f_create_log_dir
+f_var_check v_hadoop_directory
 sleep 30 &&
-su -c "cd $directory && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
+su -c "cd $HADOOP_DIRECTORY && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
+}
+
+get_list_active_datanodes() {
+f_create_log_dir
+f_var_check v_hadoop_directory
+su -c "hadoop dfsadmin -report" hadoop | grep "Datanodes available:.*" | awk '{print $3}' 2>>$log
 }
 
 check_exist_directory() {
 f_var_check v_job_name
-if ! [ -d /mnt/log/hadoop/hadoop/userlogs/$JOB_NAME ];
+f_var_check v_hadoop_log_directory
+if ! [ -d $HADOOP_LOG_DIRECTORY/$JOB_NAME ];
 then echo "directory_not_found" && exit 1
 fi
 }
