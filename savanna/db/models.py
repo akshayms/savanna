@@ -93,7 +93,7 @@ class NodeGroup(mb.SavannaBase, mb.IdMixin, mb.ExtraMixin):
         self.node_processes = node_processes
         self.count = count
         self.node_configs = node_configs or {}
-        self.anti_affinity_group = anti_affinity_group or {}
+        self.anti_affinity_group = anti_affinity_group
         self.extra = extra or {}
 
 
