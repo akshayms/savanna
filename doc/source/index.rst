@@ -37,7 +37,7 @@ Developer Docs
     :maxdepth: 1
 
     restapi/v02
-
+    hadoop-swift/hadoop-swift
 
 Installation guides
 -------------------
@@ -47,3 +47,4 @@ Installation guides
 
     installation.guide
     horizon/installation.guide
+    horizon/dev.environment.guide

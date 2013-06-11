@@ -44,10 +44,17 @@ class ITestCase(unittest.TestCase):
         self.flavor_id = param.FLAVOR_ID
         self.image_id = param.IMAGE_ID
 
-        self.url_nt = '/v0.2/%s/node-templates' % self.tenant
-        self.url_nt_with_slash = '/v0.2/%s/node-templates/' % self.tenant
-        self.url_cluster = '/v0.2/%s/clusters' % self.tenant
-        self.url_cl_with_slash = '/v0.2/%s/clusters/' % self.tenant
+        self.url_ngt = '/v1.0/%s/node-group-templates' % self.tenant
+        self.url_ngt_with_slash = '/v1.0/%s/node-group-templates/'\
+                                  % self.tenant
+        self.url_cluster = '/v1.0/%s/clusters' % self.tenant
+        self.url_cluster_with_slash = '/v1.0/%s/clusters/' % self.tenant
+        self.url_cl_tmpl = '/v1.0/%s/cluster-templates/' % self.tenant
+        self.url_cl_tmpl_with_slash = '/v1.0/%s/cluster-templates' % self.tenant
+        self.url_plugins = '/v1.0/%s/plugins' % self.tenant
+        self.url_plugins_with_slash = '/v1.0/%s/plugins/' % self.tenant
+        self.url_images = '/v1.0/%s/images' % self.tenant
+        self.url_images_with_slash = '/v1.0/%s/images/' % self.tenant
 
 #----------------------CRUD_comands--------------------------------------------
 
@@ -115,130 +122,137 @@ class ITestCase(unittest.TestCase):
 
 #----------------------other_commands------------------------------------------
 
-    def _get_body_nt(self, name, nt_type, hs1, hs2):
-        node = 'name' if nt_type in ['JT+NN', 'NN'] else 'data'
-        tracker = 'job' if nt_type in ['JT+NN', 'JT'] else 'task'
-        processes_name = nt_type
-        nt = {
-            u'name': u'%s.%s' % (name, param.FLAVOR_ID),
-            u'%s_node' % node: {u'heap_size': u'%d' % hs1},
-            u'%s_tracker' % tracker: {u'heap_size': u'%d' % hs2},
-            u'node_type': {
-                u'processes': [u'%s_tracker' % tracker,
-                               u'%s_node' % node],
-                u'name': u'%s' % processes_name},
-            u'flavor_id': u'%s' % self.flavor_id
-        }
-        if nt_type == 'NN':
-            del nt[u'%s_tracker' % tracker]
-            nt[u'node_type'][u'processes'] = [u'%s_node' % node]
-        elif nt_type == 'JT':
-            del nt[u'%s_node' % node]
-            nt[u'node_type'][u'processes'] = [u'%s_tracker' % tracker]
-        return nt
+    def make_node_group_template(self, gr_name, desc, n_proc):
+        processes = ["tasktracker", "datanode"]
+        if n_proc == 'JT+NN':
+            processes = ["jobtracker", "namenode"]
+        elif n_proc == 'JT':
+            processes = ["jobtracker"]
+        elif n_proc == 'NN':
+            processes = ["namenode"]
+        elif n_proc == 'TT':
+            processes = ["tasktracker"]
+        elif n_proc == 'DN':
+            processes = ["datanode"]
+        group_template = dict(
+            name="%s" % gr_name,
+            description="%s" % desc,
+            flavor_id="%s" % self.flavor_id,
+            plugin_name="%s" % param.PLUGIN_NAME,
+            hadoop_version="%s" % param.HADOOP_VERSION,
+            node_processes=processes,
+            node_configs={}
+        )
+        return group_template
 
-    def _get_body_cluster(self, name, master_name, worker_name, node_number):
-        return {
-            u'status': u'Starting',
-            u'service_urls': {},
-            u'name': u'%s' % name,
-            u'base_image_id': u'%s' % self.image_id,
-            u'node_templates':
-            {
-                u'%s.%s' % (master_name, param.FLAVOR_ID): 1,
-                u'%s.%s' % (worker_name, param.FLAVOR_ID): node_number
-            },
-            u'nodes': []
-        }
+    def make_cluster_template(self, ngt_list):
+        ngt = dict(
+            name="",
+            node_group_template_id="",
+            count=1
+        )
+        cluster_template = dict(
+            name="%s" % param.CLUSTER_NAME_CRUD,
+            plugin_name="%s" % param.PLUGIN_NAME,
+            hadoop_version="%s" % param.HADOOP_VERSION,
+            user_keypair_id="%s" % param.SSH_KEY,
+            default_image_id="%s" % self.image_id,
+            cluster_configs={},
+            node_groups={
+                dict(
+                    name="TT",
+                    node_group_template_id="321",
+                    count=2
+                )
+            }
+        )
+        for key, value in ngt_list.items():
+            ngt['node_group_template_id'] = key
+            ngt['count'] = value
+            cluster_template['node_groups'].append(ngt)
+            data = self._get_object(self.url_ngt_with_slash, key, 200)
+            name = data['node_group_template']['name']
+            ngt['name'] = name
+        return cluster_template
 
-    def change_field_nt(self, data, old_field, new_field):
-        val = data['node_template'][old_field]
-        del data['node_template'][old_field]
-        data['node_template'][new_field] = val
-        return data
+    def make_cl_body_with_cl_tmpl(self, plugin_name, hadoop_ver,
+                                  cl_tmpl_id):
+        cluster_body = dict(
+            name="%s" % param.CLUSTER_NAME_CRUD,
+            plugin_name="%s" % plugin_name,
+            hadoop_version="%s" % hadoop_ver,
+            cluster_template_id="%s" % cl_tmpl_id
+        )
+        return cluster_body
 
-    def make_nt(self, nt_name, node_type, jt_heap_size, nn_heap_size):
-        nt = dict(
-            node_template=dict(
-                name='%s.%s' % (nt_name, param.FLAVOR_ID),
-                node_type='JT+NN',
-                flavor_id=self.flavor_id,
-                job_tracker={
-                    'heap_size': '%d' % jt_heap_size
-                },
-                name_node={
-                    'heap_size': '%d' % nn_heap_size
-                }
-            ))
-        if node_type == 'TT+DN':
-            nt['node_template']['node_type'] = 'TT+DN'
-            nt = self.change_field_nt(nt, 'job_tracker', 'task_tracker')
-            nt = self.change_field_nt(nt, 'name_node', 'data_node')
-        elif node_type == 'NN':
-            nt['node_template']['node_type'] = 'NN'
-            del nt['node_template']['job_tracker']
-        elif node_type == 'JT':
-            nt['node_template']['node_type'] = 'JT'
-            del nt['node_template']['name_node']
-        return nt
+    def make_cl_body_with_ngt(self, ngt_list):
+        ngt = dict(
+            name="",
+            node_group_template_id="",
+            count=1
+        )
+        cluster_body = dict(
+            name="%s" % param.CLUSTER_NAME_CRUD,
+            plugin_name="%s" % param.PLUGIN_NAME,
+            hadoop_version="%s" % param.HADOOP_VERSION,
+            user_keypair_id="%s" % param.SSH_KEY,
+            default_image_id="%s" % param.IMAGE_ID,
+            cluster_configs={},
+        )
+        for key, value in ngt_list.items():
+            ngt['node_group_template_id'] = key
+            ngt['count'] = value
+            cluster_body['node_groups'].append(ngt)
+            data = self._get_object(self.url_ngt_with_slash, key, 200)
+            name = data['node_group_template']['name']
+            ngt['name'] = name
+        return cluster_body
 
-    def make_cluster_body(self, cluster_name, name_master_node,
-                          name_worker_node, number_workers):
-        body = dict(
-            cluster=dict(
-                name=cluster_name,
-                base_image_id=self.image_id,
-                node_templates={
-                    '%s.%s' % (name_master_node, param.FLAVOR_ID): 1,
-                    '%s.%s' %
-                    (name_worker_node, param.FLAVOR_ID): number_workers
-                }
-            ))
-        return body
-
-    def delete_node_template(self, data):
-        data = data['node_template']
-        object_id = data.pop(u'id')
-        self._del_object(self.url_nt_with_slash, object_id, 204)
-
-    def _crud_object(self, body, get_body, url):
+    def _crud_object(self, body, url):
         data = self._post_object(url, body, 202)
         get_url = None
         object_id = None
         try:
-            obj = 'node_template' if url == self.url_nt else 'cluster'
-            get_url = self.url_nt_with_slash if url == self.url_nt \
-                else self.url_cl_with_slash
-            data = data['%s' % obj]
-            object_id = data.pop(u'id')
-            self.assertEquals(data, get_body)
+            if url == self.url_cluster:
+                crud_object = 'cluster'
+                get_url = self.url_cluster_with_slash
+            elif url == self.url_ngt:
+                crud_object = 'node_group_template'
+                get_url = self.url_ngt_with_slash
+            else:
+                crud_object = 'cluster_template'
+                get_url = self.url_cl_tmpl_with_slash
+            data = data['%s' % crud_object]
+            object_id = data.get('id')
+            #self.assertEquals(data, get_body)
             get_data = self._get_object(get_url, object_id, 200)
-            get_data = get_data['%s' % obj]
-            del get_data[u'id']
-            if obj == 'cluster':
-                self._await_cluster_active(
-                    get_body, get_data, get_url, object_id)
+            get_data = get_data['%s' % crud_object]
+            #del get_data[u'id']
+            #if crud_object == 'cluster':
+            #    self._await_cluster_active(
+            #        get_body, get_data, get_url, object_id)
+            self.assertEquals(data, get_data)
         except Exception as e:
-            self.fail('failure:' + str(e))
+            self.fail('failure:' + e.message)
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
 
-    def _await_cluster_active(self, get_body, get_data, get_url, object_id):
-        get_body[u'status'] = u'Active'
-        del get_body[u'service_urls']
-        del get_body[u'nodes']
-        i = 1
-        while get_data[u'status'] != u'Active':
-            if i > int(param.TIMEOUT) * 6:
-                self.fail(
-                    'cluster not Starting -> Active, passed %d minutes'
-                    % param.TIMEOUT)
-            get_data = self._get_object(get_url, object_id, 200)
-            get_data = get_data['cluster']
-            del get_data[u'id']
-            del get_data[u'service_urls']
-            del get_data[u'nodes']
-            eventlet.sleep(10)
-            i += 1
-        self.assertEquals(get_data, get_body)
+    # def _await_cluster_active(self, get_body, get_data, get_url, object_id):
+    #     get_body[u'status'] = u'Active'
+    #     del get_body[u'service_urls']
+    #     del get_body[u'nodes']
+    #     i = 1
+    #     while get_data[u'status'] != u'Active':
+    #         if i > int(param.TIMEOUT) * 6:
+    #             self.fail(
+    #                 'cluster not Starting -> Active, passed %d minutes'
+    #                 % param.TIMEOUT)
+    #         get_data = self._get_object(get_url, object_id, 200)
+    #         get_data = get_data['cluster']
+    #         del get_data[u'id']
+    #         del get_data[u'service_urls']
+    #         del get_data[u'nodes']
+    #         eventlet.sleep(10)
+    #         i += 1
+    #     self.assertEquals(get_data, get_body)

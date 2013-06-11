@@ -1,3 +1,547 @@
+commit 35e7c47f27302bf54c193d39923370fe765bc195
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 10 15:25:25 2013 +0400
+
+    Adding Nadya Privalova to AUTHORS.
+    
+    Change-Id: Ie6df5f0e2b417a9cdd31533aec2d4b50f3893aca
+
+commit 94338b077fd12e0c796f3a203792832a43c3b73c
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 10 12:30:41 2013 +0400
+
+    Cleanup tools/*-requires.
+    
+    Change-Id: Id4a2207f325ab063b9042760bd9f93a3c6fb8893
+
+commit c211c5c72ae9f4cd81c1214a437c36cc53fe3e6c
+Merge: cb8ae47 fec7776
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sun Jun 9 21:16:20 2013 +0000
+
+    Merge "ImageRegistry completed."
+
+commit fec7776c3c7b5a9fc8ceb72ad4bbd5f418d36a85
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 10 01:06:53 2013 +0400
+
+    ImageRegistry completed.
+    
+    * added filtering by tags
+    * links removed from image view
+    
+    Implements blueprint hadoop-image-registry
+    
+    Change-Id: I05cd6c644495709a2f7508122070f36e3497ef03
+
+commit cb8ae47c300d19d677c3c74eb951fe08a8747114
+Merge: 974a645 1030001
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sun Jun 9 09:16:56 2013 +0000
+
+    Merge "Correct todo messages."
+
+commit 974a645ab6fdaa9032fbe87a34818acbea57f393
+Merge: 3a73f0a 0a18198
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sun Jun 9 09:16:53 2013 +0000
+
+    Merge "REST API samples updated"
+
+commit 103000188994c374aa076c385195eac028d790d7
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 9 13:00:20 2013 +0400
+
+    Correct todo messages.
+    
+    Change-Id: I4a41ffdd82da7b3abb4c92d2db945480b88cabd9
+
+commit 3a73f0a92ab5a26e05bdea88cdb613ece7379bf6
+Author: Dmitry Mescheryakov <dmescheryakov@mirantis.com>
+Date:   Sun Jun 9 11:30:35 2013 +0400
+
+    Fix for Dummy plugin
+    
+    The dummy plugin became broken after recent changes, that commit fixes the issue
+    
+    Change-Id: I4ce52ce5b15e6429a24558c2ef872fe57619f10a
+
+commit 0a1819810e34ea62a8740da1bb9f595226f9bb1b
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 9 12:23:36 2013 +0400
+
+    REST API samples updated
+    
+    Change-Id: Iaaf6ec47596b6d9722527198d1c9a978cba6af37
+
+commit 0b87ac85268fe948f2f5e4c34b26d95df58c5cf9
+Merge: 158ee68 66b3330
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jun 8 19:42:44 2013 +0000
+
+    Merge "Small code improvements."
+
+commit 158ee6808a9a19a604ab1d72549f4d4992c18a5a
+Merge: f684ea5 79efb34
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jun 8 19:42:35 2013 +0000
+
+    Merge "Core part improvements."
+
+commit 66b333054b3c10d4bedbee90bf4d0dda59b38689
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 8 22:26:01 2013 +0400
+
+    Small code improvements.
+    
+    * avoid None iteration in configs util
+    * display instances in cluster details
+    * display more info while provisioning cluster
+    
+    Change-Id: I33026468911a3f93695468cde8d67db02485a77a
+
+commit 79efb349a1ecc9dad5afd708941751280ca75301
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 8 13:32:41 2013 +0400
+
+    Core part improvements.
+    
+    * node group tmpl props are now copied to the node group
+    * imaage_id is now taken from cluster base default image id or specific one from node group
+    
+    Change-Id: I141110fbe1ba9dbc2f82d5748af6cd8643c411ee
+
+commit f684ea5d27100f1c887caf065e51543c8c0bbb24
+Merge: fb1d31f 1d8f53e
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jun 8 09:31:50 2013 +0000
+
+    Merge "Pin pbr to avoid sphinx autodocs issues"
+
+commit fb1d31f7b2de82946359ff157b3e411a29c977c2
+Merge: 82a5eb0 96d100b
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jun 8 09:31:48 2013 +0000
+
+    Merge "Adding lintstack to support pylint testing."
+
+commit 82a5eb019f98a85e2949e8defcbacbb75dd3b7e0
+Merge: f71b8c8 ebc2153
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Sat Jun 8 09:30:35 2013 +0000
+
+    Merge "Simple REST API call samples has been added."
+
+commit 1d8f53e1694a97eb92c65bc7036a3a267a0de268
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 8 12:56:13 2013 +0400
+
+    Pin pbr to avoid sphinx autodocs issues
+    
+    * https://review.openstack.org/#/c/32046/
+    
+    Change-Id: I9254c735edfb555fb97dcec281d22d7fe6293c9e
+
+commit 96d100b4244fa1dd2e5ca1cc11cb5360b1a6abd2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 8 00:25:32 2013 +0400
+
+    Adding lintstack to support pylint testing.
+    
+    * it should be carefully configured in future
+    
+    Change-Id: I35f21e7fbfab3c5fa07cd3652f47469bb2939abd
+
+commit f71b8c82fbfb11eba45d159821f9ecf518690645
+Author: Nadya Privalova <nprivalova@mirantis.com>
+Date:   Fri Jun 7 18:02:13 2013 +0400
+
+    Documentation for Hadoop-Swift integration was added
+    
+    Change-Id: I117bb78bcc00b540c1bc12d6c68721ffe6ff5d5f
+
+commit 79f8e90f6aabd5e4d1d971d344abf5ea870d6ff9
+Merge: d6a5db7 8271455
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Jun 5 21:24:11 2013 +0000
+
+    Merge "TemplatesRelation is now NodeGroup-like object."
+
+commit d6a5db74219ee42284e4481107d8aef59e4ad9f5
+Merge: 0734a92 0c416d7
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Jun 5 20:59:53 2013 +0000
+
+    Merge "Plugin stub updated to the latest version of configs vision."
+
+commit 0734a92993e4b7616af0b6d73e991e08838d80f1
+Merge: 8112c42 8162037
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Jun 5 20:58:52 2013 +0000
+
+    Merge "Improve REST API bindings."
+
+commit ebc2153fd8d8277c7984c0afca4a04c60e347ade
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 23:48:06 2013 +0400
+
+    Simple REST API call samples has been added.
+    
+    * it could be removed in future;
+    * it contains jsons for creating both node group and cluster templates.
+    
+    Change-Id: I13fc834cb11b3f21a02198a3f02334205532bc23
+
+commit 827145575003c66466346f5c4ac1cf2652caa0f8
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 23:46:44 2013 +0400
+
+    TemplatesRelation is now NodeGroup-like object.
+    
+    * model extended;
+    * storage layer updated;
+    * tests fixed.
+    
+    Change-Id: I94be8da85e35ee5db876bc0614ee3de87e42bb8f
+
+commit 0c416d7918cbf1722b552f6fdc916b90bd8c18dc
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 23:45:00 2013 +0400
+
+    Plugin stub updated to the latest version of configs vision.
+    
+    Change-Id: I6164d828b204bc0211f6af628a605f129cb578d4
+
+commit 8162037e78373a39386b6b7a0e00635e1df535c3
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 23:44:22 2013 +0400
+
+    Improve REST API bindings.
+    
+    * pass replaced with unified "NotImplemented" error;
+    * typo fixed in node_group_templates wrapper.
+    
+    Change-Id: I8a737e1aaa0c1f75a301bc64d381833eef9166a9
+
+commit 8112c4224e9422f5f67f93709627d60ac645a767
+Merge: 604778f d47ad7b
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Wed Jun 5 15:41:11 2013 +0000
+
+    Merge "instruction for dev env for horizone plugin"
+
+commit d47ad7b32386f016a831d32fc2b24a918804c011
+Author: Alexander Kuznetsov <akuznetsov@mirantis.com>
+Date:   Wed Jun 5 17:36:22 2013 +0400
+
+    instruction for dev env for horizone plugin
+    
+    Change-Id: I9f3f364a3234ed469594398c784027a7c4c3c74f
+
+commit 604778f8ba94c4ba303310f79554c3a67c347fdd
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 17:18:16 2013 +0400
+
+    Adjust Config class to the docs.
+    
+    Change-Id: Ic29edd79c44a2aa6b04dee698240d0fdda657709
+
+commit 269dc98bf7c402d082e227eb902a6b88c5200670
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Wed Jun 5 11:43:27 2013 +0400
+
+    Enable all code style tests.
+    
+    Fixes: bug #1187664
+    
+    Change-Id: I214c94c4fd8277132c115e84d63d01d3753def4d
+
+commit b6ca5d6720b4e3bcddfee53f4d0c3eeb7f100861
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Jun 4 15:20:28 2013 +0400
+
+    Add simple plugin calls and cluster status updates
+    
+    * provisioning plugin is now called while cluster creation
+    * cluster status is now updated while cluster creation
+    
+    Change-Id: I7103589ab3ebe1079079d1773384633a89b1aba0
+
+commit 2dd094fd3d9db89b6f43c21d743027c902037162
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Jun 4 15:17:16 2013 +0400
+
+    Small cleanup of db model.
+    
+    * some params removed from constructors
+    * simplification of some property names
+    
+    Change-Id: Iff8c08a7a0a1a28e1b10ea7264183eca7fae3215
+
+commit 09f8930578d1cf59000dae2ab109eb9f34d8ffd8
+Merge: 024a593 6929894
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Jun 4 17:53:55 2013 +0000
+
+    Merge "The 'model_save' helper added to the context."
+
+commit 69298949a9ecdc3375fc49c3efa03cdab93c79ff
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Jun 4 15:16:49 2013 +0400
+
+    The 'model_save' helper added to the context.
+    
+    It use ctx().session and new transaction to flush/commit object.
+    
+    Change-Id: Ife054786204affa43550aa9eb243e8e44d4e8fc3
+
+commit 024a5934b5301765c805712d0f53e698f547650f
+Merge: ae1d6b0 88847c1
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Tue Jun 4 16:13:13 2013 +0000
+
+    Merge "The 'ctx' arg removed from plaggable provisioning."
+
+commit ae1d6b0413a9348ba2374128c91afff935d05480
+Author: Alexander Kuznetsov <akuznetsov@mirantis.com>
+Date:   Tue Jun 4 19:05:45 2013 +0400
+
+    Helper for configuration in node group
+    
+    Change-Id: I43d325dbebaa0a655c5c9757893f731182ac9cc2
+
+commit 01c3e9943a2de691455783f6af663216fb6915f9
+Author: Alexander Kuznetsov <akuznetsov@mirantis.com>
+Date:   Mon Jun 3 16:26:52 2013 +0400
+
+    Cluster security and node placement control
+    
+    Adding user key to the cluster
+    
+    Each cluster will have a it own private key for passwordless login
+    
+    It is possible to schedule a data nodes on diffirent hosts
+    
+    implements: blueprint node-placement-control and blueprint cluster-security
+    
+    fixed: bug #1179815 and bug  #1179821
+    
+    Change-Id: I27183b9fcf1652b8f65a7018fe9cb880d5bed3b3
+
+commit 88847c1f6d4bd0034176a57a8c6469e7dcc16c35
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue Jun 4 15:14:00 2013 +0400
+
+    The 'ctx' arg removed from plaggable provisioning.
+    
+    Change-Id: I1a9b7a22b647beb1333dc8bb3e408b9e1f5b3890
+
+commit afde12094ac23cba6a6bf67aad2b93acf0f98cf2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 3 13:14:48 2013 +0400
+
+    Fix remote util.
+    
+    Change-Id: I6fd825ca7569fdd1dd3556af31f19427d6f33396
+
+commit dcc788c513b7f6b9d4a74a8c842c7b22fe346a12
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 3 13:14:03 2013 +0400
+
+    Fix crypto util.
+    
+    Change-Id: Ib1b5df0a71bf4df47cf6241300b85e21be894987
+
+commit ad2b890908ae49761ed5d1637d52ff35b3ab865f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 3 13:11:58 2013 +0400
+
+    Improve database model.
+    
+    * add username property to NodeGroup
+    * hide private_key in Cluster
+    * remote is now a property of Instance
+    
+    Change-Id: Iddcd0a3d2a17d71649e4c5a7ddcfd439993c8130
+
+commit 4de9066bf7dd8569feec5b43e2d499c0eeafdb3d
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 3 09:31:34 2013 +0400
+
+    Placeholder for instance creation has been added
+    
+    Change-Id: Iddf11fdfc40daf01f72899c31075e685c2d8b798
+
+commit 635d95df03f7003f0cd0fdee88a3505711cce12d
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Mon Jun 3 09:24:57 2013 +0400
+
+    Keystone auth middleware configuration fixed.
+    
+    Change-Id: Iebfa6f47137c23681747fa7e359bb79fb63b5823
+    Fixes: bug #1186843
+
+commit 5b295ab1327297d712d3ea83584383bb2801fdd2
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 2 20:32:48 2013 +0400
+
+    User keypair added to cluster object.
+    
+    Change-Id: I300bf0687a829abb06c2bcf33a6950f6f4e71fc2
+
+commit b9faa942870d0f377cbf402934cf6f4bf9e21509
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 2 20:05:32 2013 +0400
+
+    Remove unused variable.
+    
+    Change-Id: I4b532940fe5e26b30cf423729ceb4a64bce6fe0e
+
+commit f955767e611ace6ca9286c924572383bc9bc19d4
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 2 20:03:56 2013 +0400
+
+    Patch novaclient to support getting keypairs.
+    
+    Change-Id: I22da73279c164ecfdd18e5f8e3bdf633f2ddb7f3
+
+commit 463fe59a5da4a6bfefae897df4c129591a2a128f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sun Jun 2 15:30:21 2013 +0400
+
+    Introduce py33 to tox.ini
+    
+    Change-Id: Ic8bbf618116d88f811a40691e0c855c32fbeea9c
+
+commit 109d9319e8927cfafd00ed8accdbee343c40375f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 1 14:26:49 2013 +0400
+
+    AUTHORS added to the repo
+    
+    Change-Id: Icc5a1e9fd508750972524bc1ca12f7fb9e92b42b
+    Fixes: bug #1186517
+
+commit 93ac65be03fe1c2a0381a79e778e24ab4a303b19
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 1 14:21:14 2013 +0400
+
+    The .mailmap file updated to fix AUTHORS
+    
+    Fixes: bug #1186513
+    
+    Change-Id: I21ce6c59fd810bd00c3eda6ce73308c3e0abf3cc
+
+commit 6d2ee05396a289987e65ef661668d892f9b91e84
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Sat Jun 1 00:06:39 2013 +0400
+
+    Fix nova helpers (remove unneeded headers)
+    
+    Change-Id: Idc81d9e837d596c58e75940880bf67ecd974f344
+
+commit f0192eff1b098c8ff26b8c7bff2e1a3f1c2dad72
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri May 31 23:41:22 2013 +0400
+
+    Hostname/username are now available in Instance.
+    
+    Change-Id: I2d27ca263d32212290b0c9c885866ffa52d5cc78
+
+commit 3fb772c8d5958a8a93ab1cedc87c61d513b84eea
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Fri May 31 23:29:06 2013 +0400
+
+    Use six to improve python 3 compatibility.
+    
+    * StringIO
+    
+    Change-Id: I8471e525566a0353d9276529be4b0d0e0cbf6cd6
+
+commit 3da4ce6c22b48af70ef87fb08ecb756b447ea741
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Fri May 31 21:17:04 2013 +0400
+
+    Basic instance interop helpers added.
+    
+    Partially implements: blueprint instance-interop-helper.
+    
+    Change-Id: I453ddce3e5253880a000fcb287163d13803797a3
+
+commit 6d922d037778e309159edbdd798e269c24ed5dfb
+Author: Alexander Kuznetsov <akuznetsov@mirantis.com>
+Date:   Fri May 31 19:48:24 2013 +0400
+
+    Private key has been added to the Cluster object.
+    
+    * new private key generated for each new cluster
+    * add utils/crypto module to work with keypairs
+    
+    Change-Id: Id65b6131d8ae37e845c9cdb07977e4e2027473eb
+
+commit b6829d9d8bc3f7ab9c544bc223c4ec5253b3f83f
+Author: Sergey Lukjanov <slukjanov@mirantis.com>
+Date:   Tue May 21 00:26:28 2013 +0400
+
+    Initial version of Savanna v0.2
+    
+    * pluggable provisioning mechanism
+    * a lot of old code has been removed
+    * new version of REST API (1.0)
+    * image registry draft implemented as novaclient extension
+    * oslo updated
+    * using oslo.db instead of flask-sqlalchemy
+    * some hacking fixes
+    * using alembic for db migrations
+    
+    Partially implements blueprint pluggable-cluster-provisioning.
+    Partially implements blueprint savanna-rest-api-1-0.
+    Implements blueprint hadoop-image-registry.
+    Implements blueprint fulfill-openstack-requirements.
+    Implements blueprint db-migrate-support.
+    
+    Change-Id: I5df80d67e25c2f4f8367f78f67fb9e9e76fc3647
+
+commit e2eba36648ad761d8153c88cc2abbdc2261e3168
+Merge: c5f6974 a2892cb
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Thu May 30 14:43:16 2013 +0000
+
+    Merge "Pre-release 0.1.2 doc changes"
+
+commit c5f69749cf87386547b679026e228cce93f4cc51
+Merge: 250b0d5 f9ddb90
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Thu May 30 14:42:46 2013 +0000
+
+    Merge "New hadoop tests were added"
+
+commit 250b0d558dd049507cdd8972229cb22a540c1231
+Merge: f5a3a61 1244001
+Author: Jenkins <jenkins@review.openstack.org>
+Date:   Thu May 30 14:38:40 2013 +0000
+
+    Merge "Replaced path to start-all.sh script."
+
+commit a2892cb4ece7b8974be440d4522be8ac79fd304e
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Wed May 29 09:19:26 2013 -0700
+
+    Pre-release 0.1.2 doc changes
+    
+    Change-Id: I7d1cc835522fff0a99015d21019a4aef6f3220f3
+
+commit 1244001dae69f66503a21c3d918651c79df9780f
+Author: Alexander Ignatov <aignatov@mirantis.com>
+Date:   Wed May 29 03:05:36 2013 -0700
+
+    Replaced path to start-all.sh script.
+    
+    * Now all scripts should be placed in PATH of every OS
+    * savanna-hdp-img-01 may not work with this change
+    
+    Change-Id: I0e891d594378a8b96a38a99c062a7b705e84a222
+
 commit f9ddb9084e51d35d56495888b11033a3454ec718
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Mon May 27 21:19:56 2013 +0400

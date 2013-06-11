@@ -31,3 +31,6 @@ HADOOP_VERSION = _get_conf('HADOOP_VERSION', '1.1.1')
 HADOOP_DIRECTORY = _get_conf('HADOOP_DIRECTORY', '/usr/share/hadoop')
 HADOOP_LOG_DIRECTORY = _get_conf('HADOOP_LOG_DIRECTORY',
                                  '/mnt/log/hadoop/hadoop/userlogs')
+
+SSH_KEY = _get_conf('SSH_KEY', 'jenkins')
+PLUGIN_NAME = _get_conf('PLUGIN_NAME', 'vanilla')

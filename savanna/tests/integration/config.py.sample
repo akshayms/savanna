@@ -22,3 +22,6 @@ TIMEOUT = 15 # cluster creation timeout (in minutes)
 HADOOP_VERSION = '1.1.1'
 HADOOP_DIRECTORY = '/usr/share/hadoop'
 HADOOP_LOG_DIRECTORY = '/mnt/log/hadoop/hadoop/userlogs'
+
+SSH_KEY = 'ssh_key'
+PLUGIN_NAME = 'vanilla'
