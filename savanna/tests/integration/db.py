@@ -1,13 +1,13 @@
 # Copyright (c) 2013 Mirantis Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 # implied.
 # See the License for the specific language governing permissions and
@@ -56,6 +56,8 @@ class ITestCase(unittest2.TestCase):
         self.url_plugins_with_slash = '/v1.0/%s/plugins/' % self.tenant
         self.url_images = '/v1.0/%s/images' % self.tenant
         self.url_images_with_slash = '/v1.0/%s/images/' % self.tenant
+
+        self.url_image_registry = '/v1.0/%s/images' % self.tenant
 
 #----------------------CRUD_comands--------------------------------------------
 
@@ -127,23 +129,23 @@ class ITestCase(unittest2.TestCase):
 #----------------------other_commands------------------------------------------
 
     def make_node_group_template(self, gr_name, desc, n_proc):
-        processes = ["tasktracker", "datanode"]
+        processes = ['tasktracker', 'datanode']
         if n_proc == 'JT+NN':
-            processes = ["jobtracker", "namenode"]
+            processes = ['jobtracker', 'namenode']
         elif n_proc == 'JT':
-            processes = ["jobtracker"]
+            processes = ['jobtracker']
         elif n_proc == 'NN':
-            processes = ["namenode"]
+            processes = ['namenode']
         elif n_proc == 'TT':
-            processes = ["tasktracker"]
+            processes = ['tasktracker']
         elif n_proc == 'DN':
-            processes = ["datanode"]
+            processes = ['datanode']
         group_template = dict(
-            name="%s" % gr_name,
-            description="%s" % desc,
-            flavor_id="%s" % self.flavor_id,
-            plugin_name="%s" % param.PLUGIN_NAME,
-            hadoop_version="%s" % param.HADOOP_VERSION,
+            name='%s' % gr_name,
+            description='%s' % desc,
+            flavor_id='%s' % self.flavor_id,
+            plugin_name='%s' % param.PLUGIN_NAME,
+            hadoop_version='%s' % param.HADOOP_VERSION,
             node_processes=processes,
             node_configs={}
         )
@@ -151,8 +153,8 @@ class ITestCase(unittest2.TestCase):
 
     def make_cluster_template(self, name, ngt_list):
         ngt = dict(
-            name="",
-            node_group_template_id="",
+            name='',
+            node_group_template_id='',
             count=1
         )
         cluster_template = dict(
@@ -185,16 +187,16 @@ class ITestCase(unittest2.TestCase):
 
     def make_cl_body_with_ngt(self, ngt_list):
         ngt = dict(
-            name="",
-            node_group_template_id="",
+            name='',
+            node_group_template_id='',
             count=1
         )
         cluster_body = dict(
-            name="%s" % param.CLUSTER_NAME_CRUD,
-            plugin_name="%s" % param.PLUGIN_NAME,
-            hadoop_version="%s" % param.HADOOP_VERSION,
-            user_keypair_id="%s" % param.SSH_KEY,
-            default_image_id="%s" % param.IMAGE_ID,
+            name='%s' % param.CLUSTER_NAME_CRUD,
+            plugin_name='%s' % param.PLUGIN_NAME,
+            hadoop_version='%s' % param.HADOOP_VERSION,
+            user_keypair_id='%s' % param.SSH_KEY,
+            default_image_id='%s' % param.IMAGE_ID,
             cluster_configs={},
         )
         for key, value in ngt_list.items():
