@@ -80,7 +80,7 @@ class Cluster(mb.SavannaBase, mb.IdMixin, mb.TenantMixin,
 class NodeGroup(mb.SavannaBase, mb.IdMixin, mb.ExtraMixin):
     """Specifies group of nodes within a cluster."""
 
-    __filter_cols__ = ['cluster_id']
+    __filter_cols__ = ['id', 'cluster_id']
     __table_args__ = (
         sa.UniqueConstraint('name', 'cluster_id'),
     )
@@ -153,14 +153,13 @@ class Instance(mb.SavannaBase, mb.ExtraMixin):
     node_group_id = sa.Column(sa.String(36), sa.ForeignKey('NodeGroup.id'))
     instance_id = sa.Column(sa.String(36), primary_key=True)
     instance_name = sa.Column(sa.String(80), nullable=False)
+    internal_ip = sa.Column(sa.String(15))
     management_ip = sa.Column(sa.String(15))
 
-    def __init__(self, node_group_id, instance_id, instance_name,
-                 management_ip=None):
+    def __init__(self, node_group_id, instance_id, instance_name):
         self.node_group_id = node_group_id
         self.instance_id = instance_id
         self.instance_name = instance_name
-        self.management_ip = management_ip
 
     @property
     def nova_info(self):
@@ -203,16 +202,22 @@ class ClusterTemplate(mb.SavannaBase, mb.IdMixin, mb.TenantMixin,
         self.cluster_configs = cluster_configs or {}
         self.description = description
 
-    def add_node_group_template(self, kwargs):
-        relation = TemplatesRelation(self.id, **kwargs)
-        self.templates_relations.append(relation)
-        return relation
-
     def to_dict(self):
         d = super(ClusterTemplate, self).to_dict()
         d['node_groups'] = [tr.dict for tr in
                             self.templates_relations]
         return d
+
+    def to_cluster(self, values):
+        return Cluster(
+            name=values.pop('name', None) or self.name,
+            tenant_id=values.pop('tenant_id'),
+            plugin_name=values.pop('plugin_name', None) or self.plugin_name,
+            hadoop_version=(values.pop('hadoop_version', None)
+                            or self.hadoop_version),
+            cluster_configs=configs.merge_configs(
+                self.cluster_configs, values.pop('cluster_configs', None)),
+            **values)
 
 
 class NodeGroupTemplate(mb.SavannaBase, mb.IdMixin, mb.TenantMixin,

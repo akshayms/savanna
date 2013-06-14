@@ -33,12 +33,17 @@ def create_cluster(values):
     with session.begin():
         values['tenant_id'] = ctx.current().tenant_id
         ngs_vals = values.pop('node_groups', [])
-        # cluster_tmpl_id = values.pop('cluster_template_id', None)
-        # if cluster_tmpl_id:
-        #     tmpl = get_cluster_template(id=cluster_tmpl_id)
-        #     cluster = tmpl.to_cluster(values)
-        # else:
-        cluster = m.Cluster(**values)
+        cluster_tmpl_id = values.pop('cluster_template_id', None)
+        if cluster_tmpl_id:
+            cluster_tmpl = get_cluster_template(id=cluster_tmpl_id)
+            cluster = cluster_tmpl.to_cluster(values)
+        else:
+            cluster = m.Cluster(**values)
+
+        if not ngs_vals and cluster_tmpl_id:
+            # copy node groups from cluster template
+            ngs_vals = cluster_tmpl.dict['node_groups']
+
         for ng in ngs_vals:
             tmpl_id = ng.get('node_group_template_id')
             if tmpl_id:
@@ -75,11 +80,28 @@ def create_cluster_template(values):
         ngts_vals = values.pop('node_groups', [])
         cluster_template = m.ClusterTemplate(**values)
         for ngt in ngts_vals:
-            relation = cluster_template.add_node_group_template(ngt)
-            session.add(relation)
+            tmpl_id = ngt.get('node_group_template_id')
+            if tmpl_id:
+                tmpl = get_node_group_template(id=tmpl_id)
+                node_group = tmpl.to_object(
+                    ngt, m.TemplatesRelation,
+                    dict(cluster_template_id=cluster_template.id))
+            else:
+                node_group = m.TemplatesRelation(
+                    cluster_template_id=cluster_template.id, **ngt)
+            cluster_template.templates_relations.append(node_group)
+            session.add(node_group)
         session.add(cluster_template)
 
         return cluster_template
+
+
+def persist_cluster_template(cluster_template):
+    session = ctx.current().session
+    with session.begin():
+        session.add(cluster_template)
+
+    return cluster_template
 
 
 def terminate_cluster_template(**args):

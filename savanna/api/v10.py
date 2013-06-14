@@ -128,6 +128,12 @@ def plugins_get_version(plugin_name, version):
     return u.render(api.get_plugin(plugin_name, version).wrapped_dict)
 
 
+@rest.post_file('/plugins/<plugin_name>/<version>/convert-config')
+def plugins_convert_to_cluster_template(plugin_name, version, data):
+    return u.render(
+        api.convert_to_cluster_template(plugin_name, version, data))
+
+
 ## Image Registry ops
 
 @rest.get('/images')
@@ -137,13 +143,13 @@ def images_list(request):
         images=[i.dict for i in nova.client().images.list_registered(tags)])
 
 
-@rest.get('/images/<image_id>')
-def images_get(image_id):
-    return u.render(nova.client().images.get(image_id).dict)
-
-
 def _render_image(image_id, novaclient):
     return u.render(novaclient.images.get(image_id).wrapped_dict)
+
+
+@rest.get('/images/<image_id>')
+def images_get(image_id):
+    return _render_image(image_id, nova.client())
 
 
 @rest.post('/images/<image_id>')

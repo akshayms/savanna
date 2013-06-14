@@ -28,11 +28,16 @@ from savanna.utils import api as api_utils
 from savanna.utils import scheduler
 
 from savanna.openstack.common import log
+from savanna.utils import patches
 
 LOG = log.getLogger(__name__)
 
 eventlet.monkey_patch(
     os=True, select=True, socket=True, thread=True, time=True)
+
+# Patches minidom's writexml to avoid excess whitespaces in generated xml
+# configuration files that brakes Hadoop.
+patches.patch_minidom_writexml()
 
 opts = [
     cfg.StrOpt('os_auth_protocol',
@@ -80,9 +85,10 @@ def make_app():
     @app.teardown_request
     def teardown_request(_ex=None):
         # TODO(slukjanov): how it'll work in case of exception?
-        session = context.session()
-        if session.transaction:
-            session.transaction.commit()
+        if flask.request.path != '/':
+            session = context.session()
+            if session.transaction:
+                session.transaction.commit()
 
     app.register_blueprint(api_v10.rest, url_prefix='/v1.0')
 

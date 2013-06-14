@@ -18,10 +18,10 @@ import json
 from keystoneclient.v2_0 import Client as keystone_client
 import requests
 import savanna.tests.integration.parameters as param
-import unittest
+import unittest2
 
 
-class ITestCase(unittest.TestCase):
+class ITestCase(unittest2.TestCase):
 
     def setUp(self):
         self.port = param.SAVANNA_PORT
@@ -49,8 +49,9 @@ class ITestCase(unittest.TestCase):
                                   % self.tenant
         self.url_cluster = '/v1.0/%s/clusters' % self.tenant
         self.url_cluster_with_slash = '/v1.0/%s/clusters/' % self.tenant
-        self.url_cl_tmpl = '/v1.0/%s/cluster-templates/' % self.tenant
-        self.url_cl_tmpl_with_slash = '/v1.0/%s/cluster-templates' % self.tenant
+        self.url_cl_tmpl = '/v1.0/%s/cluster-templates' % self.tenant
+        self.url_cl_tmpl_with_slash = '/v1.0/%s/cluster-templates/'\
+                                      % self.tenant
         self.url_plugins = '/v1.0/%s/plugins' % self.tenant
         self.url_plugins_with_slash = '/v1.0/%s/plugins/' % self.tenant
         self.url_images = '/v1.0/%s/images' % self.tenant
@@ -115,10 +116,13 @@ class ITestCase(unittest.TestCase):
             data = json.loads(rv.content)
             return data
         else:
-            code = self.delete(url + obj_id).status_code
-            while code != 404:
-                eventlet.sleep(1)
-                code = self.delete(url + obj_id).status_code
+            return rv.status_code
+        #TODO(vrovachev) uncomment codeelement after add project exeption
+        # else:
+        #     code = self.delete(url + obj_id).status_code
+        #     while code != 404:
+        #         eventlet.sleep(1)
+        #         code = self.delete(url + obj_id).status_code
 
 #----------------------other_commands------------------------------------------
 
@@ -145,34 +149,26 @@ class ITestCase(unittest.TestCase):
         )
         return group_template
 
-    def make_cluster_template(self, ngt_list):
+    def make_cluster_template(self, name, ngt_list):
         ngt = dict(
             name="",
             node_group_template_id="",
             count=1
         )
         cluster_template = dict(
-            name="%s" % param.CLUSTER_NAME_CRUD,
+            name="%s" % name,
             plugin_name="%s" % param.PLUGIN_NAME,
             hadoop_version="%s" % param.HADOOP_VERSION,
-            user_keypair_id="%s" % param.SSH_KEY,
-            default_image_id="%s" % self.image_id,
             cluster_configs={},
-            node_groups={
-                dict(
-                    name="TT",
-                    node_group_template_id="321",
-                    count=2
-                )
-            }
+            node_groups=[]
         )
         for key, value in ngt_list.items():
             ngt['node_group_template_id'] = key
             ngt['count'] = value
-            cluster_template['node_groups'].append(ngt)
             data = self._get_object(self.url_ngt_with_slash, key, 200)
             name = data['node_group_template']['name']
             ngt['name'] = name
+            cluster_template['node_groups'].append(ngt)
         return cluster_template
 
     def make_cl_body_with_cl_tmpl(self, plugin_name, hadoop_ver,
@@ -181,7 +177,9 @@ class ITestCase(unittest.TestCase):
             name="%s" % param.CLUSTER_NAME_CRUD,
             plugin_name="%s" % plugin_name,
             hadoop_version="%s" % hadoop_ver,
-            cluster_template_id="%s" % cl_tmpl_id
+            cluster_template_id="%s" % cl_tmpl_id,
+            default_image_id="%s" % self.image_id,
+            user_keypair_id="%s" % param.SSH_KEY
         )
         return cluster_body
 
@@ -207,6 +205,11 @@ class ITestCase(unittest.TestCase):
             name = data['node_group_template']['name']
             ngt['name'] = name
         return cluster_body
+
+    def get_object_id(self, obj, body):
+        print(body)
+        data = body['%s' % obj]
+        return data['id']
 
     def _crud_object(self, body, url):
         data = self._post_object(url, body, 202)

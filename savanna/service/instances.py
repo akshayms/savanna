@@ -14,10 +14,12 @@
 # limitations under the License.
 
 import time
+import traceback
 
 from savanna import context
 from savanna.db import models as m
 from savanna.openstack.common import log as logging
+from savanna.service import networks
 from savanna.utils import crypto
 from savanna.utils.openstack import nova
 
@@ -42,6 +44,7 @@ def create_cluster(cluster):
         _configure_instances(cluster)
     except Exception as ex:
         LOG.warn("Can't start cluster: %s", ex)
+        traceback.print_exc()
         _rollback_cluster_creation(cluster, ex)
 
 
@@ -119,12 +122,8 @@ def _check_if_up(instance):
     if len(server.networks) == 0:
         return False
 
-    if instance.management_ip is None:
-        # TODO(slukjanov): support floating ips and different networks
-        ip = server.networks.values()[0][1]
-        if not ip:
-            return False
-        instance.management_ip = ip
+    if not networks.init_instances_ips(instance, server):
+        return False
 
     try:
         exit_code, _ = instance.remote.execute_command("hostname")
@@ -158,7 +157,7 @@ def _generate_etc_hosts(cluster):
     hosts = "127.0.0.1 localhost\n"
     for node_group in cluster.node_groups:
         for instance in node_group.instances:
-            hosts += "%s %s\n" % (instance.management_ip, instance.hostname)
+            hosts += "%s %s\n" % (instance.internal_ip, instance.hostname)
 
     return hosts
 
