@@ -63,9 +63,9 @@ class Test_crud_cluster(ITestCase):
                                                       cl_tmpl_body, 202))
             clstr_body = self.make_cl_body_with_cl_tmpl(
                 'vanilla', '1.1.1', cl_tmpl_id)
-            self._crud_object(self.url_cluster, clstr_body)
+            self._crud_object(clstr_body, self.url_cluster)
         except Exception as e:
-            self.fail(e.message)
+            self.fail('fail: ' + e.message)
         finally:
             self._del_object(self.url_cl_tmpl_with_slash, cl_tmpl_id, 204)
 
@@ -79,9 +79,9 @@ class Test_crud_cluster(ITestCase):
         self.crud_clstr_with_cltr_tmpl(node_list)
 
     def tearDown(self):
-        self._del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)
-        self._del_object(self.url_ngt_with_slash, self.id_jt, 204)
-        self._del_object(self.url_ngt_with_slash, self.id_nn, 204)
-        self._del_object(self.url_ngt_with_slash, self.id_tt, 204)
-        self._del_object(self.url_ngt_with_slash, self.id_dn, 204)
-        self._del_object(self.url_ngt_with_slash, self.id_tt_dn, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_jt, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_nn, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_tt, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_dn, 204)
+       self._del_object(self.url_ngt_with_slash, self.id_tt_dn, 204)
