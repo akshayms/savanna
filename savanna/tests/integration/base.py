@@ -57,7 +57,7 @@ class ITestCase(unittest2.TestCase):
         self.url_images = '/v1.0/%s/images' % self.tenant
         self.url_images_with_slash = '/v1.0/%s/images/' % self.tenant
 
-#----------------------CRUD_comands--------------------------------------------
+#----------------------CRUD_commands-------------------------------------------
 
     def post(self, url, body):
         URL = self.baseurl + url
@@ -97,19 +97,19 @@ class ITestCase(unittest2.TestCase):
             print('data= %s\n') % data
         return resp
 
-    def _post_object(self, url, body, code):
+    def post_object(self, url, body, code):
         post = self.post(url, json.dumps(body))
         self.assertEquals(post.status_code, code)
         data = json.loads(post.content)
         return data
 
-    def _get_object(self, url, obj_id, code, printing=False):
+    def get_object(self, url, obj_id, code, printing=False):
         rv = self.get(url + obj_id, printing)
         self.assertEquals(rv.status_code, code)
         data = json.loads(rv.content)
         return data
 
-    def _del_object(self, url, obj_id, code):
+    def del_object(self, url, obj_id, code):
         rv = self.delete(url + obj_id)
         self.assertEquals(rv.status_code, code)
         if rv.status_code != 204:
@@ -162,20 +162,20 @@ class ITestCase(unittest2.TestCase):
         )
         for key, value in ngt_list.items():
             ngt = dict(
-            name='',
-            node_group_template_id='',
-            count=1
+                name='',
+                node_group_template_id='',
+                count=1
             )
             ngt['node_group_template_id'] = key
             ngt['count'] = value
-            data = self._get_object(self.url_ngt_with_slash, key, 200)
+            data = self.get_object(self.url_ngt_with_slash, key, 200)
             name = data['node_group_template']['name']
             ngt['name'] = name
             cluster_template['node_groups'].append(ngt)
         return cluster_template
 
-    def make_cl_body_with_cl_tmpl(self, plugin_name, hadoop_ver,
-                                  cl_tmpl_id):
+    def make_cl_body_cluster_template(self, plugin_name, hadoop_ver,
+                                      cl_tmpl_id):
         cluster_body = dict(
             name="%s" % param.CLUSTER_NAME_CRUD,
             plugin_name="%s" % plugin_name,
@@ -186,7 +186,7 @@ class ITestCase(unittest2.TestCase):
         )
         return cluster_body
 
-    def make_cl_body_with_ngt(self, node_processes):
+    def make_cl_body_node_processes(self, node_processes):
         cluster_body = dict(
             name='%s' % param.CLUSTER_NAME_CRUD,
             plugin_name='%s' % param.PLUGIN_NAME,
@@ -238,8 +238,8 @@ class ITestCase(unittest2.TestCase):
         data = body['%s' % obj]
         return data['id']
 
-    def _crud_object(self, body, url):
-        data = self._post_object(url, body, 202)
+    def crud_object(self, body, url):
+        data = self.post_object(url, body, 202)
         get_url = None
         object_id = None
         try:
@@ -254,17 +254,17 @@ class ITestCase(unittest2.TestCase):
                 get_url = self.url_cl_tmpl_with_slash
             data = data['%s' % crud_object]
             object_id = data.get('id')
-            get_data = self._get_object(get_url, object_id, 200)
+            get_data = self.get_object(get_url, object_id, 200)
             get_data = get_data['%s' % crud_object]
             if crud_object == 'cluster':
-                self._await_cluster_active(get_data, get_url, object_id)
+                self.await_cluster_active(get_data, get_url, object_id)
         except Exception as e:
             self.fail('failure: ' + e.message)
         finally:
-            self._del_object(get_url, object_id, 204)
+            self.del_object(get_url, object_id, 204)
         return object_id
 
-    def _await_cluster_active(self, get_data, get_url, object_id):
+    def await_cluster_active(self, get_data, get_url, object_id):
         i = 1
         while get_data['status'] != 'Active':
             print 'GET_STATUS: ', get_data['status']
@@ -272,7 +272,7 @@ class ITestCase(unittest2.TestCase):
                 self.fail(
                     'cluster not Starting -> Active, passed %d minutes'
                     % param.TIMEOUT)
-            get_data = self._get_object(get_url, object_id, 200)
+            get_data = self.get_object(get_url, object_id, 200)
             get_data = get_data['cluster']
             eventlet.sleep(10)
             i += 1
