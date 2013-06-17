@@ -1,3 +1,28 @@
+commit 8845ff37e061dc27cafaf814038e8f6323232f6f
+Merge: 37996c3 28379de
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 15:25:23 2013 +0400
+
+    Merge branch 'preSF' of https://github.com/Mirantis/savanna into preSF
+
+commit 37996c370bdb1df44f4afd80bda5e51bb28a99d3
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 15:25:00 2013 +0400
+
+    merge
+
+commit 28379de28bd3ef9184431657189189dc1599ef0f
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 14:42:30 2013 +0400
+
+    add crud clusters from cluster templates
+
+commit 3b5109157d16dcbd497d296de2df6f8ab31971c4
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 14:18:58 2013 +0400
+
+    added crud operations for cluster from node groups
+
 commit eb25d828038cd0486e7c39ce6d594119adddb2ea
 Merge: feb1a79 03bfd67
 Author: Vadim Rovachev <vrovachev@mirantis.com>

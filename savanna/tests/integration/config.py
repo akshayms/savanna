@@ -3,10 +3,10 @@ OS_PASSWORD = 'swordfish'  # password for nova
 OS_TENANT_NAME = 'qa'
 OS_AUTH_URL = 'http://172.18.79.139:35357/v2.0/'  # URL for keystone
 
-SAVANNA_HOST = '172.18.79.209'  # IP for Savanna API
-SAVANNA_PORT = '8181'  # port for Savanna API
+SAVANNA_HOST = '172.18.79.226'  # IP for Savanna API
+SAVANNA_PORT = '8080'  # port for Savanna API
 
-IMAGE_ID = '6e0ae501-c039-4a7c-ae86-717f98bbfa29'  # ID for instance image
+IMAGE_ID = 'ff27275f-27b0-443b-b5dc-6ae5f6264bd7'  # ID for instance image
 FLAVOR_ID = '42'
 
 IP_PREFIX = '172.'  # prefix for IP address which is used for ssh connect
@@ -24,5 +24,5 @@ HADOOP_VERSION = '1.1.2'
 HADOOP_DIRECTORY = '/usr/share/hadoop'
 HADOOP_LOG_DIRECTORY = '/mnt/log/hadoop/hadoop/userlogs'
 
-SSH_KEY = 'vrovachev'
+SSH_KEY = 'ylobankov'
 PLUGIN_NAME = 'vanilla'

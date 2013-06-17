@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import eventlet
 import json
 import keystoneclient.v2_0
 import requests
@@ -195,7 +196,6 @@ class ITestCase(unittest2.TestCase):
             cluster_configs={},
             node_groups=[]
         )
-        i = 1
         for key, value in node_processes.items():
             ng = dict(
                 name='',
@@ -204,26 +204,33 @@ class ITestCase(unittest2.TestCase):
                 count=1
             )
             processes = ['jobtracker', 'namenode']
+            ng_name = 'jt_nn'
             if key == 'TT+DN':
                 processes = ['tasktracker', 'datanode']
+                ng_name = 'tt_dn'
             elif key == 'JT':
                 processes = ['jobtracker']
+                ng_name = 'jt'
             elif key == 'NN':
                 processes = ['namenode']
+                ng_name = 'nn'
             elif key == 'TT':
                 processes = ['tasktracker']
+                ng_name = 'tt'
             elif key == 'DN':
                 processes = ['datanode']
+                ng_name = 'dn'
             elif key == 'JT+TT+DN':
                 processes = ['jobtracker', 'tasktracker', 'datanode']
+                ng_name = 'jt_tt_dn'
             elif key == 'NN+TT+DN':
                 processes = ['namenode', 'tasktracker', 'datanode']
+                ng_name = 'nn_tt_dn'
             ng['flavor_id'] = param.FLAVOR_ID
             ng['count'] = value
             ng['node_processes'] = processes
-            ng['name'] = 'node_group_%d' % i
+            ng['name'] = ng_name
             cluster_body['node_groups'].append(ng)
-            i += 1
         return cluster_body
 
     def get_object_id(self, obj, body):
