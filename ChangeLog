@@ -1,3 +1,28 @@
+commit dbf447f7ba5dbd2ab19b4d3ceb63563b93dbf130
+Merge: 3b4c582 2b9d8d7
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 19:17:09 2013 +0400
+
+    merge branch
+
+commit 3b4c582e11e795fbc750b1cc70920d0667f8cfdd
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 19:16:07 2013 +0400
+
+    add config.py in gitignore
+
+commit 2b9d8d7fd8ab785ffd835fa87e6817eba4921097
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 19:12:05 2013 +0400
+
+    pass run_fast_checks
+
+commit b493fe83bc3a83e1fb257df4695bb7d6b9e84952
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 18:30:17 2013 +0400
+
+    rename classnames
+
 commit f510c8761ae92b5f2ac31e26d974ad4436257eb6
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Mon Jun 17 17:02:31 2013 +0400

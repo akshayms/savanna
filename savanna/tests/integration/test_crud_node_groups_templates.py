@@ -14,11 +14,11 @@
 # limitations under the License.
 
 
-from savanna.tests.integration.db import ITestCase
+import savanna.tests.integration.base
 import telnetlib
 
 
-class TestsCRUDNodeGroupsTemplates(ITestCase):
+class TestsCRUDNodeGroupsTemplates(savanna.tests.integration.base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDNodeGroupsTemplates, self).setUp()
@@ -26,26 +26,26 @@ class TestsCRUDNodeGroupsTemplates(ITestCase):
 
     def test_crud_for_ngt_nn(self):
         body_nn = self.make_node_group_template("master_nn", "qa probe", "NN")
-        self._crud_object(body_nn, self.url_ngt)
+        self.crud_object(body_nn, self.url_ngt)
 
     def test_crud_for_ngt_jt(self):
         body_jt = self.make_node_group_template("master_jt", "qa probe", "JT")
-        self._crud_object(body_jt, self.url_ngt)
+        self.crud_object(body_jt, self.url_ngt)
 
     def test_crud_for_ngt_tt(self):
         body_tt = self.make_node_group_template("worker_tt", "qa probe", "TT")
-        self._crud_object(body_tt, self.url_ngt)
+        self.crud_object(body_tt, self.url_ngt)
 
     def test_crud_for_ngt_dn(self):
         body_dn = self.make_node_group_template("worker_dn", "qa probe", "DN")
-        self._crud_object(body_dn, self.url_ngt)
+        self.crud_object(body_dn, self.url_ngt)
 
     def test_crud_for_ngt_nn_jt(self):
         body_nn_jt = self.make_node_group_template("master_nn_jt", "qa probe",
                                                    "NN+JT")
-        self._crud_object(body_nn_jt, self.url_ngt)
+        self.crud_object(body_nn_jt, self.url_ngt)
 
     def test_crud_for_ngt_tt_dn(self):
         body_tt_dn = self.make_node_group_template("worker_dn_tt", "qa probe",
                                                    "TT+DN")
-        self._crud_object(body_tt_dn, self.url_ngt)
+        self.crud_object(body_tt_dn, self.url_ngt)

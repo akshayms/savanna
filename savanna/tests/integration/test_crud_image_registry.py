@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.tests.integration.db import ITestCase
+import savanna.tests.integration.base
 import savanna.tests.integration.parameters as param
 import telnetlib
 
@@ -34,11 +34,11 @@ def print_data(expr):
 #     return '/untag'
 
 
-class TestsCRUDImageRegistry(ITestCase):
+class TestsCRUDImageRegistry(savanna.tests.integration.base.ITestCase):
 
     def get_images_list(self):
-        data = self._get_object(self.url_images, empty_object_id(True),
-                                200, print_data(False))
+        data = self.get_object(self.url_images, empty_object_id(True),
+                               200, print_data(False))
         return data
 
     def set_description_username(self, description, username):
@@ -47,12 +47,12 @@ class TestsCRUDImageRegistry(ITestCase):
             description='%s' % description,
             username='%s' % username
         )
-        data = self._post_object(url, body, 202)
+        data = self.post_object(url, body, 202)
         return data
 
     def get_image_by_tags(self, tag_name):
         url = self.url_images + '?tags=' + tag_name
-        data = self._get_object(
+        data = self.get_object(
             url, empty_object_id(True), 200, print_data(False))
         return data
 
@@ -61,12 +61,12 @@ class TestsCRUDImageRegistry(ITestCase):
         tag = []
         tag.append('%s' % tag_name)
         body = dict(tags=tag)
-        data = self._post_object(url, body, 202)
+        data = self.post_object(url, body, 202)
         return data
 
     def get_image_description(self):
         url = self.url_images + '/'
-        data = self._get_object(
+        data = self.get_object(
             url, empty_object_id(False), 200, print_data(False))
         return data
 

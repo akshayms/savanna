@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.tests.integration.db import ITestCase
-import  telnetlib
+import savanna.tests.integration.base
+import telnetlib
 
 
-class TestsCRUDClusterNodeProcesses(ITestCase):
+class TestsCRUDClusterNodeProcesses(savanna.tests.integration.base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDClusterNodeProcesses, self).setUp()
@@ -26,40 +26,40 @@ class TestsCRUDClusterNodeProcesses(ITestCase):
 
     def test_crud_cluster_jtnn_ttdn(self):
         node_processes = {'JT+NN': 1, 'TT+DN': 2}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_nn_jt_dn_tt(self):
         node_processes = {'JT': 1, 'NN': 1, 'TT': 1, 'DN': 1}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_nn(self):
         node_processes = {'NN': 1}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_nn_dn(self):
         node_processes = {'NN': 1, 'DN': 2}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_nn_jt_dn(self):
         node_processes = {'NN': 1, 'JT': 1, 'DN': 2}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
-    def test_crud_cluster_nn_jt_dn(self):
+    def test_crud_cluster_nn_jt_ttdn(self):
         node_processes = {'NN': 1, 'JT': 1, 'TT+DN': 2}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_nnttdn_jt(self):
         node_processes = {'NN+TT+DN': 1, 'JT': 1}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)
 
     def test_crud_cluster_jtttdn_nn(self):
         node_processes = {'JT+TT+DN': 1, 'NN': 1}
-        body = self.make_cl_body_with_ngt(node_processes)
-        self._crud_object(body, self.url_cluster)
+        body = self.make_cl_body_node_processes(node_processes)
+        self.crud_object(body, self.url_cluster)

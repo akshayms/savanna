@@ -27,8 +27,6 @@ class ITestCase(unittest2.TestCase):
         self.port = param.SAVANNA_PORT
         self.host = param.SAVANNA_HOST
 
-        self.maxDiff = None
-
         self.baseurl = 'http://' + self.host + ':' + self.port
 
         self.keystone = keystoneclient.v2_0.Client(
