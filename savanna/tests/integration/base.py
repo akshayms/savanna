@@ -42,6 +42,8 @@ class ITestCase(unittest2.TestCase):
         self.flavor_id = param.FLAVOR_ID
         self.image_id = param.IMAGE_ID
 
+        self.url_version = '/'
+
         self.url_ngt = '/v1.0/%s/node-group-templates' % self.tenant
         self.url_ngt_with_slash = '/v1.0/%s/node-group-templates/'\
                                   % self.tenant
