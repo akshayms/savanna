@@ -13,9 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import eventlet
 import json
-from keystoneclient.v2_0 import Client as keystone_client
+import keystoneclient.v2_0
 import requests
 import savanna.tests.integration.parameters as param
 import unittest2
@@ -31,7 +30,7 @@ class ITestCase(unittest2.TestCase):
 
         self.baseurl = 'http://' + self.host + ':' + self.port
 
-        self.keystone = keystone_client(
+        self.keystone = keystoneclient.v2_0.Client(
             username=param.OS_USERNAME,
             password=param.OS_PASSWORD,
             tenant_name=param.OS_TENANT_NAME,
@@ -57,7 +56,7 @@ class ITestCase(unittest2.TestCase):
         self.url_images = '/v1.0/%s/images' % self.tenant
         self.url_images_with_slash = '/v1.0/%s/images/' % self.tenant
 
-#----------------------CRUD_commands-------------------------------------------
+#----------------------CRUD_comands--------------------------------------------
 
     def post(self, url, body):
         URL = self.baseurl + url
@@ -145,16 +144,14 @@ class ITestCase(unittest2.TestCase):
             plugin_name='%s' % param.PLUGIN_NAME,
             hadoop_version='%s' % param.HADOOP_VERSION,
             node_processes=processes,
-            node_configs={}
+            node_configs={
+                "HDFS": {},
+                "MAPREDUCE": {}
+            }
         )
         return group_template
 
     def make_cluster_template(self, name, ngt_list):
-        ngt = dict(
-            name='',
-            node_group_template_id='',
-            count=1
-        )
         cluster_template = dict(
             name="%s" % name,
             plugin_name="%s" % param.PLUGIN_NAME,
@@ -163,6 +160,11 @@ class ITestCase(unittest2.TestCase):
             node_groups=[]
         )
         for key, value in ngt_list.items():
+            ngt = dict(
+            name='',
+            node_group_template_id='',
+            count=1
+            )
             ngt['node_group_template_id'] = key
             ngt['count'] = value
             data = self._get_object(self.url_ngt_with_slash, key, 200)
@@ -190,6 +192,7 @@ class ITestCase(unittest2.TestCase):
             hadoop_version='%s' % param.HADOOP_VERSION,
             user_keypair_id='%s' % param.SSH_KEY,
             default_image_id='%s' % param.IMAGE_ID,
+            cluster_configs={},
             node_groups=[]
         )
         i = 1
