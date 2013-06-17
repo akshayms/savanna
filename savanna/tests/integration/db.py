@@ -200,9 +200,24 @@ class ITestCase(unittest2.TestCase):
                 node_processes='',
                 count=1
             )
+            processes = ['jobtracker', 'namenode']
+            if key == 'TT+DN':
+                processes = ['tasktracker', 'datanode']
+            elif key == 'JT':
+                processes = ['jobtracker']
+            elif key == 'NN':
+                processes = ['namenode']
+            elif key == 'TT':
+                processes = ['tasktracker']
+            elif key == 'DN':
+                processes = ['datanode']
+            elif key == 'JT+TT+DN':
+                processes = ['jobtracker', 'tasktracker', 'datanode']
+            elif key == 'NN+TT+DN':
+                processes = ['namenode', 'tasktracker', 'datanode']
             ng['flavor_id'] = param.FLAVOR_ID
-            ng['count'] = key
-            ng['node_processes'] = value
+            ng['count'] = value
+            ng['node_processes'] = processes
             ng['name'] = 'node_group_%d' % i
             cluster_body['node_groups'].append(ng)
             i += 1
