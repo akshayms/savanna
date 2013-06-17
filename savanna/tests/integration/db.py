@@ -57,9 +57,7 @@ class ITestCase(unittest2.TestCase):
         self.url_images = '/v1.0/%s/images' % self.tenant
         self.url_images_with_slash = '/v1.0/%s/images/' % self.tenant
 
-        self.url_image_registry = '/v1.0/%s/images' % self.tenant
-
-#----------------------CRUD_comands--------------------------------------------
+#----------------------CRUD_commands-------------------------------------------
 
     def post(self, url, body):
         URL = self.baseurl + url
@@ -185,27 +183,29 @@ class ITestCase(unittest2.TestCase):
         )
         return cluster_body
 
-    def make_cl_body_with_ngt(self, ngt_list):
-        ngt = dict(
-            name='',
-            node_group_template_id='',
-            count=1
-        )
+    def make_cl_body_with_ngt(self, node_processes):
         cluster_body = dict(
             name='%s' % param.CLUSTER_NAME_CRUD,
             plugin_name='%s' % param.PLUGIN_NAME,
             hadoop_version='%s' % param.HADOOP_VERSION,
             user_keypair_id='%s' % param.SSH_KEY,
             default_image_id='%s' % param.IMAGE_ID,
-            cluster_configs={},
+            node_groups=[]
         )
-        for key, value in ngt_list.items():
-            ngt['node_group_template_id'] = key
-            ngt['count'] = value
-            cluster_body['node_groups'].append(ngt)
-            data = self._get_object(self.url_ngt_with_slash, key, 200)
-            name = data['node_group_template']['name']
-            ngt['name'] = name
+        i = 1
+        for key, value in node_processes.items():
+            ng = dict(
+                name='',
+                flavor_id='',
+                node_processes='',
+                count=1
+            )
+            ng['flavor_id'] = param.FLAVOR_ID
+            ng['count'] = key
+            ng['node_processes'] = value
+            ng['name'] = 'node_group_%d' % i
+            cluster_body['node_groups'].append(ng)
+            i += 1
         return cluster_body
 
     def get_object_id(self, obj, body):
@@ -229,35 +229,25 @@ class ITestCase(unittest2.TestCase):
                 get_url = self.url_cl_tmpl_with_slash
             data = data['%s' % crud_object]
             object_id = data.get('id')
-            #self.assertEquals(data, get_body)
             get_data = self._get_object(get_url, object_id, 200)
             get_data = get_data['%s' % crud_object]
-            #del get_data[u'id']
-            #if crud_object == 'cluster':
-            #    self._await_cluster_active(
-            #        get_body, get_data, get_url, object_id)
-            self.assertEquals(data, get_data)
+            if crud_object == 'cluster':
+                self._await_cluster_active(get_data, get_url, object_id)
         except Exception as e:
-            self.fail('failure:' + e.message)
+            self.fail('failure: ' + e.message)
         finally:
             self._del_object(get_url, object_id, 204)
         return object_id
 
-    # def _await_cluster_active(self, get_body, get_data, get_url, object_id):
-    #     get_body[u'status'] = u'Active'
-    #     del get_body[u'service_urls']
-    #     del get_body[u'nodes']
-    #     i = 1
-    #     while get_data[u'status'] != u'Active':
-    #         if i > int(param.TIMEOUT) * 6:
-    #             self.fail(
-    #                 'cluster not Starting -> Active, passed %d minutes'
-    #                 % param.TIMEOUT)
-    #         get_data = self._get_object(get_url, object_id, 200)
-    #         get_data = get_data['cluster']
-    #         del get_data[u'id']
-    #         del get_data[u'service_urls']
-    #         del get_data[u'nodes']
-    #         eventlet.sleep(10)
-    #         i += 1
-    #     self.assertEquals(get_data, get_body)
+    def _await_cluster_active(self, get_data, get_url, object_id):
+        i = 1
+        while get_data['status'] != 'Active':
+            print 'GET_STATUS: ', get_data['status']
+            if i > int(param.TIMEOUT) * 6:
+                self.fail(
+                    'cluster not Starting -> Active, passed %d minutes'
+                    % param.TIMEOUT)
+            get_data = self._get_object(get_url, object_id, 200)
+            get_data = get_data['cluster']
+            eventlet.sleep(10)
+            i += 1
