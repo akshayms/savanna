@@ -15,14 +15,14 @@
 
 
 from savanna.tests.integration.db import ITestCase
-from telnetlib import Telnet
+import telnetlib
 
 
 class TestNGT(ITestCase):
 
     def setUp(self):
         super(TestNGT, self).setUp()
-        Telnet(self.host, self.port)
+        telnetlib.Telnet(self.host, self.port)
 
     def test_crud_for_ngt_nn(self):
         body_nn = self.make_node_group_template("master_nn", "qa probe", "NN")
