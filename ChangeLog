@@ -1,3 +1,9 @@
+commit ebee7a8d1deff16fd8ac4dd58b88c62302e974a4
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 19:28:35 2013 +0400
+
+    new changes
+
 commit dbf447f7ba5dbd2ab19b4d3ceb63563b93dbf130
 Merge: 3b4c582 2b9d8d7
 Author: Vadim Rovachev <vrovachev@mirantis.com>
