@@ -17,10 +17,10 @@ from savanna.tests.integration.db import ITestCase
 import  telnetlib
 
 
-class TestsClusterCRUD(ITestCase):
+class TestsCRUDClusterNodeProcesses(ITestCase):
 
     def setUp(self):
-        super(TestsClusterCRUD, self).setUp()
+        super(TestsCRUDClusterNodeProcesses, self).setUp()
 
         telnetlib.Telnet(self.host, self.port)
 

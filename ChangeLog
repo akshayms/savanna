@@ -1,3 +1,21 @@
+commit f510c8761ae92b5f2ac31e26d974ad4436257eb6
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 17:02:31 2013 +0400
+
+    fix tests for crud clusters from cluster template vol.2
+
+commit 95487eeeaa73a7786e2df567b8804480a86bcd19
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 16:59:42 2013 +0400
+
+    fix tests for crud clusters from cluster template
+
+commit cedcbf284fde61569e27bbc8d6e5038d3b8b9b68
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 16:49:59 2013 +0400
+
+    added changes to crud operations from node group template
+
 commit 8845ff37e061dc27cafaf814038e8f6323232f6f
 Merge: 37996c3 28379de
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>

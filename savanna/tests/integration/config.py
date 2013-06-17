@@ -6,7 +6,7 @@ OS_AUTH_URL = 'http://172.18.79.139:35357/v2.0/'  # URL for keystone
 SAVANNA_HOST = '172.18.79.226'  # IP for Savanna API
 SAVANNA_PORT = '8080'  # port for Savanna API
 
-IMAGE_ID = 'ff27275f-27b0-443b-b5dc-6ae5f6264bd7'  # ID for instance image
+IMAGE_ID = '39d3d9ff-bbd7-49be-955d-8b3f01a68409'  # ID for instance image
 FLAVOR_ID = '42'
 
 IP_PREFIX = '172.'  # prefix for IP address which is used for ssh connect

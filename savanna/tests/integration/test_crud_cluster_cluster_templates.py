@@ -18,10 +18,10 @@ from savanna.tests.integration.db import ITestCase
 import telnetlib
 
 
-class Test_crud_cluster(ITestCase):
+class TestsCRUDClusterClusterTemplates(ITestCase):
 
     def setUp(self):
-        super(Test_crud_cluster, self).setUp()
+        super(TestsCRUDClusterClusterTemplates, self).setUp()
 
         telnetlib.Telnet(self.host, self.port)
 
@@ -54,7 +54,7 @@ class Test_crud_cluster(ITestCase):
                 self.url_ngt, self.make_node_group_template(
                     "master_jt_nn", "qa probe", "JT+NN"), 202))
 
-    def crud_clstr_with_cltr_tmpl(self, node_list):
+    def crud_clstr_cltr_tmpl(self, node_list):
         cl_tmpl_id = ''
         try:
             cl_tmpl_body = self.make_cluster_template("cl-tmpl", node_list)
@@ -71,12 +71,12 @@ class Test_crud_cluster(ITestCase):
 
     def test_cluster_nnjt_dntt(self):
         node_list = {self.id_jt_nn: 1, self.id_tt_dn: 1}
-        self.crud_clstr_with_cltr_tmpl(node_list)
+        self.crud_clstr_cltr_tmpl(node_list)
 
     def test_cluster_nn_jt_dn_tt(self):
         node_list = {self.id_nn: 1, self.id_jt: 1,
                      self.id_dn: 1, self.id_tt: 1}
-        self.crud_clstr_with_cltr_tmpl(node_list)
+        self.crud_clstr_cltr_tmpl(node_list)
 
     def tearDown(self):
        self._del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)
