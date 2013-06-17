@@ -18,10 +18,10 @@ from savanna.tests.integration.db import ITestCase
 import telnetlib
 
 
-class TestNGT(ITestCase):
+class TestsCRUDNodeGroupsTemplates(ITestCase):
 
     def setUp(self):
-        super(TestNGT, self).setUp()
+        super(TestsCRUDNodeGroupsTemplates, self).setUp()
         telnetlib.Telnet(self.host, self.port)
 
     def test_crud_for_ngt_nn(self):

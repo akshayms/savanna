@@ -34,7 +34,7 @@ def print_data(expr):
 #     return '/untag'
 
 
-class ITestsIRApi(ITestCase):
+class TestsCRUDImageRegistry(ITestCase):
 
     def get_images_list(self):
         data = self._get_object(self.url_images, empty_object_id(True),
@@ -71,14 +71,14 @@ class ITestsIRApi(ITestCase):
         return data
 
     def setUp(self):
-        super(ITestsIRApi, self).setUp()
+        super(TestsCRUDImageRegistry, self).setUp()
         telnetlib.Telnet(self.host, self.port)
 
     def test_image_registry(self):
-        username = 'Horse'
+        username = 'ubuntu'
         tag1_name = 'animal'
         tag2_name = 'dog'
-        description = 'Running horse'
+        description = 'working image'
 
         self.get_images_list()
         #self.assertEquals(data['images'][0]['id'], param.IMAGE_ID)
