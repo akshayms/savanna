@@ -1,3 +1,22 @@
+commit d9ef75bf59a281257161bb543ac3d396d12a0286
+Merge: e671f5b aa68df4
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Tue Jun 18 13:25:00 2013 +0400
+
+    merge branch
+
+commit e671f5ba768b90237161d6369c9aa2c721d5593e
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Tue Jun 18 13:23:46 2013 +0400
+
+    add new tests in integration tests
+
+commit aa68df467fea8dc283dcd5b8551fcb46f82ec2ab
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 13:22:33 2013 +0400
+
+    refactoring code
+
 commit 0a87da00f634c37c07ea6ae0a9e6b767ff6a3fb0
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>
 Date:   Mon Jun 17 19:57:18 2013 +0400

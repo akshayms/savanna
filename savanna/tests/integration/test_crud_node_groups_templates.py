@@ -50,14 +50,12 @@ class TestsCRUDNodeGroupsTemplates(savanna.tests.integration.base.ITestCase):
                                                    "TT+DN")
         self.crud_object(body_tt_dn, self.url_ngt)
 
-    def test_crud_for_ngt_tt_dn(self):
+    def test_crud_ngt_nnttdn(self):
         body_tt_dn = self.make_node_group_template("nn_dn_tt", "qa probe",
                                                    "NN+TT+DN")
         self.crud_object(body_tt_dn, self.url_ngt)
 
-    def test_crud_for_ngt_tt_dn(self):
+    def test_crud_ngt_jtttdn(self):
         body_tt_dn = self.make_node_group_template("jt_dn_tt", "qa probe",
                                                    "JT+TT+DN")
         self.crud_object(body_tt_dn, self.url_ngt)
-
-
