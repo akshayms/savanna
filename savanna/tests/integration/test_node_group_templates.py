@@ -14,14 +14,14 @@
 # limitations under the License.
 
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import telnetlib
 
 
-class TestsCRUDNodeGroupsTemplates(savanna.tests.integration.base.ITestCase):
+class NodeGroupTemplatesCrudTest(base.ITestCase):
 
     def setUp(self):
-        super(TestsCRUDNodeGroupsTemplates, self).setUp()
+        super(NodeGroupTemplatesCrudTest, self).setUp()
         telnetlib.Telnet(self.host, self.port)
 
     def test_crud_ngt_nn(self):

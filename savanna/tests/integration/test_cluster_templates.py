@@ -14,14 +14,14 @@
 # limitations under the License.
 
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import telnetlib
 
 
-class TestsCRUDClusterTemplates(savanna.tests.integration.base.ITestCase):
+class ClusterTemplatesCrudTest(base.ITestCase):
 
     def setUp(self):
-        super(TestsCRUDClusterTemplates, self).setUp()
+        super(ClusterTemplatesCrudTest, self).setUp()
 
         telnetlib.Telnet(self.host, self.port)
 

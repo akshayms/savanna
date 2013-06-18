@@ -1,3 +1,9 @@
+commit c20e36db5c4edfed06fea2c18103947f80b0b3d1
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Tue Jun 18 13:51:20 2013 +0400
+
+    add new tests and changes in tests
+
 commit d9ef75bf59a281257161bb543ac3d396d12a0286
 Merge: e671f5b aa68df4
 Author: Vadim Rovachev <vrovachev@mirantis.com>
