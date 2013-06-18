@@ -15,8 +15,8 @@ IP_PREFIX = '172.'  # prefix for IP address which is used for ssh connect
 NODE_USERNAME = 'username'  # username for master node
 NODE_PASSWORD = 'password'  # password for master node
 
-CLUSTER_NAME_CRUD = 'RV-cluster_crud'  # cluster name for crud operations
-CLUSTER_NAME_HADOOP = 'RV-cluster_hadoop'  # cluster name for hadoop testing
+CLUSTER_NAME_CRUD = 'YL-cluster_crud'  # cluster name for crud operations
+CLUSTER_NAME_HADOOP = 'YL-cluster_hadoop'  # cluster name for hadoop testing
 
 TIMEOUT = 15  # cluster creation timeout (in minutes)
 
