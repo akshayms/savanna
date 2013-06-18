@@ -201,12 +201,6 @@ class ITestCase(unittest2.TestCase):
             node_groups=[]
         )
         for key, value in node_processes.items():
-            ng = dict(
-                name='',
-                flavor_id='',
-                node_processes='',
-                count=1
-            )
             processes = ['jobtracker', 'namenode']
             ng_name = 'jt_nn'
             if key == 'TT+DN':
@@ -230,11 +224,32 @@ class ITestCase(unittest2.TestCase):
             elif key == 'NN+TT+DN':
                 processes = ['namenode', 'tasktracker', 'datanode']
                 ng_name = 'nn_tt_dn'
-            ng['flavor_id'] = param.FLAVOR_ID
-            ng['count'] = value
-            ng['node_processes'] = processes
-            ng['name'] = ng_name
-            cluster_body['node_groups'].append(ng)
+            cluster_body['node_groups'].append(dict(
+                name=ng_name,
+                flavor_id=param.FLAVOR_ID,
+                node_processes=processes,
+                count=value
+            ))
+        return cluster_body
+
+    def make_cl_body_node_groups_templates(self, ngt_id_list):
+        cluster_body = dict(
+            name='%s' % param.CLUSTER_NAME_CRUD,
+            plugin_name='%s' % param.PLUGIN_NAME,
+            hadoop_version='%s' % param.HADOOP_VERSION,
+            user_keypair_id='%s' % param.SSH_KEY,
+            default_image_id='%s' % param.IMAGE_ID,
+            cluster_configs={},
+            node_groups=[]
+        )
+        for key, value in ngt_id_list.items():
+            data = self.get_object(self.url_ngt_with_slash, key, 200)
+            name = data['node_group_template']['name']
+            cluster_body['node_groups'].append(dict(
+                name=name,
+                node_group_template_id=key,
+                count=value
+            ))
         return cluster_body
 
     def get_object_id(self, obj, body):

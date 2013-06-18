@@ -64,33 +64,33 @@ class TestsCRUDClusterTemplates(savanna.tests.integration.base.ITestCase):
                 self.url_ngt, self.make_node_group_template(
                     "master_jt_nn", "qa probe", "JT+TT+DN"), 202))
 
-    def test_crud_cl_tmpl_with_nnjt_dntt(self):
+    def test_crud_cl_tmpl_nnjt_dntt(self):
         node_list = {self.id_jt_nn: 1, self.id_tt_dn: 2}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_1", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
 
-    def test_crud_cl_tmpl_with_nn_jt_dn_tt(self):
+    def test_crud_cl_tmpl_nn_jt_dn_tt(self):
         node_list = {self.id_nn: 1, self.id_jt: 1, self.id_tt: 5,
                      self.id_dn: 5}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_2", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
 
-    def test_crud_cl_tmpl_with_nn_jt_dntt(self):
+    def test_crud_cl_tmpl_nn_jt_dntt(self):
         node_list = {self.id_jt: 1, self.id_nn: 1, self.id_tt_dn: 7}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_3", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
 
-    def test_crud_cl_tmpl_with_nn(self):
+    def test_crud_cl_tmpl_nn(self):
         node_list = {self.id_nn: 1}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_4", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
 
-    def test_crud_cl_tmpl_with_nn_dn(self):
+    def test_crud_cl_tmpl_nn_dn(self):
         node_list = {self.id_nn: 1, self.id_dn: 7}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_5", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
 
-    def test_crud_cl_tmpl_with_nn_jt_dn(self):
+    def test_crud_cl_tmpl_nn_jt_dn(self):
         node_list = {self.id_nn: 1, self.id_jt: 1, self.id_dn: 7}
         cl_tmpl_body = self.make_cluster_template("cl_tmpl_6", node_list)
         self.crud_object(cl_tmpl_body, self.url_cl_tmpl)
