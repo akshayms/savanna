@@ -14,12 +14,11 @@
 # limitations under the License.
 
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import telnetlib
 
 
-class TestsCRUDClusterNodeGroupsTemplates\
-        (savanna.tests.integration.base.ITestCase):
+class TestsCRUDClusterNodeGroupsTemplates(base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDClusterNodeGroupsTemplates, self).setUp()
@@ -30,6 +29,7 @@ class TestsCRUDClusterNodeGroupsTemplates\
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
                     'worker_tt', 'qa probe', 'TT'), 202))
+
         self.id_jt = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
@@ -86,13 +86,13 @@ class TestsCRUDClusterNodeGroupsTemplates\
         body = self.make_cl_body_node_groups_templates(ngt_id_list)
         self.crud_object(body, self.url_cluster)
 
-    def test_crud_cluster_ngt_nn_jt_ttdn(self):
-        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_tt_dn: 2}
+    def test_crud_cluster_ngt_nn_jt_dn(self):
+        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_dn: 2}
         body = self.make_cl_body_node_groups_templates(ngt_id_list)
         self.crud_object(body, self.url_cluster)
 
-    def test_crud_cluster_ngt_nn_jt_dn(self):
-        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_dn: 2}
+    def test_crud_cluster_ngt_nn_jt_ttdn(self):
+        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_tt_dn: 2}
         body = self.make_cl_body_node_groups_templates(ngt_id_list)
         self.crud_object(body, self.url_cluster)
 

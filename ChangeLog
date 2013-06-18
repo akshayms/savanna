@@ -1,3 +1,28 @@
+commit afce27682677049de4c56aa3486f76733e088de4
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 16:17:16 2013 +0400
+
+    added crud tests for cluster from ngt_id
+
+commit 48d4bf6c7bd9be306b9a29af7954aa0f3757730c
+Merge: 26a3411 539ef69
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Tue Jun 18 14:51:22 2013 +0400
+
+    Merge branch 'preSF' of https://github.com/Mirantis/savanna into preSF
+
+commit 26a3411f38e305d9c2b3f527d0d9dd76587360f2
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Tue Jun 18 14:50:59 2013 +0400
+
+    add new changes according to master branch
+
+commit 539ef69890ea271da929b82951482a9fce2194a6
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 13:55:45 2013 +0400
+
+    new chenge
+
 commit c20e36db5c4edfed06fea2c18103947f80b0b3d1
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Tue Jun 18 13:51:20 2013 +0400

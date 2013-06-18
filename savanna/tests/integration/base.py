@@ -254,6 +254,18 @@ class ITestCase(unittest2.TestCase):
             ))
         return cluster_body
 
+    def make_cl_node_processes_ngt(self, node_processes, ngt_id_list):
+        cluster_body = self.make_cl_body_node_processes(node_processes)
+        for key, value in ngt_id_list.items():
+            data = self.get_object(self.url_ngt_with_slash, key, 200)
+            name = data['node_group_template']['name']
+            cluster_body['node_groups'].append(dict(
+                name=name,
+                node_group_template_id=key,
+                count=value
+            ))
+        return cluster_body
+
     def get_object_id(self, obj, body):
         print(body)
         data = body['%s' % obj]

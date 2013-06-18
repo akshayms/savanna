@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import telnetlib
 
 
-class TestsCRUDClusterNodeProcesses(savanna.tests.integration.base.ITestCase):
+class TestsCRUDClusterNodeProcesses(base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDClusterNodeProcesses, self).setUp()

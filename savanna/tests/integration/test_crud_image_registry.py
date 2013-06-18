@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import savanna.tests.integration.parameters as param
 import telnetlib
 
@@ -22,7 +22,7 @@ def empty_object_id(expr):
     return '' if expr else param.IMAGE_ID
 
 
-class TestsCRUDImageRegistry(savanna.tests.integration.base.ITestCase):
+class TestsCRUDImageRegistry(base.ITestCase):
 
     def get_images_list(self):
         data = self.get_object(self.url_images, empty_object_id(True), 200)
