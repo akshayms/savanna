@@ -287,17 +287,17 @@ class ITestCase(unittest2.TestCase):
                 get_url = self.url_cl_tmpl_with_slash
             data = data['%s' % crud_object]
             object_id = data.get('id')
-            get_data = self.get_object(get_url, object_id, 200)
-            get_data = get_data['%s' % crud_object]
             if crud_object == 'cluster':
-                self._await_cluster_active(get_data, get_url, object_id)
+                self.await_cluster_active(get_url, object_id)
         except Exception as e:
             self.fail('failure: ' + e.message)
         finally:
             self.del_object(get_url, object_id, 204)
         return object_id
 
-    def _await_cluster_active(self, get_data, get_url, object_id):
+    def await_cluster_active(self, get_url, object_id):
+        get_data = self.get_object(get_url, object_id, 200)
+        get_data = get_data['cluster']
         i = 1
         while get_data['status'] != 'Active':
             print 'GET_STATUS: ', get_data['status']
