@@ -59,7 +59,7 @@ class ITestCase(unittest2.TestCase):
 
 #----------------------CRUD_commands-------------------------------------------
 
-    def post(self, url, body):
+    def _post(self, url, body):
         URL = self.baseurl + url
         resp = requests.post(URL, data=body, headers={
             'x-auth-token': self.token, 'Content-Type': 'application/json'})
@@ -69,7 +69,7 @@ class ITestCase(unittest2.TestCase):
               % (URL, body, resp.status_code, data))
         return resp
 
-    def put(self, url, body):
+    def _put(self, url, body):
         URL = self.baseurl + url
         resp = requests.put(URL, data=body, headers={
             'x-auth-token': self.token, 'Content-Type': 'application/json'})
@@ -78,7 +78,7 @@ class ITestCase(unittest2.TestCase):
               % (URL, body, resp.status_code, data))
         return resp
 
-    def get(self, url, printing):
+    def _get(self, url, printing):
         URL = self.baseurl + url
         resp = requests.get(URL, headers={'x-auth-token': self.token})
         if printing:
@@ -88,7 +88,7 @@ class ITestCase(unittest2.TestCase):
             print('data= %s\n') % data
         return resp
 
-    def delete(self, url):
+    def _delete(self, url):
         URL = self.baseurl + url
         resp = requests.delete(URL, headers={'x-auth-token': self.token})
         print('URL = %s\nresponse = %s\n' % (URL, resp.status_code))
@@ -98,19 +98,19 @@ class ITestCase(unittest2.TestCase):
         return resp
 
     def post_object(self, url, body, code):
-        post = self.post(url, json.dumps(body))
+        post = self._post(url, json.dumps(body))
         self.assertEquals(post.status_code, code)
         data = json.loads(post.content)
         return data
 
     def get_object(self, url, obj_id, code, printing=False):
-        rv = self.get(url + obj_id, printing)
+        rv = self._get(url + obj_id, printing)
         self.assertEquals(rv.status_code, code)
         data = json.loads(rv.content)
         return data
 
     def del_object(self, url, obj_id, code):
-        rv = self.delete(url + obj_id)
+        rv = self._delete(url + obj_id)
         self.assertEquals(rv.status_code, code)
         if rv.status_code != 204:
             data = json.loads(rv.content)
@@ -138,6 +138,10 @@ class ITestCase(unittest2.TestCase):
             processes = ['tasktracker']
         elif n_proc == 'DN':
             processes = ['datanode']
+        elif n_proc == 'NN+TT+DN':
+            processes = ['namenode', 'tasktracker', 'datanode']
+        elif n_proc == 'JT+TT+DN':
+            processes = ['jobtracker', 'tasktracker', 'datanode']
         group_template = dict(
             name='%s' % gr_name,
             description='%s' % desc,
@@ -257,14 +261,14 @@ class ITestCase(unittest2.TestCase):
             get_data = self.get_object(get_url, object_id, 200)
             get_data = get_data['%s' % crud_object]
             if crud_object == 'cluster':
-                self.await_cluster_active(get_data, get_url, object_id)
+                self._await_cluster_active(get_data, get_url, object_id)
         except Exception as e:
             self.fail('failure: ' + e.message)
         finally:
             self.del_object(get_url, object_id, 204)
         return object_id
 
-    def await_cluster_active(self, get_data, get_url, object_id):
+    def _await_cluster_active(self, get_data, get_url, object_id):
         i = 1
         while get_data['status'] != 'Active':
             print 'GET_STATUS: ', get_data['status']

@@ -55,6 +55,16 @@ class TestsCRUDClusterClusterTemplates\
                 self.url_ngt, self.make_node_group_template(
                     "master_jt_nn", "qa probe", "JT+NN"), 202))
 
+        self.id_nn_tt_dn = self.get_object_id(
+            'node_group_template', self.post_object(
+                self.url_ngt, self.make_node_group_template(
+                    "master_jt_nn", "qa probe", "NN+TT+DN"), 202))
+
+        self.id_jt_tt_dn = self.get_object_id(
+            'node_group_template', self.post_object(
+                self.url_ngt, self.make_node_group_template(
+                    "master_jt_nn", "qa probe", "JT+TT+DN"), 202))
+
     def crud_clstr_cltr_tmpl(self, node_list):
         cl_tmpl_id = ''
         try:
@@ -77,6 +87,30 @@ class TestsCRUDClusterClusterTemplates\
     def test_cluster_nn_jt_dn_tt(self):
         node_list = {self.id_nn: 1, self.id_jt: 1,
                      self.id_dn: 1, self.id_tt: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_nn: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_nn: 1, self.id_dn: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_nn: 1, self.id_jt: 1, self.id_dn: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_nn: 1, self.id_jt: 1, self.id_tt_dn: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_nn_tt_dn: 1, self.id_jt: 1}
+        self.crud_clstr_cltr_tmpl(node_list)
+
+    def test_cluster_nnjt_dntt(self):
+        node_list = {self.id_jt_tt_dn: 1, self.id_nn: 1}
         self.crud_clstr_cltr_tmpl(node_list)
 
     def tearDown(self):
