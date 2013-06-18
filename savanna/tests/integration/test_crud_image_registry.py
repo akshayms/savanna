@@ -22,23 +22,10 @@ def empty_object_id(expr):
     return '' if expr else param.IMAGE_ID
 
 
-def print_data(expr):
-    return True if expr else False
-
-
-# def set_tag():
-#     return '/tag'
-#
-#
-# def set_untag():
-#     return '/untag'
-
-
 class TestsCRUDImageRegistry(savanna.tests.integration.base.ITestCase):
 
     def get_images_list(self):
-        data = self.get_object(self.url_images, empty_object_id(True),
-                               200, print_data(False))
+        data = self.get_object(self.url_images, empty_object_id(True), 200)
         return data
 
     def set_description_username(self, description, username):
@@ -52,8 +39,7 @@ class TestsCRUDImageRegistry(savanna.tests.integration.base.ITestCase):
 
     def get_image_by_tags(self, tag_name):
         url = self.url_images + '?tags=' + tag_name
-        data = self.get_object(
-            url, empty_object_id(True), 200, print_data(False))
+        data = self.get_object(url, empty_object_id(True), 200)
         return data
 
     def set_tags_untags_image(self, url_part, tag_name):
@@ -66,8 +52,7 @@ class TestsCRUDImageRegistry(savanna.tests.integration.base.ITestCase):
 
     def get_image_description(self):
         url = self.url_images + '/'
-        data = self.get_object(
-            url, empty_object_id(False), 200, print_data(False))
+        data = self.get_object(url, empty_object_id(False), 200)
         return data
 
     def setUp(self):

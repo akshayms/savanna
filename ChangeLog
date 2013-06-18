@@ -1,3 +1,15 @@
+commit 0a87da00f634c37c07ea6ae0a9e6b767ff6a3fb0
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Mon Jun 17 19:57:18 2013 +0400
+
+    added new changes
+
+commit 73a983bc3cf9500d5eeb43234a6a289a32505d8a
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Mon Jun 17 19:44:33 2013 +0400
+
+    added low changes in tests
+
 commit ebee7a8d1deff16fd8ac4dd58b88c62302e974a4
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>
 Date:   Mon Jun 17 19:28:35 2013 +0400
