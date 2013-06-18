@@ -66,7 +66,6 @@ class TestsCRUDImageRegistry(base.ITestCase):
         description = 'working image'
 
         self.get_images_list()
-        #self.assertEquals(data['images'][0]['id'], param.IMAGE_ID)
 
         data = self.set_description_username(description, username)
         self.assertEquals(data['image']['description'], description)
@@ -115,4 +114,3 @@ class TestsCRUDImageRegistry(base.ITestCase):
         self.assertEquals(data['images'], [])
 
         self.get_images_list()
-        #self.assertEquals(data['images'][0]['id'], param.IMAGE_ID)
