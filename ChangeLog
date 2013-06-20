@@ -1,3 +1,24 @@
+<<<<<<< HEAD
+=======
+commit fb5e57f72a1aac6b905c972b1b3429cac2cb072e
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 18:14:08 2013 +0400
+
+    minor change
+
+commit 14e3dde034763eec668325e46ba9e54da3513584
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 18:06:46 2013 +0400
+
+    added crud tests for cluster from ngt and node processes
+
+commit afce27682677049de4c56aa3486f76733e088de4
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 16:17:16 2013 +0400
+
+    added crud tests for cluster from ngt_id
+
+>>>>>>> 582f99c374bafd3df2a8d54776fca905c83818d6
 commit 48d4bf6c7bd9be306b9a29af7954aa0f3757730c
 Merge: 26a3411 539ef69
 Author: Vadim Rovachev <vrovachev@mirantis.com>

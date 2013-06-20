@@ -15,11 +15,10 @@
 
 import telnetlib
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 
 
-class TestsCRUDClusterClusterTemplates\
-        (savanna.tests.integration.base.ITestCase):
+class TestsCRUDClusterClusterTemplates(base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDClusterClusterTemplates, self).setUp()

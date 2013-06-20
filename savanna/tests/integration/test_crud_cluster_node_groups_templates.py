@@ -14,12 +14,11 @@
 # limitations under the License.
 
 
-import savanna.tests.integration.base
+from savanna.tests.integration import base
 import telnetlib
 
 
-class TestsCRUDClusterNodeGroupsTemplates\
-        (savanna.tests.integration.base.ITestCase):
+class TestsCRUDClusterNodeGroupsTemplates(base.ITestCase):
 
     def setUp(self):
         super(TestsCRUDClusterNodeGroupsTemplates, self).setUp()
@@ -32,7 +31,42 @@ class TestsCRUDClusterNodeGroupsTemplates\
         ngt_id_list = {self.id_jt_nn: 1, self.id_tt_dn: 2}
         body = self.make_cl_body_node_groups_templates(ngt_id_list)
         self.crud_object(body, self.url_cluster)
-        print '=================', body
+
+    def test_crud_cluster_ngt_jt_nn_tt_dn(self):
+        ngt_id_list = {self.id_jt: 1, self.id_nn: 1, self.id_tt: 1,
+                       self.id_dn: 1}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_nn(self):
+        ngt_id_list = {self.id_nn: 1}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_nn_dn(self):
+        ngt_id_list = {self.id_nn: 1, self.id_dn: 2}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_nn_jt_dn(self):
+        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_dn: 2}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_nn_jt_ttdn(self):
+        ngt_id_list = {self.id_nn: 1, self.id_jt: 1, self.id_tt_dn: 2}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_nnttdn_jt(self):
+        ngt_id_list = {self.id_nn_tt_dn: 1, self.id_jt: 1}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
+
+    def test_crud_cluster_ngt_jtttdn_nn(self):
+        ngt_id_list = {self.id_jt_tt_dn: 1, self.id_nn: 1}
+        body = self.make_cl_body_node_groups_templates(ngt_id_list)
+        self.crud_object(body, self.url_cluster)
 
     def tearDown(self):
         self.delete_node_group_template()

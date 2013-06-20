@@ -42,6 +42,8 @@ class ITestCase(unittest2.TestCase):
         self.flavor_id = param.FLAVOR_ID
         self.image_id = param.IMAGE_ID
 
+        self.maxDiff = None
+
         self.url_version = '/'
 
         self.url_ngt = '/v1.0/%s/node-group-templates' % self.tenant
@@ -242,6 +244,18 @@ class ITestCase(unittest2.TestCase):
             cluster_configs={},
             node_groups=[]
         )
+        for key, value in ngt_id_list.items():
+            data = self.get_object(self.url_ngt_with_slash, key, 200)
+            name = data['node_group_template']['name']
+            cluster_body['node_groups'].append(dict(
+                name=name,
+                node_group_template_id=key,
+                count=value
+            ))
+        return cluster_body
+
+    def make_cl_node_processes_ngt(self, node_processes, ngt_id_list):
+        cluster_body = self.make_cl_body_node_processes(node_processes)
         for key, value in ngt_id_list.items():
             data = self.get_object(self.url_ngt_with_slash, key, 200)
             name = data['node_group_template']['name']
