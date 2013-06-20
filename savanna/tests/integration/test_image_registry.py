@@ -23,7 +23,7 @@ def empty_object_id(expr):
     return '' if expr else param.IMAGE_ID
 
 
-class TestsCRUDImageRegistry(base.ITestCase):
+class ImageRegistryCrudTest(base.ITestCase):
 
     def get_images_list(self):
         data = self.get_object(self.url_images, empty_object_id(True), 200)
@@ -57,7 +57,7 @@ class TestsCRUDImageRegistry(base.ITestCase):
         return data
 
     def setUp(self):
-        super(TestsCRUDImageRegistry, self).setUp()
+        super(ImageRegistryCrudTest, self).setUp()
         telnetlib.Telnet(self.host, self.port)
 
     def test_image_registry(self):

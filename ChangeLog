@@ -1,3 +1,9 @@
+commit e6c99fadac3f5450157056109e3b942193d2e692
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu Jun 20 20:15:06 2013 +0400
+
+    added hadoop tests
+
 commit 428aadf660a8083f3f393b928793e4abe60224d8
 Merge: 6943de4 582f99c
 Author: Vadim Rovachev <vrovachev@mirantis.com>
