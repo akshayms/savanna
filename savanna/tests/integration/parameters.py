@@ -34,3 +34,5 @@ HADOOP_LOG_DIRECTORY = _get_conf('HADOOP_LOG_DIRECTORY',
 
 SSH_KEY = _get_conf('SSH_KEY', 'jenkins')
 PLUGIN_NAME = _get_conf('PLUGIN_NAME', 'vanilla')
+PATH_TO_SSH = _get_conf('PATH_TO_SSH', '/home/user/.ssh/id_rsa')
+PASS_FROM_SSH = _get_conf('PASS_FROM_SSH', '')

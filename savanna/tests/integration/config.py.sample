@@ -25,3 +25,5 @@ HADOOP_LOG_DIRECTORY = '/mnt/log/hadoop/hadoop/userlogs'
 
 SSH_KEY = 'ssh_key'
 PLUGIN_NAME = 'vanilla'
+PATH_TO_SSH = '/home/user/.ssh/id_rsa'
+PASS_FROM_SSH = ''

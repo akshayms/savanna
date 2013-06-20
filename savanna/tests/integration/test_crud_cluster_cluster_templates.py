@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import telnetlib
 
 import savanna.tests.integration.base
-import telnetlib
 
 
 class TestsCRUDClusterClusterTemplates\
@@ -26,44 +26,7 @@ class TestsCRUDClusterClusterTemplates\
 
         telnetlib.Telnet(self.host, self.port)
 
-        self.id_tt = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'worker_tt', 'qa probe', 'TT'), 202))
-        self.id_jt = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'master_jt', 'qa probe', 'JT'), 202))
-
-        self.id_nn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'master_nn', 'qa probe', 'NN'), 202))
-
-        self.id_dn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'worker_dn', 'qa probe', 'DN'), 202))
-
-        self.id_tt_dn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'worker_tt_dn', 'qa probe', 'TT+DN'), 202))
-
-        self.id_jt_nn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'master_jt_nn', 'qa probe', 'JT+NN'), 202))
-
-        self.id_nn_tt_dn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'nn_tt_dn', 'qa probe', 'NN+TT+DN'), 202))
-
-        self.id_jt_tt_dn = self.get_object_id(
-            'node_group_template', self.post_object(
-                self.url_ngt, self.make_node_group_template(
-                    'jt_tt_dn', 'qa probe', 'JT+TT+DN'), 202))
+        self.create_node_group_template()
 
     def crud_clstr_cltr_tmpl(self, node_list):
         cl_tmpl_id = ''
@@ -114,11 +77,4 @@ class TestsCRUDClusterClusterTemplates\
         self.crud_clstr_cltr_tmpl(node_list)
 
     def tearDown(self):
-        self.del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_jt, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_nn, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_tt, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_dn, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_tt_dn, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_nn_tt_dn, 204)
-        self.del_object(self.url_ngt_with_slash, self.id_jt_tt_dn, 204)
+        self.delete_node_group_template()

@@ -122,13 +122,13 @@ echo "[------netstat------]">>$log
 echo `sudo netstat -plten | grep java` &>>$log
 echo "[------test for hdfs------]">>$log
 echo `dmesg > $dir/input` 2>>$log
-su -c "hadoop dfs -ls /" hadoop &&
-su -c "hadoop dfs -mkdir /test" hadoop &&
-su -c "hadoop dfs -copyFromLocal $dir/input /test/mydata" hadoop 2>>$log
+sudo su -c "hadoop dfs -ls /" hadoop &&
+sudo su -c "hadoop dfs -mkdir /test" hadoop &&
+sudo su -c "hadoop dfs -copyFromLocal $dir/input /test/mydata" hadoop 2>>$log
 echo "[------start job------]">>$log &&
-su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
-su -c "hadoop dfs -copyToLocal /test/output/ $dir/out/" hadoop 2>>$log &&
-su -c "hadoop dfs -rmr /test" hadoop 2>>$log
+sudo su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar wordcount /test/mydata /test/output" hadoop 2>>$log &&
+sudo su -c "hadoop dfs -copyToLocal /test/output/ $dir/out/" hadoop 2>>$log &&
+sudo su -c "hadoop dfs -rmr /test" hadoop 2>>$log
 }
 
 run_pi_job() {
@@ -138,25 +138,24 @@ f_var_check v_hadoop_directory
 f_create_log_dir
 directory=/usr/share/hadoop
 logdir=/var/log/hadoop/hadoop/userlogs
-su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
+sudo su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
 }
 
 get_job_name() {
 f_var_check v_hadoop_directory
-su -c "cd $HADOOP_DIRECTORY && hadoop job -list all | tail -n1" hadoop | awk '{print $1}' 2>>$log
+sudo su -c "cd $HADOOP_DIRECTORY && hadoop job -list all | tail -n1" hadoop | awk '{print $1}' 2>>$log
 }
 
 get_list_active_trackers() {
 f_create_log_dir
 f_var_check v_hadoop_directory
-sleep 30 &&
-su -c "cd $HADOOP_DIRECTORY && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
+sudo su -c "cd $HADOOP_DIRECTORY && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
 }
 
 get_list_active_datanodes() {
 f_create_log_dir
 f_var_check v_hadoop_directory
-su -c "hadoop dfsadmin -report" hadoop | grep "Datanodes available:.*" | awk '{print $3}' 2>>$log
+sudo su -c "hadoop dfsadmin -report" hadoop | grep "Datanodes available:.*" | awk '{print $3}' 2>>$log
 }
 
 check_exist_directory() {

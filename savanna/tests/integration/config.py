@@ -1,6 +1,6 @@
-OS_USERNAME = 'qa-user'  # username for nova
+OS_USERNAME = 'admin'  # username for nova
 OS_PASSWORD = 'swordfish'  # password for nova
-OS_TENANT_NAME = 'qa'
+OS_TENANT_NAME = 'admin'
 OS_AUTH_URL = 'http://172.18.79.139:35357/v2.0/'  # URL for keystone
 
 SAVANNA_HOST = '172.18.79.209'  # IP for Savanna API
@@ -24,5 +24,7 @@ HADOOP_VERSION = '1.1.2'
 HADOOP_DIRECTORY = '/usr/share/hadoop'
 HADOOP_LOG_DIRECTORY = '/mnt/log/hadoop/hadoop/userlogs'
 
-SSH_KEY = 'ylobankov'
+SSH_KEY = 'vrovachev'
 PLUGIN_NAME = 'vanilla'
+PATH_TO_SSH = '/home/user/.ssh/id_rsa'
+PASS_FROM_SSH = '20091100'
