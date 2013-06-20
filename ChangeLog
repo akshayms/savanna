@@ -1,5 +1,22 @@
-<<<<<<< HEAD
-=======
+commit 428aadf660a8083f3f393b928793e4abe60224d8
+Merge: 6943de4 582f99c
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu Jun 20 15:06:15 2013 +0400
+
+    merge branch
+
+commit 6943de46fb0fffdc4785f34f4679577e9900730d
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu Jun 20 15:04:47 2013 +0400
+
+    add changes for create node_nroup_templates and add hadoop test
+
+commit 582f99c374bafd3df2a8d54776fca905c83818d6
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jun 18 19:19:32 2013 +0400
+
+    added chanes to method await_cluster_active
+
 commit fb5e57f72a1aac6b905c972b1b3429cac2cb072e
 Author: Yaroslav Lobankov <ylobankov@mirantis.com>
 Date:   Tue Jun 18 18:14:08 2013 +0400
@@ -18,7 +35,6 @@ Date:   Tue Jun 18 16:17:16 2013 +0400
 
     added crud tests for cluster from ngt_id
 
->>>>>>> 582f99c374bafd3df2a8d54776fca905c83818d6
 commit 48d4bf6c7bd9be306b9a29af7954aa0f3757730c
 Merge: 26a3411 539ef69
 Author: Vadim Rovachev <vrovachev@mirantis.com>

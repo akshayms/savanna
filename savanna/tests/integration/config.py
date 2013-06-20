@@ -1,9 +1,9 @@
-OS_USERNAME = 'admin'  # username for nova
+OS_USERNAME = 'qa-user'  # username for nova
 OS_PASSWORD = 'swordfish'  # password for nova
-OS_TENANT_NAME = 'admin'
+OS_TENANT_NAME = 'qa'
 OS_AUTH_URL = 'http://172.18.79.139:35357/v2.0/'  # URL for keystone
 
-SAVANNA_HOST = '172.18.79.209'  # IP for Savanna API
+SAVANNA_HOST = '172.18.79.226'  # IP for Savanna API
 SAVANNA_PORT = '8080'  # port for Savanna API
 
 IMAGE_ID = '39d3d9ff-bbd7-49be-955d-8b3f01a68409'  # ID for instance image

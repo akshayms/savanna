@@ -310,7 +310,7 @@ class ITestCase(unittest2.TestCase):
             eventlet.sleep(10)
             i += 1
 
-    #------------------create_node_group_template-------------------------------
+#---------------------create_node_group_template-------------------------------
 
     def create_node_group_template(self):
         self.id_tt = self.get_object_id(
@@ -352,7 +352,7 @@ class ITestCase(unittest2.TestCase):
                 self.url_ngt, self.make_node_group_template(
                     'jt_tt_dn', 'qa probe', 'JT+TT+DN'), 202))
 
-    #------------------delete_node_group_template-------------------------------
+#---------------------delete_node_group_template-------------------------------
 
     def delete_node_group_template(self):
         self.del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)

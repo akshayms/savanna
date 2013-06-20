@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from os import getcwd
+import os
 import paramiko
+import telnetlib
+
 from savanna.tests.integration import base
 import savanna.tests.integration.parameters as param
-from telnetlib import Telnet
 
 
 def _setup_ssh_connection(host, ssh):
@@ -89,7 +89,7 @@ class TestHadoop(base.ITestCase):
 
     def setUp(self):
         super(TestHadoop, self).setUp()
-        Telnet(self.host, self.port)
+        telnetlib.Telnet(self.host, self.port)
         self.create_node_group_template()
 
     def _hadoop_testing(self, node_list):
@@ -129,7 +129,7 @@ class TestHadoop(base.ITestCase):
                 if 'datanode' in value:
                     datanode_count += 1
                 node_count += 1
-            this_dir = getcwd()
+            this_dir = os.getcwd()
 
             try:
                 for key in ip_instances:
@@ -179,8 +179,7 @@ class TestHadoop(base.ITestCase):
             try:
                 for key, value in ip_instances.items():
                     if 'datanode' in value or 'tasktracker' in value:
-                        self.assertEquals(
-                        _execute_command_on_node(
+                        self.assertEquals(_execute_command_on_node(
                             key,
                             './script.sh ed -jn %s -hld %s'
                             % (job_name[:-1], param.HADOOP_LOG_DIRECTORY)), 0)
