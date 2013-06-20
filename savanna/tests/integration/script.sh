@@ -1,7 +1,7 @@
 #!/bin/bash
 #touch script.sh && chmod +x script.sh && vim script.sh
 
-dir=/outputTestMapReduce
+dir=/tmp/outputTestMapReduce
 log=$dir/log.txt
 
 case $1 in
@@ -136,8 +136,6 @@ f_var_check v_node_count
 f_var_check v_hadoop_version
 f_var_check v_hadoop_directory
 f_create_log_dir
-directory=/usr/share/hadoop
-logdir=/var/log/hadoop/hadoop/userlogs
 sudo su -c "cd $HADOOP_DIRECTORY && hadoop jar hadoop-examples-$HADOOP_VERSION.jar pi $[$NODE_COUNT*10] 1000" hadoop 2>>$log
 }
 
@@ -148,12 +146,14 @@ sudo su -c "cd $HADOOP_DIRECTORY && hadoop job -list all | tail -n1" hadoop | aw
 
 get_list_active_trackers() {
 f_create_log_dir
+sleep 30
 f_var_check v_hadoop_directory
 sudo su -c "cd $HADOOP_DIRECTORY && hadoop job -list-active-trackers" hadoop | wc -l 2>>$log
 }
 
 get_list_active_datanodes() {
 f_create_log_dir
+sleep 30
 f_var_check v_hadoop_directory
 sudo su -c "hadoop dfsadmin -report" hadoop | grep "Datanodes available:.*" | awk '{print $3}' 2>>$log
 }

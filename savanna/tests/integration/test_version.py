@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import telnetlib
 
 from savanna.tests.integration import base
-import telnetlib
 
 
 class RestApiVersionsTest(base.ITestCase):

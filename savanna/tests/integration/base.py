@@ -310,49 +310,49 @@ class ITestCase(unittest2.TestCase):
             eventlet.sleep(10)
             i += 1
 
-    #------------------create_node_group_template-------------------------------
+    #------------------create_node_group_template------------------------------
 
     def create_node_group_template(self):
         self.id_tt = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'worker_tt', 'qa probe', 'TT'), 202))
+                    'worker-tt', 'qa probe', 'TT'), 202))
         self.id_jt = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'master_jt', 'qa probe', 'JT'), 202))
+                    'master-jt', 'qa probe', 'JT'), 202))
 
         self.id_nn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'master_nn', 'qa probe', 'NN'), 202))
+                    'master-nn', 'qa probe', 'NN'), 202))
 
         self.id_dn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'worker_dn', 'qa probe', 'DN'), 202))
+                    'worker-dn', 'qa probe', 'DN'), 202))
 
         self.id_tt_dn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'worker_tt_dn', 'qa probe', 'TT+DN'), 202))
+                    'worker-tt-dn', 'qa probe', 'TT+DN'), 202))
 
         self.id_jt_nn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'master_jt_nn', 'qa probe', 'JT+NN'), 202))
+                    'master-jt-nn', 'qa probe', 'JT+NN'), 202))
 
         self.id_nn_tt_dn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'nn_tt_dn', 'qa probe', 'NN+TT+DN'), 202))
+                    'nn-tt-dn', 'qa probe', 'NN+TT+DN'), 202))
 
         self.id_jt_tt_dn = self.get_object_id(
             'node_group_template', self.post_object(
                 self.url_ngt, self.make_node_group_template(
-                    'jt_tt_dn', 'qa probe', 'JT+TT+DN'), 202))
+                    'jt-tt-dn', 'qa probe', 'JT+TT+DN'), 202))
 
-    #------------------delete_node_group_template-------------------------------
+    #------------------delete_node_group_template------------------------------
 
     def delete_node_group_template(self):
         self.del_object(self.url_ngt_with_slash, self.id_jt_nn, 204)
