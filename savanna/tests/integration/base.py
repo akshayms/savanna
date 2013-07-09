@@ -116,6 +116,12 @@ class ITestCase(unittest2.TestCase):
         data = json.loads(post.content)
         return data
 
+    def put_object(self, url, obj_id, body, code):
+        rv = self._put(url + obj_id, json.dumps(body))
+        self.assertEquals(rv.status_code, code)
+        data = json.loads(rv.content)
+        return data
+
     def get_object(self, url, obj_id, code, printing=False):
         rv = self._get(url + obj_id, printing)
         self.assertEquals(rv.status_code, code)
@@ -149,7 +155,7 @@ class ITestCase(unittest2.TestCase):
             data = data[crud_object]
             object_id = data.get('id')
             if crud_object == 'cluster':
-                self.await_cluster_active(get_url, object_id)
+                self.await_cluster_active(object_id)
         except Exception as e:
             self.fail('failure: ' + str(e))
         finally:
@@ -353,8 +359,8 @@ class ITestCase(unittest2.TestCase):
 
 #------------------------------helper_methods----------------------------------
 
-    def await_cluster_active(self, get_url, object_id):
-        get_data = self.get_object(get_url, object_id, 200)
+    def await_cluster_active(self, object_id):
+        get_data = self.get_object(self.url_cluster_with_slash, object_id, 200)
         get_data = get_data['cluster']
         i = 1
         while get_data['status'] != 'Active':
@@ -364,7 +370,8 @@ class ITestCase(unittest2.TestCase):
                 self.fail(
                     'cluster is not getting status \'Active\', '
                     'passed %d minutes' % param.TIMEOUT)
-            get_data = self.get_object(get_url, object_id, 200)
+            get_data = self.get_object(
+                self.url_cluster_with_slash, object_id, 200)
             get_data = get_data['cluster']
             time.sleep(10)
             i += 1
@@ -407,9 +414,24 @@ class ITestCase(unittest2.TestCase):
         data = self.post_object(self.url_cluster, cluster_body, 202)
         cluster_id = data['cluster']['id']
 
-        self.await_cluster_active(self.url_cluster_with_slash, cluster_id)
+        self.await_cluster_active(cluster_id)
 
         return cluster_id
+
+    def create_cluster_using_ngt_and_get_id(self, node_list, name):
+        cl_tmpl_id = None
+        try:
+            cl_tmpl_body = self.make_cluster_template('cl-tmpl', node_list)
+            cl_tmpl_id = self.get_object_id(
+                'cluster_template', self.post_object(self.url_cl_tmpl,
+                                                     cl_tmpl_body, 202))
+            clstr_body = self.make_cl_body_cluster_template(cl_tmpl_id)
+            clstr_body['name'] = name
+            return self.create_cluster_and_get_id(clstr_body)
+        except Exception as e:
+            print(str(e))
+        finally:
+            self.del_object(self.url_cl_tmpl_with_slash, cl_tmpl_id, 204)
 
     def get_instances_ip_and_node_processes_list(self, cluster_id):
         get_data = self.get_object(

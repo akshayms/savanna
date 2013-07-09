@@ -1,8 +1,33 @@
+commit 3c113357eeb98a8c22874efc22ad70fd59538209
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jul 9 18:52:15 2013 +0400
+
+    add initial test for scaling
+
+commit 833857cef06b1bb403dc1c74324e2ece1633265b
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Tue Jul 9 18:46:09 2013 +0400
+
+    add tests from master branch
+
+commit 873eab6aff1b69ba5ab88d0e3f8a9452cd6e9744
+Merge: e6c99fa 8b3276c
+Author: Vadim Rovachev <vrovachev@mirantis.com>
+Date:   Thu Jun 20 20:18:00 2013 +0400
+
+    merge branch
+
 commit e6c99fadac3f5450157056109e3b942193d2e692
 Author: Vadim Rovachev <vrovachev@mirantis.com>
 Date:   Thu Jun 20 20:15:06 2013 +0400
 
     added hadoop tests
+
+commit 8b3276cc464d9c6e25fa1bcfb2b37e028283b408
+Author: Yaroslav Lobankov <ylobankov@mirantis.com>
+Date:   Thu Jun 20 15:35:42 2013 +0400
+
+    few improvments of code
 
 commit 428aadf660a8083f3f393b928793e4abe60224d8
 Merge: 6943de4 582f99c

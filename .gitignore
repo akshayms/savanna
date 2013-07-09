@@ -30,4 +30,5 @@ doc/source/apidoc
 nosetests.xml
 pylint-report.txt
 etc/local.cfg
+ets/savanna/savanna.conf
 savanna/tests/integration/config.py

@@ -32,16 +32,9 @@ class TestHadoop(base.ITestCase):
         cl_tmpl_id = None
         cluster_id = None
         try:
-            cl_tmpl_body = self.make_cluster_template('cl-tmpl', node_list)
-            cl_tmpl_id = self.get_object_id(
-                'cluster_template', self.post_object(self.url_cl_tmpl,
-                                                     cl_tmpl_body, 202))
-            clstr_body = self.make_cl_body_cluster_template(cl_tmpl_id)
-            clstr_body['name'] = param.CLUSTER_NAME_HADOOP
-            data = self.post_object(self.url_cluster, clstr_body, 202)
-            data = data['cluster']
-            cluster_id = data.pop('id')
-            self.await_cluster_active(self.url_cluster_with_slash, cluster_id)
+            cluster_id = self.create_cluster_using_ngt_and_get_id(
+                node_list, param.CLUSTER_NAME_HADOOP)
+            self.await_cluster_active(cluster_id)
             time.sleep(30)
             get_data = self.get_object(
                 self.url_cluster_with_slash, cluster_id, 200, True)
