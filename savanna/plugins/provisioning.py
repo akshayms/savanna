@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import abc
 import functools
 
 from savanna.plugins import base as plugins_base
@@ -31,35 +30,51 @@ class ProvisioningPluginContext(object):
 
 
 class ProvisioningPluginBase(plugins_base.PluginInterface):
-    @abc.abstractmethod
+    @plugins_base.required
     def get_versions(self):
         pass
 
-    @abc.abstractmethod
+    @plugins_base.required
     def get_configs(self, hadoop_version):
         pass
 
-    @abc.abstractmethod
+    @plugins_base.required
     def get_node_processes(self, hadoop_version):
         pass
 
+    @plugins_base.required_with_default
+    def get_required_image_tags(self, hadoop_version):
+        return [self.name, hadoop_version]
+
+    @plugins_base.required_with_default
     def validate(self, cluster):
         pass
 
+    @plugins_base.required_with_default
+    def validate_scaling(self, cluster, existing, additional):
+        pass
+
+    @plugins_base.required_with_default
     def update_infra(self, cluster):
         pass
 
-    @abc.abstractmethod
+    @plugins_base.required
     def configure_cluster(self, cluster):
         pass
 
-    @abc.abstractmethod
+    @plugins_base.required
     def start_cluster(self, cluster):
         pass
 
+    @plugins_base.optional
+    def scale_cluster(self, cluster, instances):
+        pass
+
+    @plugins_base.optional
     def convert(self, hadoop_version, config_file):
         pass
 
+    @plugins_base.required_with_default
     def on_terminate_cluster(self, cluster):
         pass
 
@@ -67,6 +82,38 @@ class ProvisioningPluginBase(plugins_base.PluginInterface):
         res = super(ProvisioningPluginBase, self).to_dict()
         res['versions'] = self.get_versions()
         return res
+
+    # Some helpers for plugins
+
+    def _map_to_user_inputs(self, hadoop_version, configs):
+        config_objs = self.get_configs(hadoop_version)
+
+        # convert config objects to applicable_target -> config_name -> obj
+        config_objs_map = {}
+        for config_obj in config_objs:
+            applicable_target = config_obj.applicable_target
+            confs = config_objs_map.get(applicable_target, {})
+            confs[config_obj.name] = config_obj
+            config_objs_map[applicable_target] = confs
+
+        # iterate over all configs and append UserInputs to result list
+        result = []
+        for applicable_target in configs:
+            for config_name in configs[applicable_target]:
+                confs = config_objs_map.get(applicable_target)
+                if not confs:
+                    # TODO(slukjanov): raise specific exception
+                    raise RuntimeError("Can't find applicable target '%s'"
+                                       % applicable_target)
+                conf = confs.get(config_name)
+                if not conf:
+                    # TODO(slukjanov): raise specific exception
+                    raise RuntimeError("Can't find config '%s' in '%s'"
+                                       % (config_name, applicable_target))
+                result.append(UserInput(
+                    conf, configs[applicable_target][config_name]))
+
+        return result
 
 
 class Config(resources.BaseResource):
@@ -76,14 +123,18 @@ class Config(resources.BaseResource):
     If config type is 'enum' then list of valid values should be specified in
     config_values property.
 
+    Priority - integer parameter which helps to differentiate all
+    configurations in the UI. Priority decreases from the lower values to
+    higher values.
+
     For example:
 
         "some_conf", "map_reduce", "node", is_optional=True
     """
 
-    def __init__(self, name, applicable_target, scope, config_type="str",
+    def __init__(self, name, applicable_target, scope, config_type="string",
                  config_values=None, default_value=None, is_optional=False,
-                 description=None):
+                 description=None, priority=2):
         self.name = name
         self.description = description
         self.config_type = config_type
@@ -92,6 +143,7 @@ class Config(resources.BaseResource):
         self.applicable_target = applicable_target
         self.scope = scope
         self.is_optional = is_optional
+        self.priority = priority
 
     def to_dict(self):
         res = super(Config, self).to_dict()
@@ -108,6 +160,9 @@ class UserInput(object):
     def __init__(self, config, value):
         self.config = config
         self.value = value
+
+    def __eq__(self, other):
+        return self.config == other.config and self.value == other.value
 
     def __repr__(self):
         return '<UserInput %s = %s>' % (self.config.name, self.value)

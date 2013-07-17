@@ -1,3 +1,0 @@
-GLOB sdist-make: /home/lobankovyy/Savanna/preSF/savanna/setup.py
-venv inst-nodeps: /home/lobankovyy/Savanna/preSF/savanna/.tox/dist/savanna-0.2.a220.g03bfd67.zip
-venv runtests: commands[0]

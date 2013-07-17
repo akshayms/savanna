@@ -23,12 +23,12 @@ from savanna.api import v10 as api_v10
 from savanna import context
 from savanna.db import api as db_api
 from savanna.middleware import auth_valid
+from savanna.openstack.common import log
+from savanna.openstack.common.middleware import debug
 from savanna.plugins import base as plugins_base
 from savanna.utils import api as api_utils
-from savanna.utils import scheduler
-
-from savanna.openstack.common import log
 from savanna.utils import patches
+from savanna.utils import scheduler
 
 LOG = log.getLogger(__name__)
 
@@ -44,7 +44,7 @@ opts = [
                default='http',
                help='Protocol used to access OpenStack Identity service'),
     cfg.StrOpt('os_auth_host',
-               default='openstack',
+               default='127.0.0.1',
                help='IP or hostname of machine on which OpenStack Identity '
                     'service is located'),
     cfg.StrOpt('os_auth_port',
@@ -76,6 +76,7 @@ def make_app():
 
     @app.route('/', methods=['GET'])
     def version_list():
+        context.set_ctx(None)
         return api_utils.render({
             "versions": [
                 {"id": "v1.0", "status": "CURRENT"}
@@ -85,10 +86,17 @@ def make_app():
     @app.teardown_request
     def teardown_request(_ex=None):
         # TODO(slukjanov): how it'll work in case of exception?
-        if flask.request.path != '/':
-            session = context.session()
-            if session.transaction:
-                session.transaction.commit()
+        if context.has_ctx():
+            if flask.request.path != '/':
+                try:
+                    session = context.session()
+                    if session.transaction:
+                        session.transaction.commit()
+                except Exception, e:
+                    return api_utils.internal_error(
+                        500, 'Internal Server Error', e)
+
+        context.set_ctx(None)
 
     app.register_blueprint(api_v10.rest, url_prefix='/v1.0')
 
@@ -109,6 +117,13 @@ def make_app():
 
     for code in werkzeug_exceptions.default_exceptions.iterkeys():
         app.error_handler_spec[None][code] = make_json_error
+
+    if CONF.debug and not CONF.log_exchange:
+        LOG.debug('Logging of request/response exchange could be enabled using'
+                  ' flag --log-exchange')
+
+    if CONF.log_exchange:
+        app.wsgi_app = debug.Debug.factory(app.config)(app.wsgi_app)
 
     app.wsgi_app = auth_valid.filter_factory(app.config)(app.wsgi_app)
 

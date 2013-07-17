@@ -18,6 +18,7 @@ from savanna.plugins import provisioning as p
 from savanna.plugins.vanilla import config_helper as c_helper
 from savanna.plugins.vanilla import exceptions as ex
 from savanna.plugins.vanilla import utils
+from savanna.utils import crypto
 
 LOG = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ class VanillaProvider(p.ProvisioningPluginBase):
     def __init__(self):
         self.processes = {
             "HDFS": ["namenode", "datanode", "secondarynamenode"],
-            "MAPREDUCE": ["tasktracker", "jobtracker"]
+            "MapReduce": ["tasktracker", "jobtracker"]
         }
 
     def get_plugin_opts(self):
@@ -73,14 +74,14 @@ class VanillaProvider(p.ProvisioningPluginBase):
         pass
 
     def configure_cluster(self, cluster):
-        for ng in cluster.node_groups:
-            for inst in ng.instances:
-                inst.remote.execute_command(
-                    'sudo chown -R $USER:$USER /etc/hadoop'
-                )
-
         self._extract_configs(cluster)
         self._push_configs_to_nodes(cluster)
+        self._write_hadoop_user_keys(cluster.private_key,
+                                     utils.get_instances(cluster))
+
+        nn = utils.get_namenode(cluster)
+        nn.remote.execute_command(
+            "sudo su -c 'hadoop namenode -format' hadoop")
 
     def start_cluster(self, cluster):
         nn_instance = utils.get_namenode(cluster)
@@ -96,61 +97,151 @@ class VanillaProvider(p.ProvisioningPluginBase):
             jt_instance.remote.execute_command(
                 'sudo su -c /usr/sbin/start-mapred.sh hadoop >>'
                 ' /tmp/savanna-hadoop-start-mapred.log')
-            LOG.info("MAPREDUCE service at '%s' has been started",
+            LOG.info("MapReduce service at '%s' has been started",
                      jt_instance.hostname)
 
         LOG.info('Cluster %s has been started successfully' % cluster.name)
+
+        self._set_cluster_info(cluster)
 
     def _extract_configs(self, cluster):
         nn = utils.get_namenode(cluster)
         jt = utils.get_jobtracker(cluster)
         for ng in cluster.node_groups:
-            #TODO(aignatov): setup_script should be replaced with remote calls
             ng.extra = {
                 'xml': c_helper.generate_xml_configs(ng.configuration,
+                                                     ng.storage_paths,
                                                      nn.hostname,
                                                      jt.hostname
                                                      if jt else None),
-                'setup_script': c_helper.render_template(
-                    'setup-general.sh',
-                    args={
-                        'env_configs': c_helper.extract_environment_confs(
-                            ng.configuration)
-                    }
+                'setup_script': c_helper.generate_setup_script(
+                    ng.storage_paths,
+                    c_helper.extract_environment_confs(ng.configuration)
                 )
             }
 
-    def _push_configs_to_nodes(self, cluster):
+    def validate_scaling(self, cluster, existing, additional):
+        ng_names = existing.copy()
+        allowed = ["datanode", "tasktracker"]
+        #validate existing n_g scaling at first:
         for ng in cluster.node_groups:
-            for inst in ng.instances:
-                inst.remote.write_file_to('/etc/hadoop/core-site.xml',
-                                          ng.extra['xml']['core-site'])
-                inst.remote.write_file_to('/etc/hadoop/mapred-site.xml',
-                                          ng.extra['xml']['mapred-site'])
-                inst.remote.write_file_to('/etc/hadoop/hdfs-site.xml',
-                                          ng.extra['xml']['hdfs-site'])
-                inst.remote.write_file_to('/tmp/savanna-hadoop-init.sh',
-                                          ng.extra['setup_script'])
-                inst.remote.execute_command(
+            #we do not support deletion now
+            if ng.name in ng_names:
+                del ng_names[ng.name]
+                #we do not support deletion now
+                if ng.count > existing[ng.name]:
+                    raise ex.NodeGroupCannotBeScaled(
+                        ng.name, "Vanilla plugin cannot shrink node_group")
+                if not set(ng.node_processes).issubset(allowed):
+                    raise ex.NodeGroupCannotBeScaled(
+                        ng.name, "Vanilla plugin cannot scale nodegroup"
+                                 " with processes: " +
+                                 ' '.join(ng.node_processes))
+        if len(ng_names) != 0:
+            raise ex.NodeGroupsDoNotExist(ng_names.keys())
+            #validate additional n_g
+        jt = utils.get_jobtracker(cluster)
+        nn = utils.get_namenode(cluster)
+        for ng in additional:
+            if (not set(ng.node_processes).issubset(allowed)) or (
+                    not jt and 'tasktracker' in ng.node_processes) or (
+                    not nn and 'datanode' in ng.node_processes):
+                raise ex.NodeGroupCannotBeScaled(
+                    ng.name, "Vanilla plugin cannot scale node group with "
+                             "processes which have no master-processes run "
+                             "in cluster")
+
+    def scale_cluster(self, cluster, instances):
+        self._extract_configs(cluster)
+        self._push_configs_to_nodes(cluster, instances=instances)
+        self._write_hadoop_user_keys(cluster.private_key,
+                                     instances)
+
+        for i in instances:
+            with i.remote as remote:
+                if "datanode" in i.node_group.node_processes:
+                    remote.execute_command('sudo su -c '
+                                           '"/usr/sbin/hadoop-daemon.sh '
+                                           'start datanode" hadoop'
+                                           '>> /tmp/savanna-start-datanode.log'
+                                           ' 2>&1')
+
+                if "tasktracker" in i.node_group.node_processes:
+                    remote.execute_command('sudo su -c '
+                                           '"/usr/sbin/hadoop-daemon.sh '
+                                           'start tasktracker" hadoop'
+                                           '>> /tmp/savanna-start-'
+                                           'tasktracker.log 2>&1')
+
+    def _push_configs_to_nodes(self, cluster, instances=None):
+        if instances is None:
+            instances = utils.get_instances(cluster)
+
+        for inst in instances:
+            files = {
+                '/etc/hadoop/core-site.xml': inst.node_group.extra['xml'][
+                    'core-site'],
+                '/etc/hadoop/mapred-site.xml': inst.node_group.extra['xml'][
+                    'mapred-site'],
+                '/etc/hadoop/hdfs-site.xml': inst.node_group.extra['xml'][
+                    'hdfs-site'],
+                '/tmp/savanna-hadoop-init.sh': inst.node_group.extra[
+                    'setup_script']
+            }
+            with inst.remote as r:
+                r.execute_command(
+                    'sudo chown -R $USER:$USER /etc/hadoop'
+                )
+                r.write_files_to(files)
+                r.execute_command(
                     'sudo chmod 0500 /tmp/savanna-hadoop-init.sh'
                 )
-                inst.remote.execute_command(
+                r.execute_command(
                     'sudo /tmp/savanna-hadoop-init.sh '
                     '>> /tmp/savanna-hadoop-init.log 2>&1')
-
         nn = utils.get_namenode(cluster)
         jt = utils.get_jobtracker(cluster)
-
-        nn.remote.write_file_to('/etc/hadoop/slaves',
-                                utils.generate_host_names(
-                                utils.get_datanodes(cluster)))
-        nn.remote.write_file_to('/etc/hadoop/masters',
-                                utils.generate_host_names(
-                                utils.get_secondarynamenodes(cluster)))
-        nn.remote.execute_command(
-            "sudo su -c 'hadoop namenode -format' hadoop")
+        nn.remote.write_files_to({
+            '/etc/hadoop/slaves': utils.generate_host_names(
+                utils.get_datanodes(cluster)),
+            '/etc/hadoop/masters': utils.generate_host_names(
+                utils.get_secondarynamenodes(cluster))
+        })
 
         if jt and nn.instance_id != jt.instance_id:
             jt.remote.write_file_to('/etc/hadoop/slaves',
                                     utils.generate_host_names(
-                                    utils.get_tasktrackers(cluster)))
+                                        utils.get_tasktrackers(cluster)))
+
+    def _set_cluster_info(self, cluster):
+        nn = utils.get_namenode(cluster)
+        jt = utils.get_jobtracker(cluster)
+
+        info = cluster.info
+
+        if jt and jt.management_ip:
+            info['MapReduce'] = {
+                'Web UI': 'http://%s:50030' % jt.management_ip
+            }
+        if nn and nn.management_ip:
+            info['HDFS'] = {
+                'Web UI': 'http://%s:50070' % nn.management_ip
+            }
+
+    def _write_hadoop_user_keys(self, private_key, instances):
+        public_key = crypto.private_key_to_public_key(private_key)
+
+        files = {
+            'id_rsa': private_key,
+            'authorized_keys': public_key
+        }
+
+        mv_cmd = 'sudo mkdir -p /home/hadoop/.ssh/; ' \
+                 'sudo mv id_rsa authorized_keys /home/hadoop/.ssh ; ' \
+                 'sudo chown -R hadoop:hadoop /home/hadoop/.ssh; ' \
+                 'sudo chmod 600 /home/hadoop/.ssh/{id_rsa,authorized_keys}'
+
+        for instance in instances:
+            with instance.remote as remote:
+                remote.write_files_to(files)
+                remote.execute_command(mv_cmd)

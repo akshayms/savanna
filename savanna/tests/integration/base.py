@@ -15,6 +15,7 @@
 
 import contextlib
 import json
+import os
 import telnetlib
 import time
 
@@ -114,12 +115,6 @@ class ITestCase(unittest2.TestCase):
         post = self._post(url, json.dumps(body))
         self.assertEquals(post.status_code, code)
         data = json.loads(post.content)
-        return data
-
-    def put_object(self, url, obj_id, body, code):
-        rv = self._put(url + obj_id, json.dumps(body))
-        self.assertEquals(rv.status_code, code)
-        data = json.loads(rv.content)
         return data
 
     def get_object(self, url, obj_id, code, printing=False):
@@ -396,10 +391,12 @@ class ITestCase(unittest2.TestCase):
         with contextlib.closing(self.ssh_connection(host)) as ssh:
             return remote.read_file_from(ssh.open_sftp(), remote_file)
 
-    def transfer_script_to_node(self, host, directory, folder, script):
-        self.write_file_to(
-            str(host), 'script.sh',
-            open('%s/integration/%s/%s' % (directory, folder, script)).read())
+    def transfer_script_to_node(self, host,
+                                script='hadoop_test/hadoop_test_script.sh'):
+        self.write_file_to(str(host),
+                           'script.sh',
+                           open('%s/integration/%s' % (os.getcwd(),
+                                                       script)).read())
         self.execute_command(str(host), 'chmod 777 script.sh')
 
     def try_telnet(self, host, port):

@@ -27,7 +27,7 @@ OS_TENANT_NAME = _get_conf('OS_TENANT_NAME', 'admin')
 OS_AUTH_URL = _get_conf('OS_AUTH_URL', 'http://192.168.1.1:35357/v2.0/')
 
 SAVANNA_HOST = _get_conf('SAVANNA_HOST', '192.168.1.1')
-SAVANNA_PORT = _get_conf('SAVANNA_PORT', '8080')
+SAVANNA_PORT = _get_conf('SAVANNA_PORT', '8386')
 
 IMAGE_ID = _get_conf('IMAGE_ID', '42abc')
 FLAVOR_ID = _get_conf('FLAVOR_ID', '42')
@@ -49,6 +49,14 @@ SSH_KEY = _get_conf('SSH_KEY', 'jenkins')
 PATH_TO_SSH = _get_conf('PATH_TO_SSH', '/home/user/.ssh/id_rsa')
 
 PLUGIN_NAME = _get_conf('PLUGIN_NAME', 'vanilla')
+
+NAMENODE_CONFIG = _get_conf('NAMENODE_CONFIG', {})
+JOBTRACKER_CONFIG = _get_conf('JOBTRACKER_CONFIG', {})
+DATANODE_CONFIG = _get_conf('DATANODE_CONFIG', {})
+TASKTRACKER_CONFIG = _get_conf('TASKTRACKER_CONFIG', {})
+GENERAL_CONFIG = _get_conf('GENERAL_CONFIG', {})
+CLUSTER_HDFS_CONFIG = _get_conf('CLUSTER_HDFS_CONFIG', {})
+CLUSTER_MAPREDUCE_CONFIG = _get_conf('CLUSTER_MAPREDUCE_CONFIG', {})
 
 JT_PORT = _get_conf('JT_PORT', 50030)
 NN_PORT = _get_conf('NN_PORT', 50070)

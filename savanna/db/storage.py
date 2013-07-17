@@ -17,18 +17,22 @@ from savanna import context as ctx
 import savanna.db.models as m
 
 
+def _model_filter_by(model, **kwargs):
+    return ctx.model_query(model, project_only=True).filter_by(**kwargs)
+
+
 ## Cluster ops
-# TODO(slukjanov): check tenant_id and etc.
 
 def get_clusters(**args):
-    return ctx.model_query(m.Cluster).filter_by(**args).all()
+    return _model_filter_by(m.Cluster, **args).all()
 
 
 def get_cluster(**args):
-    return ctx.model_query(m.Cluster).filter_by(**args).first()
+    return _model_filter_by(m.Cluster, **args).first()
 
 
 def create_cluster(values):
+    values = values.copy()
     session = ctx.current().session
     with session.begin():
         values['tenant_id'] = ctx.current().tenant_id
@@ -66,14 +70,15 @@ def terminate_cluster(cluster):
 ## ClusterTemplate ops
 
 def get_cluster_templates(**args):
-    return ctx.model_query(m.ClusterTemplate).filter_by(**args).all()
+    return _model_filter_by(m.ClusterTemplate, **args).all()
 
 
 def get_cluster_template(**args):
-    return ctx.model_query(m.ClusterTemplate).filter_by(**args).first()
+    return _model_filter_by(m.ClusterTemplate, **args).first()
 
 
 def create_cluster_template(values):
+    values = values.copy()
     session = ctx.current().session
     with session.begin():
         values['tenant_id'] = ctx.current().tenant_id
@@ -83,13 +88,11 @@ def create_cluster_template(values):
             tmpl_id = ngt.get('node_group_template_id')
             if tmpl_id:
                 tmpl = get_node_group_template(id=tmpl_id)
-                node_group = tmpl.to_object(
-                    ngt, m.TemplatesRelation,
-                    dict(cluster_template_id=cluster_template.id))
+                node_group = tmpl.to_object(ngt, m.TemplatesRelation)
+                node_group.cluster_template_id = cluster_template.id
             else:
-                node_group = m.TemplatesRelation(
-                    cluster_template_id=cluster_template.id, **ngt)
-            cluster_template.templates_relations.append(node_group)
+                node_group = m.TemplatesRelation(**ngt)
+            cluster_template.node_groups.append(node_group)
             session.add(node_group)
         session.add(cluster_template)
 
@@ -112,14 +115,15 @@ def terminate_cluster_template(**args):
 ## NodeGroupTemplate ops
 
 def get_node_group_templates(**args):
-    return ctx.model_query(m.NodeGroupTemplate).filter_by(**args).all()
+    return _model_filter_by(m.NodeGroupTemplate, **args).all()
 
 
 def get_node_group_template(**args):
-    return ctx.model_query(m.NodeGroupTemplate).filter_by(**args).first()
+    return _model_filter_by(m.NodeGroupTemplate, **args).first()
 
 
 def create_node_group_template(values):
+    values = values.copy()
     session = ctx.current().session
     with session.begin():
         values['tenant_id'] = ctx.current().tenant_id

@@ -1,7 +1,32 @@
-Savanna Overview
-================
+Overview
+========
 
-.. include:: introduction.rst.inc
+Introduction
+------------
+
+Apache Hadoop is an industry standard and widely adopted MapReduce implementation.
+The aim of this project is to enable users to easily provision and manage Hadoop clusters on OpenStack.
+It is worth mentioning that Amazon provides Hadoop for several years as Amazon Elastic MapReduce (EMR) service.
+
+Savanna aims to provide users with simple means to provision Hadoop clusters
+by specifying several parameters like Hadoop version, cluster topology, nodes hardware details
+and a few more. After user fills in all the parameters, Savanna deploys the cluster in a few minutes.
+Also Savanna provides means to scale already provisioned cluster by adding/removing worker nodes on demand.
+
+The solution will address following use cases:
+
+* fast provisioning of Hadoop clusters on OpenStack for Dev and QA;
+* utilization of unused compute power from general purpose OpenStack IaaS cloud;
+* "Analytics as a Service" for ad-hoc or bursty analytic workloads (similar to AWS EMR).
+
+Key features are:
+
+* designed as an OpenStack component;
+* managed through REST API with UI available as part of OpenStack Dashboard;
+* support for different Hadoop distributions:
+    * pluggable system of Hadoop installation engines;
+    * integration with vendor specific management tools, such as Apache Ambari or Cloudera Management Console;
+* predefined templates of Hadoop configurations with ability to modify parameters.
 
 Details
 -------
@@ -63,24 +88,30 @@ For analytic as a service generic workflow will be as following:
 User’s Perspective
 ------------------
 
-While provisioning cluster through Savanna, user operates on two types of entities: Node Templates and Clusters.
+While provisioning cluster through Savanna, user operates on three types of entities: Node Group Templates, Cluster Templates and Clusters.
 
-Node Template describes a node within cluster and it has several parameters. Node Type is one of the Node Template’s
-properties that determines what Hadoop processes will be running on the node and thereby its role in the cluster.
-It could be either of JobTracker, NameNode, TaskTracker or DataNode, or any logical combination of these.
-Also template encapsulates hardware parameters (flavor) for the node VM and configuration for Hadoop processes running on the node.
+A Node Group Template describes a group of nodes within cluster. It contains a list of hadoop processes that will be launched on each instance in a group.
+Also a Node Group Template may provide node scoped configurations for those processes.
+This kind of templates encapsulates hardware parameters (flavor) for the node VM and configuration for Hadoop processes running on the node.
 
-Cluster entity simply represents Hadoop Cluster. It is mainly characterized by VM image with pre-installed Hadoop which
-will be used for cluster deployment and cluster topology. The topology is a list of node templates and respectively
-amount of nodes being deployed for each template. With respect to topology, Savanna checks only that cluster has one JobTracker and one NameNode.
+A Cluster Template is designed to bring Node Group Templates together to form a Cluster.
+A Cluster Template defines what Node Groups will be included and how many instances will be created in each.
+Some of Hadoop Configurations can not be applied to a single node, but to a whole Cluster, so user can specify this kind of configurations in a Cluster Template.
+Savanna enables user to specify which processes should be added to an anti-affinity group within a Cluster Template. If a process is included into an anti-affinity
+group, it means that VMs where this process is going to be launched should be scheduled to different hardware hosts.
 
-Each node template and cluster belongs to some tenant determined by user. Users have access only to objects located in
+The Cluster entity represents a Hadoop Cluster. It is mainly characterized by VM image with pre-installed Hadoop which
+will be used for cluster deployment. User may choose one of pre-configured Cluster Templates to start a Cluster.
+To get access to VMs after a Cluster has started, user should specify a keypair.
+
+Savanna provides several constraints on Hadoop cluster topology. JobTracker and NameNode processes could be run either on a single
+VM or two separate ones. Also cluster could contain worker nodes of different types. Worker nodes could run both TaskTracker and DataNode,
+or either of these processes alone. Savanna allows user to create cluster with any combination of these options,
+but it will not allow to create a non working topology, for example: a set of workers with DataNodes, but without a NameNode.
+
+Each Cluster belongs to some tenant determined by user. Users have access only to objects located in
 tenants they have access to. Users could edit/delete only objects they created. Naturally admin users have full access to every object.
 That way Savanna complies with general OpenStack access policy.
-
-Savanna provides several kinds of Hadoop cluster topology. JobTracker and NameNode processes could be run either on a single
-VM or two separate ones. Also cluster could contain worker nodes of different types. Worker nodes could run both TaskTracker and DataNode,
-or either of these processes alone. Savanna allows user to create cluster with any combination of these options.
 
 Integration with Swift
 ----------------------
@@ -96,6 +127,8 @@ as naturally as with HDFS.
 On the Swift side, we have the change request: `Change I6b1ba25b <https://review.openstack.org/#/c/21015/>`_ (merged).
 It implements the ability to list endpoints for an object, account or container, to make it possible to integrate swift
 with software that relies on data locality information to avoid network overhead.
+
+To get more information on how to enable Swift support see :doc:`userdoc/hadoop-swift`.
 
 Pluggable Deployment and Monitoring
 -----------------------------------

@@ -1,166 +1,73 @@
-Savanna Horizon Setup
-=====================
+Savanna UI Installation Guide
+=============================
 
-1 Setup prerequisites
----------------------
+Savanna UI is a plugin for OpenStack Dashboard. There are two ways to install
+it. One is to plug it into existing Dashboard installation and another is
+to setup another Dashboard and plug Savanna UI there. The first approach
+advantage is that you will have Savanna UI in the very same Dashboard with
+which you work with OpenStack. The disadvantage is that you have to tweak
+your Dashboard configuration in order to enable the plugin. The second
+approach does not have this disadvantage.
 
-1.1 OpenStack environment (Folsom+ version) installed.
+Further steps describe installation for the first approach. For the second
+approach see :doc:`/horizon/dev.environment.guide`
 
-1.2 Savanna REST API service installed and configured.
+1. Prerequisites
+----------------
 
-1.3 Operating system, where Savanna Horizon’s service installed, has to be connected to internal OpenStack network.
+1) OpenStack environment (Folsom or Grizzly version) installed.
 
-2 Savanna-Horizon Installation
-------------------------------
+2) Savanna installed, configured and running.
 
-2.1 Go to your Horizon’s machine and install the following packets:
+2. Savanna Dashboard Installation
+---------------------------------
 
-.. sourcecode:: bash
+1) Go to the machine where Dashboard resides and install Savanna UI:
 
-    sudo apt-get update
-    sudo apt-get install git python-dev gcc python-setuptools python-virtualenv node-less
+.. sourcecode:: console
 
-On Ubuntu 12.10 and higer you have to install the following lib as well:
+    $ sudo pip install savannadashboard
+..
 
-.. sourcecode:: bash
+   This will install latest stable release of Savanna UI. If you want to install master branch of Savanna UI:
 
-    sudo apt-get install nodejs-legacy
+.. sourcecode:: console
 
-2.2 Clone Horizon’s Git repo:
+    $ sudo pip install 'http://tarballs.openstack.org/savanna-dashboard/savanna-dashboard-master.tar.gz'
 
-.. sourcecode:: bash
-
-    git clone -b savanna https://github.com/Mirantis/openstack-horizon.git
-
-**Note:** Above link will be changed soon when project moved to StackForge.
-
-2.3 Create the following structure of directories:
-
-.. sourcecode:: bash
-
-    sudo mkdir -p <path_to_horizon>/bin/less
-    sudo ln -s /usr/bin/lessc <path_to_horizon>/bin/less/lessc
-
-2.4 Go to cloned directory:
-
-.. sourcecode:: bash
-
-    cd <path_to_horizon>
-
-2.5 Install Python virtual environment:
-
-.. sourcecode:: bash
-
-    python tools/install_venv.py
-
-This operation will install **.venv** in the current directory
-
-2.6 Create configuration file:
-
-.. sourcecode:: bash
-
-    cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py
-
-2.7 Change **openstack_dashboard/local/local_settings.py** file with the following parameters:
-
-2.7.1 Set **OPENSTACK_HOST** to KeyStone URL:
-
-Here is a snippet of code with the changed parameter:
+2) Configure OpenStack Dashboard. In ``settings.py`` add savanna to
 
 .. sourcecode:: python
 
-    [skipped]
+    HORIZON_CONFIG = {
+        'dashboards': ('nova', 'syspanel', 'settings', 'savanna'),
+..
 
-    OPENSTACK_HOST = "172.18.79.139"    <------ KeyStone address
-    OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST
-    OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"
-
-    [skipped]
-
-2.8 Change **openstack_dashboard/wsgi/django.wsgi** file to make virtualenv packages available for apache
-
-Here are the required modifications
+   and also add savannadashboard to
 
 .. sourcecode:: python
-    
-    import logging
-    import os
-    import sys
 
-    venv_path = "<path_to_horizon>/.venv/"    <---------- Horizon .venv directory
-    activate_this = os.path.join(venv_path, "bin/activate_this.py")
-    execfile(activate_this, dict(__file__=activate_this))
+    INSTALLED_APPS = (
+        'savannadashboard',
+        ....
+..
 
-    from django.conf import settings
-    import django.core.handlers.wsgi
+   Note: ``settings.py`` file is located in ``/usr/share/openstack_dashboard/openstack-dashboard/`` by default.
 
-    [skipped]
+3) Also you have to specify **SAVANNA_URL** in local_settings.py. For example:
 
+.. sourcecode:: python
 
-3 Configure apache2 server
---------------------------
+    SAVANNA_URL = 'http://localhost:8386/v1.0'
+..
 
-3.1 Install apache and mod_wsgi
+   Note: ``local_settings.py`` file is located in ``/usr/share/openstack-dashboard/openstack_dashboard/local/`` by default.
 
-.. sourcecode:: bash
+4) Now all installations are done and apache web server can be restarted for the changes to take effect:
 
-   sudo apt-get install apache2 libapache2-mod-wsgi
+.. sourcecode:: console
 
-3.2 Create **/etc/apache2/sites-available/horizon** file
+    $ sudo service apache2 restart
+..
 
-Here is the apache configuration
-
-.. sourcecode:: bash
-   
-    <VirtualHost *:80>
-   	WSGIScriptAlias / <horizon-path>/openstack_dashboard/wsgi/django.wsgi
-	WSGIDaemonProcess horizon user=<user> group=<group> processes=3 threads=10 home=<horizon-path> python-path=<horizon-path>:<horizon-path>/.venv/lib/python-2.7/site-packages
-	WSGIApplicationGroup %{GLOBAL}
-
-        SetEnv APACHE_RUN_USER <user>
-        SetEnv APACHE_RUN_GROUP <user>
-        WSGIProcessGroup horizon
-
-        DocumentRoot <horizon-path>/.blackhole/
-        Alias /media <horizon-path>/openstack_dashboard/static
-
-        <Directory />
-            Options FollowSymLinks
-            AllowOverride None
-        </Directory>
-
-        <Directory <horizon-path>/>
-            Options Indexes FollowSymLinks MultiViews
-            AllowOverride None
-            Order allow,deny
-            allow from all
-        </Directory>
-
-        ErrorLog /var/log/apache2/horizon_error.log
-        LogLevel warn
-        CustomLog /var/log/apache2/horizon_access.log combined
-    </VirtualHost>
-
-    WSGISocketPrefix /var/run/apache2
-
-Replace following parameters:
-
-- <user> - username
-- <group> - group
-- <horizon-path> - path to horizon directory
-
-3.3 Enable horizon site
-
-.. sourcecode:: bash
-    
-   sudo a2ensite horizon
-
-
-Now all installations are done and Horizon can be started:
-
-.. sourcecode:: bash
-
-    sudo service apache2 restart
-
-
-You can check that service has been started successfully. Go to Horizon URL and you'll be able to see Savanna pages in the Project tab.
+   You can check that service has been started successfully. Go to Horizon URL and if installation is correct you'll be able to see the Savanna tab.

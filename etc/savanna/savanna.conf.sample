@@ -1,27 +1,35 @@
 [DEFAULT]
 
 # REST API config
-#port=8080
+#port=8386
 
 # Address and credentials that will be used to check auth tokens
-#os_auth_host=openstack
+#os_auth_host=127.0.0.1
 #os_auth_port=35357
 #os_admin_username=admin
 #os_admin_password=nova
 #os_admin_tenant_name=admin
 
-When set to false, Savanna uses only internal IP of VMs.
-When set to true, Savanna expects OpenStack to auto-
-assign floating IPs to cluster nodes. Internal IPs will
-be used for inter-cluster communication, while floating
-ones will be used by Savanna to configure nodes. Also
-floating IPs will be exposed in service URLs.
-#use_floating_ip=True
+# When set to false, Savanna uses only internal IP of VMs.
+# When set to true, Savanna expects OpenStack to auto-
+# assign floating IPs to cluster nodes. Internal IPs will
+# be used for inter-cluster communication, while floating
+# ones will be used by Savanna to configure nodes. Also
+# floating IPs will be exposed in service URLs.
+#use_floating_ips=True
 
+# The suffix of the node's FQDN. In nova-network that is
+# dhcp_domain config parameter (string value)
+#node_domain=novalocal
+
+# List of plugins to be loaded. Savanna preserves the order of
+# the list when returning it. (list value)
 plugins=vanilla
+
 
 [plugin:vanilla]
 plugin_class=savanna.plugins.vanilla.plugin:VanillaProvider
+
 
 [database]
 

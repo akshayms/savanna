@@ -28,11 +28,25 @@ LOG = logging.getLogger(__name__)
 opts = [
     cfg.ListOpt('plugins',
                 default=[],
-                help='List of plugins to be loaded'),
+                help='List of plugins to be loaded. Savanna preserves the '
+                     'order of the list when returning it.'),
 ]
 
 CONF = cfg.CONF
 CONF.register_opts(opts)
+
+
+def required(fun):
+    return abc.abstractmethod(fun)
+
+
+def required_with_default(fun):
+    return fun
+
+
+def optional(fun):
+    fun.__not_implemented__ = True
+    return fun
 
 
 class PluginInterface(resources.BaseResource):
@@ -42,6 +56,7 @@ class PluginInterface(resources.BaseResource):
 
     name = 'plugin_interface'
 
+    @required_with_default
     def get_plugin_opts(self):
         """Plugin can expose some options that should be specified in conf file
 
@@ -55,6 +70,7 @@ class PluginInterface(resources.BaseResource):
         """
         return []
 
+    @required_with_default
     def setup(self, conf):
         """Plugin initialization
 
@@ -62,7 +78,7 @@ class PluginInterface(resources.BaseResource):
         """
         pass
 
-    @abc.abstractmethod
+    @required
     def get_title(self):
         """Plugin title
 
@@ -72,6 +88,7 @@ class PluginInterface(resources.BaseResource):
         """
         pass
 
+    @required_with_default
     def get_description(self):
         """Optional description of the plugin
 
@@ -154,12 +171,22 @@ class PluginManager(object):
 
     def get_plugins(self, base):
         return [
-            self.plugins[plugin] for plugin in self.plugins
+            self.plugins[plugin] for plugin in CONF.plugins
             if not base or issubclass(self.plugins[plugin].__class__, base)
         ]
 
     def get_plugin(self, plugin_name):
         return self.plugins.get(plugin_name)
+
+    def is_plugin_implements(self, plugin_name, fun_name):
+        plugin = self.get_plugin(plugin_name)
+
+        fun = getattr(plugin, fun_name)
+
+        if not (fun and callable(fun)):
+            return False
+
+        return not hasattr(fun, '__not_implemented__')
 
 
 PLUGINS = None

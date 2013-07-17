@@ -1,3 +1,18 @@
+# Copyright (c) 2013 Mirantis Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import setuptools
 
 from savanna.openstack.common import setup as common_setup
@@ -10,9 +25,9 @@ setuptools.setup(
     name=project,
     version=common_setup.get_version(project, '0.2'),
     description='Savanna project',
-    author='Mirantis Inc.',
-    author_email='savanna-team@mirantis.com',
-    url='http://savanna.mirantis.com',
+    author='OpenStack',
+    author_email='openstack-dev@lists.openstack.org',
+    url='https://savanna.readthedocs.org',
     classifiers=[
         'Environment :: OpenStack',
         'Intended Audience :: Information Technology',
@@ -27,8 +42,9 @@ setuptools.setup(
     cmdclass=common_setup.get_cmdclass(),
     packages=setuptools.find_packages(exclude=['bin']),
     package_data={'savanna': [
-        'plugins/vanilla/resources/*.template',
-        'plugins/vanilla/resources/*.xml'
+        'plugins/vanilla/resources/*.xml',
+        'swift/resources/*.xml',
+        'tests/unit/resources/*.xml'
     ]},
     install_requires=requires,
     dependency_links=depend_links,

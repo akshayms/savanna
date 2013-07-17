@@ -13,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import inspect
-import mimetypes
 import traceback
 
 import flask
 from werkzeug import datastructures
 
 from savanna import context
+from savanna import exceptions as ex
 from savanna.openstack.common import log as logging
 from savanna.openstack.common import wsgi
 
@@ -56,16 +55,11 @@ class Rest(flask.Blueprint):
             endpoint = options.pop('endpoint', func.__name__)
 
             def handler(**kwargs):
-                # extract response content type
-                resp_type = flask.request.accept_mimetypes
-                type_suffix = kwargs.pop('resp_type', None)
-                if type_suffix:
-                    suffix_mime = mimetypes.guess_type("res." + type_suffix)[0]
-                    if suffix_mime:
-                        resp_type = datastructures.MIMEAccept(
-                            [(suffix_mime, 1)])
-                flask.request.resp_type = resp_type
-                flask.request.file_upload = file_upload
+                context.set_ctx(None)
+
+                LOG.debug("Rest.route.decorator.handler, kwargs=%s", kwargs)
+
+                _init_resp_type(file_upload)
 
                 # update status code
                 if status:
@@ -76,39 +70,52 @@ class Rest(flask.Blueprint):
                 ctx = context.Context(
                     flask.request.headers['X-User-Id'],
                     flask.request.headers['X-Tenant-Id'],
-                    flask.request.headers[
-                        'X-Auth-Token'],
+                    flask.request.headers['X-Auth-Token'],
                     flask.request.headers)
                 context.set_ctx(ctx)
 
-                # set func implicit args
-                args = inspect.getargspec(func).args
-
-                if 'ctx' in args:
-                    kwargs['ctx'] = ctx
-                if 'request' in args:
-                    kwargs['request'] = flask.request
-
-                if flask.request.method in ['POST', 'PUT'] and 'data' in args:
+                if flask.request.method in ['POST', 'PUT']:
                     kwargs['data'] = request_data()
 
-                return func(**kwargs)
+                try:
+                    return func(**kwargs)
+                except ex.SavannaException, e:
+                    return bad_request(e)
+                except Exception, e:
+                    return internal_error(500, 'Internal Server Error', e)
 
             f_rule = "/<tenant_id>" + rule
             self.add_url_rule(f_rule, endpoint, handler, **options)
-            ext_rule = f_rule + '.<resp_type>'
-            self.add_url_rule(ext_rule, endpoint, handler, **options)
+            self.add_url_rule(f_rule + '.json', endpoint, handler, **options)
+            self.add_url_rule(f_rule + '.xml', endpoint, handler, **options)
 
-            try:
-                return func
-            except Exception, e:
-                return internal_error(500, 'Exception in API call', e)
+            return func
 
         return decorator
 
 
 RT_JSON = datastructures.MIMEAccept([("application/json", 1)])
 RT_XML = datastructures.MIMEAccept([("application/xml", 1)])
+
+
+def _init_resp_type(file_upload):
+    """Extracts response content type."""
+
+    # get content type from Accept header
+    resp_type = flask.request.accept_mimetypes
+
+    # url /foo.xml
+    if flask.request.path.endswith('.xml'):
+        resp_type = RT_XML
+
+    # url /foo.json
+    if flask.request.path.endswith('.json'):
+        resp_type = RT_JSON
+
+    flask.request.resp_type = resp_type
+
+    # set file upload flag
+    flask.request.file_upload = file_upload
 
 
 def _clean_nones(obj):
@@ -201,6 +208,10 @@ def request_data():
     flask.request.parsed_data = parsed_data
 
     return flask.request.parsed_data
+
+
+def get_request_args():
+    return flask.request.args
 
 
 def abort_and_log(status_code, descr, exc=None):

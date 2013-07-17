@@ -8,7 +8,7 @@
 #host=
 
 # set port (integer value)
-#port=8080
+#port=8386
 
 
 #
@@ -21,7 +21,7 @@
 
 # IP or hostname of machine on which OpenStack Identity
 # service is located (string value)
-#os_auth_host=openstack
+#os_auth_host=127.0.0.1
 
 # Port of OpenStack Identity service (string value)
 #os_auth_port=35357
@@ -163,7 +163,8 @@
 # Options defined in savanna.plugins.base
 #
 
-# List of plugins to be loaded (list value)
+# List of plugins to be loaded. Savanna preserves the order of
+# the list when returning it. (list value)
 #plugins=
 
 
@@ -178,6 +179,10 @@
 # used by Savanna to configure nodes. Also floating IPs will
 # be exposed in service URLs. (boolean value)
 #use_floating_ips=true
+
+# The suffix of the node's FQDN. In nova-network that is
+# dhcp_domain config parameter (string value)
+#node_domain=novalocal
 
 
 [database]
@@ -251,4 +256,4 @@
 #pool_timeout=<None>
 
 
-# Total option count: 50
+# Total option count: 51

@@ -31,9 +31,32 @@ class SavannaException(ex.ApiError):
 
 class NotFoundException(SavannaException):
 
+    message = "Object not found"
     # It could be a various property of object which was not found
     value = None
 
-    def __init__(self, value):
+    def __init__(self, value, message=None):
         self.code = "NOT_FOUND"
         self.value = value
+        if message:
+            self.message = message % value
+
+
+class NameAlreadyExistsException(SavannaException):
+
+    message = "Name already exists"
+
+    def __init__(self, message=None):
+        self.code = "NAME_ALREADY_EXISTS"
+        if message:
+            self.message = message
+
+
+class InvalidException(SavannaException):
+
+    message = "Invalid object reference"
+
+    def __init__(self, message=None):
+        self.code = "INVALID_REFERENCE"
+        if message:
+            self.message = message

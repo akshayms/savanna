@@ -15,6 +15,9 @@
 
 import threading
 
+import eventlet
+from eventlet import corolocal
+
 from savanna.db import api as db_api
 from savanna.openstack.common import log as logging
 
@@ -34,6 +37,12 @@ class Context(object):
         self.headers = headers
         self._db_session = None
 
+    def clone(self):
+        return Context(self.user_id,
+                       self.tenant_id,
+                       self.auth_token,
+                       self.headers)
+
     @property
     def session(self):
         if self._db_session is None:
@@ -42,13 +51,19 @@ class Context(object):
 
 
 _CTXS = threading.local()
+_CTXS._curr_ctxs = {}
+
+
+def has_ctx():
+    ident = corolocal.get_ident()
+    return ident in _CTXS._curr_ctxs and _CTXS._curr_ctxs[ident]
 
 
 def ctx():
-    if not hasattr(_CTXS, '_curr_ctx'):
+    if not has_ctx():
         # TODO(slukjanov): replace with specific error
         raise RuntimeError("Context isn't available here")
-    return _CTXS._curr_ctx
+    return _CTXS._curr_ctxs[corolocal.get_ident()]
 
 
 def current():
@@ -61,15 +76,23 @@ def session(context=None):
 
 
 def set_ctx(new_ctx):
-    if not new_ctx and hasattr(_CTXS, '_curr_ctx'):
-        del _CTXS._curr_ctx
-    elif new_ctx:
-        _CTXS._curr_ctx = new_ctx
+    ident = corolocal.get_ident()
+
+    if not new_ctx and ident in _CTXS._curr_ctxs:
+        del _CTXS._curr_ctxs[ident]
+
+    if new_ctx:
+        _CTXS._curr_ctxs[ident] = new_ctx
 
 
-def model_query(model, context=None):
+def model_query(model, context=None, project_only=None):
     context = context or ctx()
-    return context.session.query(model)
+    query = context.session.query(model)
+
+    if project_only:
+        query = query.filter_by(tenant_id=context.tenant_id)
+
+    return query
 
 
 def model_save(model, context=None):
@@ -77,3 +100,34 @@ def model_save(model, context=None):
     with context.session.begin():
         context.session.add(model)
     return model
+
+
+def model_update(model, context=None, **kwargs):
+    if not hasattr(model, '__table__'):
+        # TODO(slikjanov): replace with specific exception
+        raise RuntimeError("Specified object isn't model, class: %s"
+                           % model.__class__.__name__)
+    columns = model.__table__.columns
+    for prop in kwargs:
+        if prop not in columns:
+            # TODO(slukjanov): replace with specific exception
+            raise RuntimeError(
+                "Model class '%s' doesn't contains specified property '%s'"
+                % (model.__class__.__name__, prop))
+        setattr(model, prop, kwargs[prop])
+
+    return model_save(model, context)
+
+
+def spawn(func, *args, **kwargs):
+    ctx = current().clone()
+
+    def wrapper(ctx, func, *args, **kwargs):
+        set_ctx(ctx)
+        func(*args, **kwargs)
+
+    eventlet.spawn(wrapper, ctx, func, *args, **kwargs)
+
+
+def sleep(seconds=0):
+    eventlet.sleep(seconds)

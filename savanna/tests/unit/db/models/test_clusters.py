@@ -15,10 +15,10 @@
 
 from savanna import context as ctx
 from savanna.db import models as m
-from savanna.tests.unit.db.models import base as models_test_base
+from savanna.tests.unit import base as models_test_base
 
 
-class ClusterModelTest(models_test_base.ModelTestCase):
+class ClusterModelTest(models_test_base.DbTestCase):
     def testCreateCluster(self):
         session = ctx.current().session
         with session.begin():
@@ -39,6 +39,7 @@ class ClusterModelTest(models_test_base.ModelTestCase):
         del c_dict['node_groups']
         del c_dict['status']
         del c_dict['status_description']
+        del c_dict['info']
 
         c_dict.update({
             'tenant_id': 't-1'
