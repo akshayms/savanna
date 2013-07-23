@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from savanna.tests.ui import base
+from savanna.tests.uitests import base
 
 
 class UIClusterCreate(base.UITestCase):
